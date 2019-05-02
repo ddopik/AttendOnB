@@ -13,4 +13,15 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+
+
+    <string name="general_photo_chooser_gallery">Gallery</string>
+    <string name="general_photo_chooser_title">Upload picture</string>
+    <string name="map_fragment_open_gps">Please open Gps</string>
+    <string name="map_fragment_yes">Enable Gps</string>
+    <string name="map_fragment_no">No Gps</string>
+    <string name="general_photo_chooser_camera">Camera</string>
+    <string name="general_gallery_chooser_title">Select Picture:</string>
+    <string name="send_feed_back">Send Feed Back</string>
+    <string name="client_email_feedback_subject">client_feed_back</string>
 </resources>

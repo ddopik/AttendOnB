@@ -2,23 +2,30 @@ package com.example.attendonb.app
 
 import android.app.Application
 import android.content.Context
-import android.content.IntentFilter
-import android.net.ConnectivityManager
-import android.os.Build
+import com.androidnetworking.AndroidNetworking
+import com.example.attendonb.network.BasicAuthInterceptor
+import com.example.attendonb.realm.RealmConfigFile
+import com.example.attendonb.realm.RealmDbMigration
+import com.facebook.stetho.Stetho
+import com.uphyca.stetho_realm.RealmInspectorModulesProvider
+import okhttp3.OkHttpClient
 import java.io.File
+import io.realm.Realm
+import io.realm.RealmConfiguration
 
-class AttendOnBApp  {
+class AttendOnBApp : Application() {
 
 
     var realm: Realm? = null
-    var app: PhLogApp? = null
 
-    private var networkStateChangeManager: NetworkStateChangeManager? = null
-    private var networkChangeBroadcastReceiver: NetworkChangeBroadcastReceiver? = null
+    companion object {
+
+        var app: AttendOnBApp? = null
+    }
 
     override fun onCreate() {
         super.onCreate()
-        this.app = this
+        app = this
         //        MultiDex.install(app);
         //        initRealm(); //--> [1]order is must
         //        setRealmDefaultConfiguration(); //--> [2]order is must
@@ -26,26 +33,9 @@ class AttendOnBApp  {
         //        deleteCache(app);   ///for developing        ##################
         //        initializeDepInj(); ///intializing Dagger Dependancy
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            networkStateChangeManager = NetworkStateChangeManager(this)
-            networkStateChangeManager!!.listen()
-        } else {
-            networkChangeBroadcastReceiver = NetworkChangeBroadcastReceiver()
-            val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-            registerReceiver(networkChangeBroadcastReceiver, filter)
-        }
+
     }
 
-    override fun onTerminate() {
-        super.onTerminate()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (networkStateChangeManager != null)
-                networkStateChangeManager!!.stopListening()
-        } else {
-            if (networkChangeBroadcastReceiver != null)
-                unregisterReceiver(networkChangeBroadcastReceiver)
-        }
-    }
 
     /**
      * use this method in case initializing object by --new ()-- keyword
@@ -53,13 +43,13 @@ class AttendOnBApp  {
      * @param app app Context
      */
     fun init(app: Application) {
-        PhLogApp.app = app as PhLogApp
+        AttendOnBApp.app = app as AttendOnBApp
     }
 
 
-    fun getApp(): PhLogApp {
+    fun getApp(): AttendOnBApp {
         if (app != null) {
-            return app
+            return app as AttendOnBApp
         }
         throw NullPointerException("u should init AppContext  first")
     }
@@ -106,7 +96,7 @@ class AttendOnBApp  {
      */
     fun setRealmDefaultConfiguration(isFirstLaunch: Boolean, realmModules: Any) {
         if (isFirstLaunch) {
-            val realmConfiguration = RealmConfiguration.Builder().schemaVersion(RealmConfigFile.REALM_VERSION).migration(RealmDbMigration()).modules(realmModules).build()
+            val realmConfiguration = RealmConfiguration.Builder().schemaVersion(RealmConfigFile.REALM_VERSION.toLong()).migration(RealmDbMigration()).modules(realmModules).build()
             Realm.setDefaultConfiguration(realmConfiguration)
         }
     }

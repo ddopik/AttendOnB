@@ -23,7 +23,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.example.softmills.phlog.R;
+
+import com.example.attendonb.R;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

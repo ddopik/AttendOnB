@@ -1,11 +1,15 @@
-package com.example.softmills.phlog.Utiltes
 
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.androidnetworking.error.ANError
-import com.example.softmills.phlog.base.commonmodel.ErrorMessageResponse
-import com.example.softmills.phlog.network.BaseNetworkApi.*
+import com.example.attendonb.base.commonModel.ErrorMessageResponse
+import com.example.attendonb.network.BaseNetWorkApi.Companion.ERROR_STATE_1
+import com.example.attendonb.network.BaseNetWorkApi.Companion.STATUS_401
+import com.example.attendonb.network.BaseNetWorkApi.Companion.STATUS_404
+import com.example.attendonb.network.BaseNetWorkApi.Companion.STATUS_500
+import com.example.attendonb.network.BaseNetWorkApi.Companion.STATUS_BAD_REQUEST
+
 import com.google.gson.Gson
 
 /**

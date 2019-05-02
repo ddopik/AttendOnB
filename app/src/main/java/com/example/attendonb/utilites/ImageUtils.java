@@ -25,7 +25,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.example.softmills.phlog.R;
+import com.example.attendonb.R;
 
 
 import java.io.ByteArrayOutputStream;
