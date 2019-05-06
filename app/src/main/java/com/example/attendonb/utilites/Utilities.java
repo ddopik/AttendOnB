@@ -94,7 +94,7 @@ public class Utilities {
 
 
 //
-//    public static void sendEmail(String email, BaseActivity activity) {
+//    public static void sendEmail(String email, BaseFragmentActivity activity) {
 //        Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
 //        emailIntent.setType("message/rfc822");
 //        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{email});
