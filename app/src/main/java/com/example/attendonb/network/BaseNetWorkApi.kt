@@ -1,5 +1,9 @@
 package com.example.attendonb.network
 
+import com.androidnetworking.common.Priority
+import com.example.attendonb.ui.viewmodel.model.LoginResposne
+import com.rx2androidnetworking.Rx2AndroidNetworking
+
 class BaseNetWorkApi {
     companion object {
 
@@ -13,6 +17,25 @@ class BaseNetWorkApi {
         val STATUS_500 = 500
         var STATUS_ERROR = "405"
         val ERROR_STATE_1 = "1"
+
+
+        private val BASE_URL = "baseUrl"
+        private val LOGIN_URL = "$BASE_URL/login_url"
+
+
+        fun login(userName: String, password: String,deviceOS:String,deviceModel:String ,currentLat: String, currentLng: String, deviceIMEI: String): io.reactivex.Observable<LoginResposne> {
+            return Rx2AndroidNetworking.post(LOGIN_URL)
+                    .addBodyParameter("userName", userName)
+                    .addBodyParameter("password", password)
+                    .addBodyParameter("deviceOS", deviceOS)
+                    .addBodyParameter("deviceModel", deviceModel)
+                    .addBodyParameter("currentLat", currentLat)
+                    .addBodyParameter("currentLng", currentLng)
+                    .addBodyParameter("deviceIMEI", deviceIMEI)
+                    .setPriority(Priority.HIGH)
+                    .build()
+                    .getObjectObservable(LoginResposne::class.java)
+        }
 
     }
 }

@@ -15,6 +15,8 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -177,6 +179,18 @@ public class Utilities {
 
         password.setSelection(password.getText().length());
     }
+    @SuppressLint("MissingPermission")
+    public static String getDeviceIMEI(Context context){
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        return telephonyManager.getDeviceId();
+    }
+    @SuppressLint("HardwareIds")
+    public static String getDeviceUniqueID(Activity activity){
+        String device_unique_id = Settings.Secure.getString(activity.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        return device_unique_id;
+    }
+
 
     public static String arabicToDecimal(String number) {
         char[] chars = new char[number.length()];

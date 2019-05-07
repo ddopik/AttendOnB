@@ -1,10 +1,15 @@
 package com.example.attendonb.ui.viewmodel
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
+import com.example.attendonb.network.BaseNetWorkApi
 import com.example.attendonb.ui.LoginActivity
+import com.example.attendonb.utilites.Utilities
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class LoginViewModel : ViewModel() {
 
@@ -23,6 +28,7 @@ class LoginViewModel : ViewModel() {
     var isNetworkError: MutableLiveData<Boolean> = MutableLiveData()
     var isUnknownError: MutableLiveData<Boolean> = MutableLiveData()
     var isDataLoading: MutableLiveData<Boolean> = MutableLiveData()
+    var alreadyLogedIdError: MutableLiveData<String> = MutableLiveData()
 
 
     fun isDataLoading(): LiveData<Boolean> = isDataLoading
@@ -30,7 +36,24 @@ class LoginViewModel : ViewModel() {
     fun isUnKnownError(): LiveData<Boolean> = isUnknownError
 
 
+    @SuppressLint("CheckResult")
+    fun loginUser(userName: String, currentLat: String, currentLng: String, password: String, deviceIMEI: String): LiveData<Boolean> {
+        val loginState = MutableLiveData<Boolean>();
+        BaseNetWorkApi.login(userName = userName, password = password, currentLat = currentLat, currentLng = currentLng, deviceOS = "Android", deviceModel = Utilities.getDeviceName(), deviceIMEI = deviceIMEI)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
 
+                }, { t: Throwable? ->
+                    {
+
+                    }
+                }
+
+                )
+        p
+        return true
+    }
 
 
     /**
