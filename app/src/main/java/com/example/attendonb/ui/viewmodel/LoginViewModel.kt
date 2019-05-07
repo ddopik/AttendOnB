@@ -6,8 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.example.attendonb.network.BaseNetWorkApi
-import com.example.attendonb.ui.LoginActivity
-import com.example.attendonb.utilites.Utilities
+import com.example.attendonb.ui.login.LoginActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -37,24 +36,28 @@ class LoginViewModel : ViewModel() {
 
 
     @SuppressLint("CheckResult")
-    fun loginUser(userName: String, currentLat: String, currentLng: String, password: String, deviceIMEI: String): LiveData<Boolean> {
+    fun loginUser(userName: String, currentLat: Double, currentLng: Double, password: String ) :LiveData<Boolean>{
         val loginState = MutableLiveData<Boolean>();
-        BaseNetWorkApi.login(userName = userName, password = password, currentLat = currentLat, currentLng = currentLng, deviceOS = "Android", deviceModel = Utilities.getDeviceName(), deviceIMEI = deviceIMEI)
+        BaseNetWorkApi.login(userName = userName, password = password, currentLat = currentLat.toString(), currentLng = currentLng.toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
+                    loginState.value=true
 
                 }, { t: Throwable? ->
-                    {
 
+                    {
+                        loginState.value=false
                     }
+
                 }
 
                 )
-        p
-        return true
-    }
 
+        return loginState;
+
+    }
+//    , deviceOS = "Android", deviceModel = Utilities.getDeviceName(), deviceIMEI = deviceIMEI
 
     /**
      * VM Publisher method 2

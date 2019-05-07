@@ -1,4 +1,4 @@
-package com.example.attendonb.ui
+package com.example.attendonb.ui.login
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -8,18 +8,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import com.example.attendonb.R
-import com.example.attendonb.base.BaseFragmentActivity
+import com.example.attendonb.base.BaseActivity
 import com.example.attendonb.ui.viewmodel.LoginViewModel
 import com.example.attendonb.utilites.Constants.Companion.REQUEST_CODE_LOCATION
 import com.example.attendonb.utilites.MapUtls
-import com.example.attendonb.utilites.Utilities
-import com.google.android.gms.maps.model.LatLng
 import io.reactivex.annotations.NonNull
 import kotlinx.android.synthetic.main.activity_login.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 
-class LoginActivity : BaseFragmentActivity(), MapUtls.OnLocationUpdate {
+class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
 
     private var loginViewModel: LoginViewModel? = null
     private var mapUtls: MapUtls? = null
@@ -32,6 +30,7 @@ class LoginActivity : BaseFragmentActivity(), MapUtls.OnLocationUpdate {
 
         loginViewModel = LoginViewModel.getInstance(this)
         mapUtls = MapUtls(this)
+        requestLoginPermeation()
 
         initObservers()
         initListeners()
@@ -73,7 +72,7 @@ class LoginActivity : BaseFragmentActivity(), MapUtls.OnLocationUpdate {
     private fun initListeners() {
         btn_login.setOnClickListener {
             if (validateLoginInput()) {
-                loginViewModel?.loginUser(userName = login_user_name.text.toString(), password = login_password.text.toString(), deviceIMEI = Utilities.getDeviceIMEI(this))?.observe(this, Observer {
+                loginViewModel?.loginUser(userName = login_user_name.text.toString(), password = login_password.text.toString(),currentLat = curentLat!!,currentLng =curentLng!! )?.observe(this, Observer {
                     if (it) {
 
                     }
@@ -102,6 +101,7 @@ class LoginActivity : BaseFragmentActivity(), MapUtls.OnLocationUpdate {
         if (curentLat == null && curentLng == null) {
 
             showToast("error gitting current location")
+            requestLoginPermeation()
             return false
         }
 
@@ -112,7 +112,7 @@ class LoginActivity : BaseFragmentActivity(), MapUtls.OnLocationUpdate {
 
     override fun onLocationUpdate(location: Location) {
         // New location has now been determined
-        val latLng = LatLng(location.latitude, location.longitude)
+//        val latLng = LatLng(location.latitude, location.longitude)
         curentLat = location.latitude
         curentLng = location.longitude
 
@@ -121,13 +121,14 @@ class LoginActivity : BaseFragmentActivity(), MapUtls.OnLocationUpdate {
 
     @SuppressLint("MissingPermission")
     @AfterPermissionGranted(REQUEST_CODE_LOCATION)
-    private fun requestLocation() {
-        if (EasyPermissions.hasPermissions(this, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+    private fun requestLoginPermeation() {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
             mapUtls?.startLocationUpdates(this, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
         } else {
             // Request one permission
-            EasyPermissions.requestPermissions(this, getString(R.string.need_location_permation),
-                    REQUEST_CODE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+            EasyPermissions.requestPermissions(this, getString(R.string.need_location_permation), REQUEST_CODE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+
+
         }
     }
 

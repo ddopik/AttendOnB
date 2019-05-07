@@ -23,15 +23,12 @@ class BaseNetWorkApi {
         private val LOGIN_URL = "$BASE_URL/login_url"
 
 
-        fun login(userName: String, password: String,deviceOS:String,deviceModel:String ,currentLat: String, currentLng: String, deviceIMEI: String): io.reactivex.Observable<LoginResposne> {
+        fun login(userName: String, password: String, currentLat: String, currentLng: String): io.reactivex.Observable<LoginResposne> {
             return Rx2AndroidNetworking.post(LOGIN_URL)
                     .addBodyParameter("userName", userName)
                     .addBodyParameter("password", password)
-                    .addBodyParameter("deviceOS", deviceOS)
-                    .addBodyParameter("deviceModel", deviceModel)
                     .addBodyParameter("currentLat", currentLat)
                     .addBodyParameter("currentLng", currentLng)
-                    .addBodyParameter("deviceIMEI", deviceIMEI)
                     .setPriority(Priority.HIGH)
                     .build()
                     .getObjectObservable(LoginResposne::class.java)
