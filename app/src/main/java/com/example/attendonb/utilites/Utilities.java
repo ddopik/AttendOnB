@@ -13,6 +13,7 @@ import android.content.pm.ResolveInfo;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import androidx.annotation.Nullable;
 
 import com.example.attendonb.R;
 
@@ -380,6 +382,19 @@ public class Utilities {
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    @Nullable
+    public static Bitmap loadBitmapFromView(View view) {
+        try {
+            view.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+            view.setDrawingCacheEnabled(false);
+            return bitmap;
+        } catch (OutOfMemoryError error) {
+            Log.e(TAG, "Out of Memory while loadBitmapFromView");
+            return null;
         }
     }
 }

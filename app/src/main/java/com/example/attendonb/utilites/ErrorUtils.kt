@@ -3,6 +3,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.androidnetworking.error.ANError
+import com.example.attendonb.app.AttendOnBApp
 import com.example.attendonb.base.commonModel.ErrorMessageResponse
 import com.example.attendonb.network.BaseNetWorkApi.Companion.ERROR_STATE_1
 import com.example.attendonb.network.BaseNetWorkApi.Companion.STATUS_401
@@ -27,7 +28,7 @@ class ErrorUtils {
         }
 
         //Universal Error State From Server
-        fun setError(context: Context, contextTAG: String, throwable: Throwable?) {
+        fun setError( contextTAG: String, throwable: Throwable?) {
             try {
                 throwable.takeIf { it is ANError }.apply {
                     (throwable as ANError).errorBody?.let {
@@ -37,7 +38,7 @@ class ErrorUtils {
                         when (statusCode) {
                             STATUS_BAD_REQUEST -> {
                                 var errorMessageResponse: ErrorMessageResponse = gson.fromJson(errorData, ErrorMessageResponse::class.java)
-                                viewError(context, contextTAG, errorMessageResponse)
+                                viewError(AttendOnBApp.app?.getApp()?.baseContext!!, contextTAG, errorMessageResponse)
                             }
                             STATUS_404 -> {
                                 Log.e(TAG, contextTAG + "------>" + STATUS_404 + "---" + throwable.response)
@@ -64,17 +65,17 @@ class ErrorUtils {
 
         ///PreDefined Error Code From Server
         private fun viewError(context: Context, contextTAG: String, errorMessageResponse: ErrorMessageResponse) {
-            for (i in errorMessageResponse.errors.indices) {
-                if (errorMessageResponse.errors[i].code != null)
-                    when (errorMessageResponse.errors[i].code) {
+
+                    when (errorMessageResponse.code) {
                         ERROR_STATE_1 -> {
-                            Toast.makeText(context, errorMessageResponse.errors[i].message, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, errorMessageResponse.data.msg, Toast.LENGTH_SHORT).show()
                         }
                         else -> {
-                            Log.e(TAG, contextTAG + "------>" + errorMessageResponse.errors[i].message)
+                            Toast.makeText(context, errorMessageResponse.data.msg, Toast.LENGTH_SHORT).show()
+                            Log.e(TAG, "$contextTAG------> ${errorMessageResponse.data.msg}")
                         }
                     }
-            }
+
 
         }
     }

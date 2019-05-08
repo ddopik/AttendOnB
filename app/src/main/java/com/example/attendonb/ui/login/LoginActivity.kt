@@ -7,11 +7,13 @@ import android.location.Location
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import com.example.attendonb.MainActivity
 import com.example.attendonb.R
 import com.example.attendonb.base.BaseActivity
 import com.example.attendonb.ui.viewmodel.LoginViewModel
 import com.example.attendonb.utilites.Constants.Companion.REQUEST_CODE_LOCATION
 import com.example.attendonb.utilites.MapUtls
+import com.example.attendonb.utilites.Utilities
 import io.reactivex.annotations.NonNull
 import kotlinx.android.synthetic.main.activity_login.*
 import pub.devrel.easypermissions.AfterPermissionGranted
@@ -61,7 +63,7 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
 
         })
 
-        loginViewModel?.alreadyLogedIdError?.observe(this, Observer {
+        loginViewModel?.loginErrorMessage?.observe(this, Observer {
 
             showToast(it)
         })
@@ -72,9 +74,12 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
     private fun initListeners() {
         btn_login.setOnClickListener {
             if (validateLoginInput()) {
-                loginViewModel?.loginUser(userName = login_user_name.text.toString(), password = login_password.text.toString(),currentLat = curentLat!!,currentLng =curentLng!! )?.observe(this, Observer {
-                    if (it) {
-
+                Utilities.getDeviceIMEI(baseContext)
+                loginViewModel?.loginUser(userName = login_user_name.text.toString(), password = login_password.text.toString(), currentLat = curentLat!!, currentLng = curentLng!!, deviceImei = Utilities.getDeviceIMEI(baseContext))?.observe(this, Observer { loginState ->
+                    if (loginState) {
+                        val intent = Intent(this, MainActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        startActivity(intent)
                     }
                 })
             }

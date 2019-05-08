@@ -16,19 +16,20 @@ class BaseNetWorkApi {
         val STATUS_404 = 404
         val STATUS_500 = 500
         var STATUS_ERROR = "405"
-        val ERROR_STATE_1 = "1"
+        val ERROR_STATE_1 = "login-300"
 
 
-        private val BASE_URL = "baseUrl"
-        private val LOGIN_URL = "$BASE_URL/login_url"
+        private const val BASE_URL = "https://nfc.spiderholidays.co/en"
+        private const val LOGIN_URL = "$BASE_URL/Api/login_check"
 
 
-        fun login(userName: String, password: String, currentLat: String, currentLng: String): io.reactivex.Observable<LoginResposne> {
+        fun login(userName: String, password: String, currentLat: String, currentLng: String,deviceImei:String): io.reactivex.Observable<LoginResposne> {
             return Rx2AndroidNetworking.post(LOGIN_URL)
-                    .addBodyParameter("userName", userName)
-                    .addBodyParameter("password", password)
-                    .addBodyParameter("currentLat", currentLat)
-                    .addBodyParameter("currentLng", currentLng)
+                    .addBodyParameter("username", userName)
+                    .addBodyParameter("pass", password)
+                    .addBodyParameter("latitude", currentLat)
+                    .addBodyParameter("longitude", currentLng)
+                    .addBodyParameter("imei", deviceImei)
                     .setPriority(Priority.HIGH)
                     .build()
                     .getObjectObservable(LoginResposne::class.java)

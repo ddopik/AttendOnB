@@ -1,6 +1,6 @@
 package com.example.attendonb.base.commonModel;
 
-import com.example.attendonb.base.BaseErrorResponse;
+import com.example.attendonb.base.BaseErrorData;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,8 +16,16 @@ import java.util.List;
  */
 
 public class ErrorMessageResponse {
-    @SerializedName("errors")
+
+    @SerializedName("status")
     @Expose
-    public List<BaseErrorResponse> errors = null;
+    public Boolean status;
+    @SerializedName("data")
+    @Expose
+    public BaseErrorData data;
+    @SerializedName("code")
+    @Expose
+    public String code;
+
 
 }

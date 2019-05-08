@@ -21,11 +21,14 @@ class AttendOnBApp : Application() {
     companion object {
 
         var app: AttendOnBApp? = null
+
     }
 
     override fun onCreate() {
         super.onCreate()
         app = this
+        AttendOnBApp.app = app as AttendOnBApp
+        initFastAndroidNetworking(null,baseContext)
         //        MultiDex.install(app);
         //        initRealm(); //--> [1]order is must
         //        setRealmDefaultConfiguration(); //--> [2]order is must
@@ -37,15 +40,6 @@ class AttendOnBApp : Application() {
     }
 
 
-    /**
-     * use this method in case initializing object by --new ()-- keyword
-     *
-     * @param app app Context
-     */
-    fun init(app: Application) {
-        AttendOnBApp.app = app as AttendOnBApp
-    }
-
 
     fun getApp(): AttendOnBApp {
         if (app != null) {
@@ -53,6 +47,8 @@ class AttendOnBApp : Application() {
         }
         throw NullPointerException("u should init AppContext  first")
     }
+
+
 
     /**
      * delete App Cache and NetWork Cache
@@ -134,7 +130,7 @@ class AttendOnBApp : Application() {
 //    }
 
 
-    fun initFastAndroidNetworking(userToken: String?, userType: String, lang: String, context: Context) {
+    fun initFastAndroidNetworking(userToken: String?, context: Context) {
 
         /**
          * initializing block to add authentication to your Header Request
@@ -142,9 +138,7 @@ class AttendOnBApp : Application() {
         if (userToken != null) {
             val basicAuthInterceptor = BasicAuthInterceptor(context)
             basicAuthInterceptor.setUserToken(userToken)
-            basicAuthInterceptor.setUserType(userType)
-            basicAuthInterceptor.setLang(lang)
-            val okHttpClient = OkHttpClient().newBuilder()
+             val okHttpClient = OkHttpClient().newBuilder()
                     .addNetworkInterceptor(basicAuthInterceptor)
                     .build()
             AndroidNetworking.initialize(context, okHttpClient)

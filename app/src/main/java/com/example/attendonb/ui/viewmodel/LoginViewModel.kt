@@ -1,16 +1,21 @@
 package com.example.attendonb.ui.viewmodel
 
+import ErrorUtils
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
+import com.example.attendonb.base.commonModel.ErrorMessageResponse
 import com.example.attendonb.network.BaseNetWorkApi
 import com.example.attendonb.ui.login.LoginActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class LoginViewModel : ViewModel() {
+
+
+    private val TAG = LoginViewModel::class.java.simpleName
 
     companion object {
         private var INSTANCE: LoginViewModel? = null
@@ -27,7 +32,7 @@ class LoginViewModel : ViewModel() {
     var isNetworkError: MutableLiveData<Boolean> = MutableLiveData()
     var isUnknownError: MutableLiveData<Boolean> = MutableLiveData()
     var isDataLoading: MutableLiveData<Boolean> = MutableLiveData()
-    var alreadyLogedIdError: MutableLiveData<String> = MutableLiveData()
+    var loginErrorMessage: MutableLiveData<String> = MutableLiveData()
 
 
     fun isDataLoading(): LiveData<Boolean> = isDataLoading
@@ -36,9 +41,9 @@ class LoginViewModel : ViewModel() {
 
 
     @SuppressLint("CheckResult")
-    fun loginUser(userName: String, currentLat: Double, currentLng: Double, password: String ) :LiveData<Boolean>{
+    fun loginUser(userName: String, currentLat: Double, currentLng: Double, password: String, deviceImei: String): LiveData<Boolean> {
         val loginState = MutableLiveData<Boolean>();
-        BaseNetWorkApi.login(userName = userName, password = password, currentLat = currentLat.toString(), currentLng = currentLng.toString())
+        BaseNetWorkApi.login(userName = userName, password = password, currentLat = currentLat.toString(), currentLng = currentLng.toString(), deviceImei = deviceImei)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -46,15 +51,18 @@ class LoginViewModel : ViewModel() {
 
                 }, { t: Throwable? ->
 
-                    {
-                        loginState.value=false
+                    run {
+                        isNetworkError.postValue(false)
+
+                         loginState.value = false
+                        ErrorUtils.setError(TAG, t)
                     }
 
                 }
 
                 )
 
-        return loginState;
+        return loginState
 
     }
 //    , deviceOS = "Android", deviceModel = Utilities.getDeviceName(), deviceIMEI = deviceIMEI
