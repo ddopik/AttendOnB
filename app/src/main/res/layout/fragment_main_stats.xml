@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parent_view"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grayEDF0F3"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cardView"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="2dp"
+        card_view:cardBackgroundColor="#fff"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="4dp"
+
+        card_view:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+
+            >
+
+
+            <!--<TextView-->
+            <!--android:id="@+id/headingText"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_toRightOf="@+id/appImage"-->
+            <!--android:paddingLeft="16sp"-->
+            <!--android:paddingRight="16dp"-->
+            <!--android:text="Title"-->
+            <!--android:textColor="#000"-->
+            <!--android:textSize="18sp"-->
+            <!--tools:ignore="RtlHardcoded"/>-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/subHeaderText"-->
+            <!--style="@style/Base.TextAppearance.AppCompat.Subhead"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/headingText"-->
+            <!--android:layout_toRightOf="@+id/appImage"-->
+            <!--android:paddingLeft="16dp"-->
+            <!--android:text="SubTiltle"-->
+            <!--android:paddingRight="16dp"-->
+            <!--android:textColor="#000"-->
+            <!--android:textSize="15sp"/>-->
+
+            <TextView
+                android:id="@+id/stats_val"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="5"
+                android:maxLines="5"
+                android:padding="@dimen/widget_padding"
+                android:paddingBottom="32dp"
+                android:gravity="center"
+                android:textColor="#737078"
+                android:textSize="14sp"
+                tools:text="stories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detail" />
+
+            <Button
+                android:id="@+id/apply_stats"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/text_input_color"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="Button" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</FrameLayout>

@@ -4,4 +4,5 @@
 
     <dimen name="map_location_marker_icon_width">500dp</dimen>
     <dimen name="map_location_marker_icon_height">500dp</dimen>
+    <dimen name="widget_padding">8dp</dimen>
 </resources>

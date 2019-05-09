@@ -1,7 +1,7 @@
 package com.example.attendonb.network
 
 import com.androidnetworking.common.Priority
-import com.example.attendonb.ui.viewmodel.model.LoginResposne
+import com.example.attendonb.ui.login.viewmodel.model.LoginResponse
 import com.rx2androidnetworking.Rx2AndroidNetworking
 
 class BaseNetWorkApi {
@@ -23,7 +23,7 @@ class BaseNetWorkApi {
         private const val LOGIN_URL = "$BASE_URL/Api/login_check"
 
 
-        fun login(userName: String, password: String, currentLat: String, currentLng: String,deviceImei:String): io.reactivex.Observable<LoginResposne> {
+        fun login(userName: String, password: String, currentLat: String, currentLng: String,deviceImei:String): io.reactivex.Observable<LoginResponse> {
             return Rx2AndroidNetworking.post(LOGIN_URL)
                     .addBodyParameter("username", userName)
                     .addBodyParameter("pass", password)
@@ -32,7 +32,7 @@ class BaseNetWorkApi {
                     .addBodyParameter("imei", deviceImei)
                     .setPriority(Priority.HIGH)
                     .build()
-                    .getObjectObservable(LoginResposne::class.java)
+                    .getObjectObservable(LoginResponse::class.java)
         }
 
     }

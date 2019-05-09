@@ -34,4 +34,7 @@
     <string name="invalid_password">Invalid password</string>
     <string name="need_location_permation">Need location Permation</string>
     <string name="take_screen_shot">take screen shot</string>
+    <string name="mock_location_warrning">Please disable mock Location aps</string>
+    <string name="please_disable_mock_location_apps">Please disable mock location apps</string>
+    <string name="apply">Apply</string>
 </resources>

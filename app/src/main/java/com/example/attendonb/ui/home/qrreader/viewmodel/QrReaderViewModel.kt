@@ -1,4 +1,4 @@
-package com.example.attendonb.ui.qrreader.ui.qrreader
+package com.example.attendonb.ui.home.qrreader.viewmodel
 
 import androidx.lifecycle.ViewModel
 

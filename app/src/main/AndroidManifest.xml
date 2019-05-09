@@ -19,11 +19,11 @@
         android:name=".app.AttendOnBApp"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.qrreader.QrReaderActivity" >
+        <activity android:name="com.example.attendonb.ui.home.qrreader.ui.QrReaderActivity" >
 
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.home.HomeActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
 

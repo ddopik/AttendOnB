@@ -6,36 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    tools:context=".MainActivity">
+    tools:context=".ui.home.HomeActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="40dp"
-        android:gravity="center"
-        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginBottom="20dp"
-            app:srcCompat="@drawable/qr_code_icon" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Click button to scan your QR Code"
-            android:textSize="16dp" />
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btnScanQRCode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="15dp"
-        android:text="Scan QR Code"
-        android:textSize="18dp" />
 
 </RelativeLayout>

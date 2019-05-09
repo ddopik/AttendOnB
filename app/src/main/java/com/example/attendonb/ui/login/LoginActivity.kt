@@ -6,11 +6,13 @@ import android.content.Intent
 import android.location.Location
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import com.example.attendonb.MainActivity
 import com.example.attendonb.R
 import com.example.attendonb.base.BaseActivity
-import com.example.attendonb.ui.viewmodel.LoginViewModel
+import com.example.attendonb.ui.home.HomeActivity
+import com.example.attendonb.ui.login.viewmodel.LoginViewModel
 import com.example.attendonb.utilites.Constants.Companion.REQUEST_CODE_LOCATION
 import com.example.attendonb.utilites.MapUtls
 import com.example.attendonb.utilites.Utilities
@@ -25,6 +27,7 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
     private var mapUtls: MapUtls? = null
     private var curentLat: Double? = null
     private var curentLng: Double? = null
+    private var isFromMockProvider: Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,10 +35,14 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
 
         loginViewModel = LoginViewModel.getInstance(this)
         mapUtls = MapUtls(this)
-        requestLoginPermeation()
 
         initObservers()
         initListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requestLoginPermeation()
     }
 
     override fun initObservers() {
@@ -68,20 +75,21 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
             showToast(it)
         })
 
+        loginViewModel?.loginState?.observe(this, Observer { loginState ->
+            if (loginState) {
+                val intent = Intent(this, HomeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                startActivity(intent)
+                finish()
+            }
+        })
 
     }
 
     private fun initListeners() {
         btn_login.setOnClickListener {
             if (validateLoginInput()) {
-                Utilities.getDeviceIMEI(baseContext)
-                loginViewModel?.loginUser(userName = login_user_name.text.toString(), password = login_password.text.toString(), currentLat = curentLat!!, currentLng = curentLng!!, deviceImei = Utilities.getDeviceIMEI(baseContext))?.observe(this, Observer { loginState ->
-                    if (loginState) {
-                        val intent = Intent(this, MainActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                        startActivity(intent)
-                    }
-                })
+                loginViewModel?.loginUser(userName = login_user_name.text.toString(), password = login_password.text.toString(), currentLat = curentLat!!, currentLng = curentLng!!, deviceImei = Utilities.getDeviceIMEI(baseContext), context = baseContext)
             }
 
         }
@@ -103,6 +111,7 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
             input_password.isErrorEnabled = false
         }
 
+
         if (curentLat == null && curentLng == null) {
 
             showToast("error gitting current location")
@@ -120,7 +129,14 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
 //        val latLng = LatLng(location.latitude, location.longitude)
         curentLat = location.latitude
         curentLng = location.longitude
-
+        isFromMockProvider = location.isFromMockProvider
+        if (isFromMockProvider!!) {
+            btn_login.isEnabled = false
+            Toast.makeText(this, resources.getString(R.string.mock_location_warrning), Toast.LENGTH_LONG).show()
+        } else {
+            btn_login.setBackgroundColor(ContextCompat.getColor(baseContext, R.color.text_input_color))
+            btn_login.isEnabled = true
+        }
         mapUtls?.removeLocationRequest()
     }
 

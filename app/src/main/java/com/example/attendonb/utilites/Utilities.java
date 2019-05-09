@@ -6,6 +6,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.LabeledIntent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings;
@@ -396,5 +398,52 @@ public class Utilities {
             Log.e(TAG, "Out of Memory while loadBitmapFromView");
             return null;
         }
+    }
+
+    //    I have done some investigation and sharing my results here,this may be useful for others.
+//      First, we can check whether MockSetting option is turned ON
+    public static boolean isMockSettingsON(Context context) {
+        // returns true if mock location enabled, false if not enabled.
+        if (Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ALLOW_MOCK_LOCATION).equals("0"))
+            return false;
+        else
+            return true;
+    }
+
+
+
+    public static boolean areThereMockPermissionApps(Context context) {
+        int count = 0;
+
+        PackageManager pm = context.getPackageManager();
+        List<ApplicationInfo> packages =
+                pm.getInstalledApplications(PackageManager.GET_META_DATA);
+
+        for (ApplicationInfo applicationInfo : packages) {
+            try {
+                PackageInfo packageInfo = pm.getPackageInfo(applicationInfo.packageName,
+                        PackageManager.GET_PERMISSIONS);
+
+                // Get Permissions
+                String[] requestedPermissions = packageInfo.requestedPermissions;
+
+                if (requestedPermissions != null) {
+                    for (int i = 0; i < requestedPermissions.length; i++) {
+                        if (requestedPermissions[i]
+                                .equals("android.permission.ACCESS_MOCK_LOCATION")
+                                && !applicationInfo.packageName.equals(context.getPackageName())) {
+                            count++;
+                        }
+                    }
+                }
+            } catch (PackageManager.NameNotFoundException e) {
+                Log.e("Got exception ", e.getMessage());
+            }
+        }
+
+        if (count > 0)
+            return true;
+        return false;
     }
 }
