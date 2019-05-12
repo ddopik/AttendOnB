@@ -70,6 +70,9 @@ class LoginViewModel : ViewModel() {
                         PrefUtil.setUserTrackId(context, loginResponse.loginData?.userData?.track!!)
                         PrefUtil.setCurrentStatsMessage(context, loginResponse.loginData?.attendStatus?.msg!!)
                         PrefUtil.setCurrentUserStatsID(context, loginResponse.loginData?.attendStatus?.status!!)
+                        PrefUtil.setCurrentCentralLat(context, loginResponse.loginData?.userData?.lat!!)
+                        PrefUtil.setCurrentCentralLng(context, loginResponse.loginData?.userData?.Lng!!)
+                        PrefUtil.setCurrentCentralRadious(context, loginResponse.loginData?.userData?.radius!!)
 
                         isDataLoading.postValue(false)
                         loginState.postValue(true)

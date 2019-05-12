@@ -26,6 +26,9 @@ class PrefUtil {
         private val USER_GENDER = "user_gender"
         private val CURRENT_USER_STATS_ID = "current_user_stats"
         private val CURRENT_STATS_MESSAGE = "current_stats_message"
+        private val CURRENT_CENTRAL_LAT = "current_central_lat"
+        private val CURRENT_CENTRAL_LNG = "current_central_lng"
+        private val CURRENT_CENTRAL_RADIOUS = "CURRENT_CENTRAL_RADIOUS"
 
 
         private fun getSharedPref(context: Context): SharedPreferences {
@@ -108,6 +111,29 @@ class PrefUtil {
                     .apply()
         }
 
+        fun setCurrentCentralLat(context: Context, currentCentralLat: String) {
+            getSharedPref(context)
+                    .edit()
+                    .putString(CURRENT_CENTRAL_LAT, currentCentralLat)
+                    .apply()
+        }
+
+        fun setCurrentCentralLng(context: Context, currentCentralLng: String) {
+            getSharedPref(context)
+                    .edit()
+                    .putString(CURRENT_CENTRAL_LNG, currentCentralLng)
+                    .apply()
+        }
+
+
+
+        fun setCurrentCentralRadious(context: Context, currentCentralRadious: String) {
+            getSharedPref(context)
+                    .edit()
+                    .putString(CURRENT_CENTRAL_RADIOUS, currentCentralRadious)
+                    .apply()
+        }
+
 
         fun getUseToken(mContext: Context): String? {
             return getSharedPref(mContext).getString(USER_TOKEN, "-1")
@@ -149,6 +175,20 @@ class PrefUtil {
         }
         fun getCurrentStatsMessage(mContext: Context): String? {
             return getSharedPref(mContext).getString(CURRENT_STATS_MESSAGE, "")
+
+        }
+
+        fun getCurrentCentralLat(mContext: Context): String? {
+            return getSharedPref(mContext).getString(CURRENT_CENTRAL_LAT, "")
+
+        }
+
+        fun getCurrentCentralLng(mContext: Context): String? {
+            return getSharedPref(mContext).getString(CURRENT_CENTRAL_LNG, "")
+
+        }
+        fun getCurrentCentralRadious(mContext: Context): String? {
+            return getSharedPref(mContext).getString(CURRENT_CENTRAL_RADIOUS, "")
 
         }
 

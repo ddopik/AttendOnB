@@ -2,6 +2,7 @@ package com.example.attendonb.ui.login
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
@@ -13,7 +14,7 @@ import com.example.attendonb.R
 import com.example.attendonb.base.BaseActivity
 import com.example.attendonb.ui.home.HomeActivity
 import com.example.attendonb.ui.login.viewmodel.LoginViewModel
-import com.example.attendonb.utilites.Constants.Companion.REQUEST_CODE_LOCATION
+import com.example.attendonb.utilites.Constants.Companion.REQUEST_CODE_PHONE_STATE
 import com.example.attendonb.utilites.MapUtls
 import com.example.attendonb.utilites.Utilities
 import io.reactivex.annotations.NonNull
@@ -25,9 +26,10 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
 
     private var loginViewModel: LoginViewModel? = null
     private var mapUtls: MapUtls? = null
-    private var curentLat: Double? = null
-    private var curentLng: Double? = null
+    private var curentLat: Double = 0.0
+    private var curentLng: Double = 0.0
     private var isFromMockProvider: Boolean? = null
+    private var isPhoneStatePermationGranted: Boolean = false;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,14 +37,10 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
 
         loginViewModel = LoginViewModel.getInstance(this)
         mapUtls = MapUtls(this)
+        requestLoginPermeation()
 
         initObservers()
         initListeners()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        requestLoginPermeation()
     }
 
     override fun initObservers() {
@@ -88,7 +86,7 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
 
     private fun initListeners() {
         btn_login.setOnClickListener {
-            if (validateLoginInput()) {
+            if (validateLoginInput() && isPhoneStatePermationGranted) {
                 loginViewModel?.loginUser(userName = login_user_name.text.toString(), password = login_password.text.toString(), currentLat = curentLat!!, currentLng = curentLng!!, deviceImei = Utilities.getDeviceIMEI(baseContext), context = baseContext)
             }
 
@@ -111,13 +109,26 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
             input_password.isErrorEnabled = false
         }
 
+        if (!isPhoneStatePermationGranted) {
 
-        if (curentLat == null && curentLng == null) {
+            val builder1 = AlertDialog.Builder(this)
+            builder1.setMessage(R.string.need_phone_state_permuation)
+            builder1.setCancelable(true)
 
-            showToast("error gitting current location")
-            requestLoginPermeation()
-            return false
+            builder1.setPositiveButton(resources.getString(R.string.ok)) { dialog, id ->
+                requestLoginPermeation()
+                dialog.cancel()
+            }
+
         }
+
+
+//        if (curentLat == null && curentLng == null) {
+//
+//            showToast("error gitting current location")
+//            requestLoginPermeation()
+//            return false
+//        }
 
         return true
 
@@ -141,17 +152,21 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
     }
 
     @SuppressLint("MissingPermission")
-    @AfterPermissionGranted(REQUEST_CODE_LOCATION)
+    @AfterPermissionGranted(REQUEST_CODE_PHONE_STATE)
     private fun requestLoginPermeation() {
-        if (EasyPermissions.hasPermissions(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_PHONE_STATE)) {
+            isPhoneStatePermationGranted = true
             mapUtls?.startLocationUpdates(this, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
         } else {
             // Request one permission
-            EasyPermissions.requestPermissions(this, getString(R.string.need_location_permation), REQUEST_CODE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+            isPhoneStatePermationGranted = false
+            EasyPermissions.requestPermissions(this, getString(R.string.need_phone_state_permuation), REQUEST_CODE_PHONE_STATE, Manifest.permission.READ_PHONE_STATE)
 
 
         }
     }
+
+
 
 
     override fun onRequestPermissionsResult(requestCode: Int,
@@ -165,10 +180,6 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
     }
-
-
-
-
 
 
     /**
@@ -195,4 +206,5 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
 //                }
 //            }
 //        })
+
 }

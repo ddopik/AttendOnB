@@ -19,6 +19,20 @@ class LoginUserData {
     @SerializedName("name")
     @Expose
     var name: String? = null
+
+    @SerializedName("lat")
+    @Expose
+    var lat: String? = null
+
+    @SerializedName("Lng")
+    @Expose
+    var Lng: String? = null
+
+    @SerializedName("radius")
+    @Expose
+    var radius: String? = null
+
+
     @SerializedName("email")
     @Expose
     var email: String? = null

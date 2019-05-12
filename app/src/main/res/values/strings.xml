@@ -32,9 +32,51 @@
     <string name="un_known_error">Unknowen error</string>
     <string name="invalid_user_name">invalid_user_name</string>
     <string name="invalid_password">Invalid password</string>
+    <string name="need_phone_state_permuation">Need location Permeation and phone state Permeation</string>
     <string name="need_location_permation">Need location Permation</string>
     <string name="take_screen_shot">take screen shot</string>
     <string name="mock_location_warrning">Please disable mock Location aps</string>
     <string name="please_disable_mock_location_apps">Please disable mock location running Apps</string>
     <string name="apply">Apply</string>
+    <string name="permation_required">Permation required</string>
+    <string name="ok">ok</string>
+
+
+
+
+
+    <!-- Buttons strings -->
+    <string name="add_geofences">Add geofences</string>
+    <string name="remove_geofences">Remove geofences</string>
+
+    <string name="geofences_added">Geofences added</string>
+    <string name="geofences_removed">Geofences removed</string>
+
+    <!-- Error strings -->
+    <string name="geofence_not_available">Geofence service is not available now</string>
+    <string name="geofence_too_many_geofences">Your app has registered too many geofences</string>
+    <string name="geofence_too_many_pending_intents">
+        You have provided too many PendingIntents to the addGeofences() call
+    </string>
+    <string name="unknown_geofence_error">
+        Unknown error: the Geofence service is not available now
+    </string>
+    <string name="geofence_transition_invalid_type">
+        Geofence transition error: invalid transition type %1$d
+    </string>
+
+    <!-- Transition type strings -->
+    <string name="geofence_transition_entered">Entered</string>
+    <string name="geofence_transition_exited">Exited</string>
+    <string name="unknown_geofence_transition">Unknown Transition</string>
+
+    <string name="geofence_transition_notification_text">
+        Click notification to return to app
+    </string>
+
+    <string name="insufficient_permissions">Insufficient permissions.</string>
+    <string name="permission_rationale">Location permission is needed for core functionality</string>
+    <string name="permission_denied_explanation">Permission was denied, but is needed for core
+        functionality.</string>
+    <string name="settings">Settings</string>
 </resources>
