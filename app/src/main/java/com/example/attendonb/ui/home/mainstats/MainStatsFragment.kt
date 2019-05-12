@@ -18,8 +18,8 @@ import com.example.attendonb.utilites.Constants.Companion.OUT
 import com.example.attendonb.utilites.MapUtls
 import com.example.attendonb.utilites.PrefUtil
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.fragment_main_stats.*
+
 
 /**
  * Created by ddopik on 09,May,2019
@@ -35,7 +35,7 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate {
     private var currentLat: Double? = null
     private var currentLng: Double? = null
     private var isFromMockProvider: Boolean? = null
-
+    private  var snakBar :Snackbar ?=null
     companion object {
         fun newInstance() = MainStatsFragment()
     }
@@ -59,7 +59,7 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate {
     override fun intiView() {
         stats_val.text = PrefUtil.getCurrentStatsMessage(context!!)
         apply_stats.text = resources.getString(R.string.apply)
-
+        snakBar=Snackbar.make(parent_view, resources.getString(R.string.mock_location_warrning), Snackbar.LENGTH_INDEFINITE);
 
     }
 
@@ -95,24 +95,26 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate {
     override fun onResume() {
         super.onResume()
         mapUtls?.startLocationUpdates(activity, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
+
+
     }
 
     override fun onLocationUpdate(location: Location) {
         // New location has now been determined
 //        val latLng = LatLng(location.latitude, location.longitude)
+
         currentLat = location.latitude
         currentLng = location.longitude
         isFromMockProvider = location.isFromMockProvider
         if (isFromMockProvider!!) {
-            Snackbar.make(parent_view, "asd", Snackbar.LENGTH_LONG).setAction(resources.getString(R.string.mock_location_warrning), null).show();
-
             apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.gray400))
-
             apply_stats.isEnabled=false
+            snakBar?.show()
         } else {
-
+            snakBar?.dismiss()
             apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.text_input_color))
-            apply_stats.isEnabled = true        }
+            apply_stats.isEnabled = true
+        }
         mapUtls?.removeLocationRequest()
     }
 
