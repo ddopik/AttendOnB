@@ -135,59 +135,59 @@ class PrefUtil {
         }
 
 
-        fun getUseToken(mContext: Context): String? {
+        fun getUseToken(mContext: Context): String {
             return getSharedPref(mContext).getString(USER_TOKEN, "-1")
 
         }
 
-        fun getUserId(mContext: Context): Int? {
-            return getSharedPref(mContext).getInt(USER_ID, -1)
+        fun getUserId(mContext: Context): String {
+            return getSharedPref(mContext).getString(USER_ID, "-1")
 
         }
 
-        fun getUserName(mContext: Context): String? {
+        fun getUserName(mContext: Context): String {
             return getSharedPref(mContext).getString(USER_NAME, "")
 
         }
 
-        fun getUserTrack(mContext: Context): String? {
+        fun getUserTrack(mContext: Context): String {
             return getSharedPref(mContext).getString(USER_TRACK, "-1")
 
         }
 
-        fun getUserMail(mContext: Context): String? {
+        fun getUserMail(mContext: Context): String {
             return getSharedPref(mContext).getString(USER_MAIL, "")
 
         }
 
-        fun getUserProfilePic(mContext: Context): String? {
+        fun getUserProfilePic(mContext: Context): String {
             return getSharedPref(mContext).getString(PROFILE_PIC, "")
 
         }
 
-        fun getCurrentUserStatsID(mContext: Context): String? {
+        fun getCurrentUserStatsID(mContext: Context): String {
             return getSharedPref(mContext).getString(CURRENT_USER_STATS_ID, "-1")
 
         }
-        fun getUserGender(mContext: Context): String? {
+        fun getUserGender(mContext: Context): String {
             return getSharedPref(mContext).getString(FIRST_TIME_LOGIN, "")
 
         }
-        fun getCurrentStatsMessage(mContext: Context): String? {
+        fun getCurrentStatsMessage(mContext: Context): String {
             return getSharedPref(mContext).getString(CURRENT_STATS_MESSAGE, "")
 
         }
 
-        fun getCurrentCentralLat(mContext: Context): String? {
+        fun getCurrentCentralLat(mContext: Context): String {
             return getSharedPref(mContext).getString(CURRENT_CENTRAL_LAT, "")
 
         }
 
-        fun getCurrentCentralLng(mContext: Context): String? {
+        fun getCurrentCentralLng(mContext: Context): String {
             return getSharedPref(mContext).getString(CURRENT_CENTRAL_LNG, "")
 
         }
-        fun getCurrentCentralRadious(mContext: Context): String? {
+        fun getCurrentCentralRadious(mContext: Context): String {
             return getSharedPref(mContext).getString(CURRENT_CENTRAL_RADIOUS, "")
 
         }

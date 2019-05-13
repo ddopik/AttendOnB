@@ -21,6 +21,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.animation.Interpolator;
@@ -177,7 +179,7 @@ public class MapUtls {
 
     // Trigger new location updates at interval
     @SuppressLint("MissingPermission")
-    public  void startLocationUpdates(Activity context,MapConst mapConst) {
+    public  void startLocationUpdates(Context context,MapConst mapConst) {
         // Create the location request to start receiving updates
         mLocationRequest = new LocationRequest();
         client = LocationServices.getFusedLocationProviderClient(context);
@@ -210,8 +212,10 @@ public class MapUtls {
                 switch (ex.getStatusCode()) {
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         try {
+                            int REQUEST_CHECK_SETTINGS = 214;
+
                             ResolvableApiException resolvableApiException = (ResolvableApiException) ex;
-                            resolvableApiException.startResolutionForResult(context, 1126);
+                            resolvableApiException.startResolutionForResult((AppCompatActivity) context, REQUEST_CHECK_SETTINGS);
                         } catch (IntentSender.SendIntentException e) {
                         }
                         break;
