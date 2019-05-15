@@ -7,12 +7,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
-import com.example.attendonb.R
 import com.example.attendonb.app.AttendOnBApp
 import com.example.attendonb.network.BaseNetWorkApi
 import com.example.attendonb.ui.login.LoginActivity
 import com.example.attendonb.utilites.PrefUtil
-import com.example.attendonb.utilites.Utilities
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -72,7 +70,7 @@ class LoginViewModel : ViewModel() {
                         PrefUtil.setCurrentUserStatsID(context, loginResponse.loginData?.attendStatus?.status!!)
                         PrefUtil.setCurrentCentralLat(context, loginResponse.loginData?.userData?.lat!!)
                         PrefUtil.setCurrentCentralLng(context, loginResponse.loginData?.userData?.Lng!!)
-                        PrefUtil.setCurrentCentralRadious(context, loginResponse.loginData?.userData?.radius!!)
+                        PrefUtil.setCurrentCentralRadius(context, loginResponse.loginData?.userData?.radius!!)
 
                         isDataLoading.postValue(false)
                         loginState.postValue(true)

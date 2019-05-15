@@ -29,6 +29,7 @@ class PrefUtil {
         private val CURRENT_CENTRAL_LAT = "current_central_lat"
         private val CURRENT_CENTRAL_LNG = "current_central_lng"
         private val CURRENT_CENTRAL_RADIOUS = "CURRENT_CENTRAL_RADIOUS"
+        private val IS_INSIDE_RADIOUS = "is_inside_radious"
 
 
         private fun getSharedPref(context: Context): SharedPreferences {
@@ -127,21 +128,28 @@ class PrefUtil {
 
 
 
-        fun setCurrentCentralRadious(context: Context, currentCentralRadious: String) {
+        fun setCurrentCentralRadius(context: Context, currentCentralRadious: String) {
             getSharedPref(context)
                     .edit()
                     .putString(CURRENT_CENTRAL_RADIOUS, currentCentralRadious)
                     .apply()
         }
 
+        fun setIsInsideRadius(context: Context, isInsideRadius: Boolean) {
+            getSharedPref(context)
+                    .edit()
+                    .putBoolean(IS_INSIDE_RADIOUS,isInsideRadius)
+                    .apply()
+        }
+
 
         fun getUseToken(mContext: Context): String {
-            return getSharedPref(mContext).getString(USER_TOKEN, "-1")
+            return getSharedPref(mContext).getString(USER_TOKEN, "")
 
         }
 
         fun getUserId(mContext: Context): String {
-            return getSharedPref(mContext).getString(USER_ID, "-1")
+            return getSharedPref(mContext).getString(USER_ID, "")
 
         }
 
@@ -151,7 +159,7 @@ class PrefUtil {
         }
 
         fun getUserTrack(mContext: Context): String {
-            return getSharedPref(mContext).getString(USER_TRACK, "-1")
+            return getSharedPref(mContext).getString(USER_TRACK, "")
 
         }
 
@@ -187,11 +195,15 @@ class PrefUtil {
             return getSharedPref(mContext).getString(CURRENT_CENTRAL_LNG, "")
 
         }
-        fun getCurrentCentralRadious(mContext: Context): String {
+        fun getCurrentCentralRadius(mContext: Context): String {
             return getSharedPref(mContext).getString(CURRENT_CENTRAL_RADIOUS, "")
 
         }
 
+        fun isInsideRadius(mContext: Context): Boolean {
+            return getSharedPref(mContext).getBoolean(IS_INSIDE_RADIOUS, false)
+
+        }
         fun isFirstTimeLogin(mContext: Context): Boolean {
             return getSharedPref(mContext).getBoolean(FIRST_TIME_LOGIN, true)
 

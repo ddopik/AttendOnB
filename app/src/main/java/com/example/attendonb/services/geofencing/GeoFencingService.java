@@ -65,7 +65,7 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
 
     @Override
     public void onCreate() {
-
+        Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
         // Empty list for storing geofences.
         mGeofenceList = new ArrayList<>();
 
@@ -222,7 +222,7 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
                     .setCircularRegion(
                             Double.parseDouble(PrefUtil.Companion.getCurrentCentralLat(getBaseContext())),
                             Double.parseDouble(PrefUtil.Companion.getCurrentCentralLng(getBaseContext())),
-                            Integer.parseInt(PrefUtil.Companion.getCurrentCentralRadious(getBaseContext()))
+                            Integer.parseInt(PrefUtil.Companion.getCurrentCentralRadius(getBaseContext()))
                     )
 
                     // Set the expiration duration of the geofence. This geofence gets automatically

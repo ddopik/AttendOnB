@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.example.attendonb.R
 import com.example.attendonb.base.BaseFragment
-import com.example.attendonb.services.geofencing.GeoFencingService
 import com.example.attendonb.ui.home.HomeActivity
 import com.example.attendonb.ui.home.mainstats.viewmodel.MainStateViewModel
 import com.example.attendonb.ui.home.qrreader.ui.QrReaderActivity
@@ -27,9 +26,6 @@ import io.reactivex.annotations.NonNull
 import kotlinx.android.synthetic.main.fragment_main_stats.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
-import pub.devrel.easypermissions.AppSettingsDialog
-
-
 
 
 /**
@@ -84,6 +80,8 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
 
                         main_state_progress.visibility=View.GONE
                         val intent = Intent(activity, QrReaderActivity::class.java)
+                        intent.putExtra(QrReaderActivity.CURRENT_LAT, currentLat)
+                        intent.putExtra(QrReaderActivity.CURRENT_LNG, currentLng)
                         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         startActivity(intent)
                     }
@@ -96,7 +94,7 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
                     startActivity(intent)
                 }
                 ENDED -> {
-
+                    apply_stats.visibility = View.GONE
                 }
 
             }
@@ -105,7 +103,6 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
     }
 
     override fun initObservers() {
-
 
     }
 
@@ -124,48 +121,56 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
 //        fakeLocation.latitude=30.101218
 //        fakeLocation.longitude=31.369461
 
+
+        currentLat = location.latitude
+        currentLng = location.longitude
         mainStateViewModel?.isCloseLocation(location)
 
 
 
         isFromMockProvider = location.isFromMockProvider
 
+        if (!isFromMockProvider!! && PrefUtil.isInsideRadius(context!!)) {
 
-        if (isFromMockProvider!!) {
-            apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.gray400))
-            apply_stats.isEnabled=false
-            snakBar?.show()
-        } else {
+
+
+            if (PrefUtil.getCurrentUserStatsID(activity?.baseContext!!).equals(ENDED)) {
+
+                apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.gray400))
+                apply_stats.isEnabled = false
+            } else {
+                apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.text_input_color))
+                apply_stats.isEnabled = true
+
+            }
             snakBar?.dismiss()
-            apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.text_input_color))
-            apply_stats.isEnabled = true
-
             mapUtls?.removeLocationRequest()
-
+        } else {
+            snakBar?.show()
         }
     }
 
     @SuppressLint("MissingPermission")
     @AfterPermissionGranted(Constants.REQUEST_CODE_LOCATION)
     private fun requestLocationPermeation()  :Boolean{
-        if (EasyPermissions.hasPermissions(activity?.baseContext!!, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION)) {
-             mapUtls?.startLocationUpdates(activity, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
-            return true;
+        return if (EasyPermissions.hasPermissions(activity?.baseContext!!, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            mapUtls?.startLocationUpdates(activity, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
+            true
         } else {
             // Request one permission
-             EasyPermissions.requestPermissions(this, getString(R.string.need_location_permation), REQUEST_CODE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION)
-            return false;
+            EasyPermissions.requestPermissions(this, getString(R.string.need_location_permation), REQUEST_CODE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+            false
         }
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
 
-        apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.gray400))
+//        apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.gray400))
         // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
         // This will display a dialog directing them to enable the permission in app settings.
-        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-            AppSettingsDialog.Builder(this).build().show()
-        }
+//        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+//            AppSettingsDialog.Builder(this).build().show()
+//        }
     }
 
 

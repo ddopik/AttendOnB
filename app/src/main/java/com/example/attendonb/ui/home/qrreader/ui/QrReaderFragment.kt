@@ -6,13 +6,16 @@ import android.content.Intent
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.attendonb.R
+import com.example.attendonb.base.BaseFragment
+import com.example.attendonb.ui.home.HomeActivity
 import com.example.attendonb.ui.home.qrreader.viewmodel.QrReaderViewModel
 import com.example.attendonb.ui.result.ResultActivity
 import com.example.attendonb.utilites.Constants
@@ -24,34 +27,73 @@ import kotlinx.android.synthetic.main.qr_reader_fragment.*
 import pub.devrel.easypermissions.EasyPermissions
 
 
-class QrReaderFragment : Fragment(), EasyPermissions.PermissionCallbacks {
+class QrReaderFragment : BaseFragment(), EasyPermissions.PermissionCallbacks {
 
-    companion object {
-        fun newInstance() = QrReaderFragment()
-    }
+    private val TAG = QrReaderFragment::class.java.simpleName
 
-
+    var currentLat: Double? = null
+    var currentLng: Double? = null
     var barcodeDetector: BarcodeDetector? = null
     var cameraSource: CameraSource? = null
     var scanResult = ""
-    private lateinit var viewModel: QrReaderViewModel
+    private lateinit var qrReaderViewModel: QrReaderViewModel
+
+
+    companion object {
+        fun newInstance(currentLat: Double?, currentLng: Double?): QrReaderFragment? {
+
+            currentLat?.let {
+                val instance = QrReaderFragment()
+                instance.currentLat = currentLat
+                instance.currentLng = currentLng
+                return instance
+            }
+
+            return null
+        }
+    }
+
+
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.qr_reader_fragment, container, false)
     }
 
+
+    override fun initObservers() {
+        qrReaderViewModel.OnDataLoading().observe(activity as QrReaderActivity, Observer {
+
+        })
+        qrReaderViewModel.isNetWorkError().observe(activity as QrReaderActivity, Observer {
+            showToast(it)
+
+        })
+        qrReaderViewModel.onAttendResponse().observe(activity as QrReaderActivity, Observer {
+            val intent = Intent(activity, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            startActivity(intent)
+
+        })
+        qrReaderViewModel.isUnKnownError().observe(activity as QrReaderActivity, Observer {
+            Log.e(TAG, it)
+        })
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+        intiView()
+
+    }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(QrReaderViewModel::class.java)
+        qrReaderViewModel = ViewModelProviders.of(this).get(QrReaderViewModel::class.java)
         EasyPermissions.requestPermissions(this, getString(R.string.need_location_permation), Constants.REQUEST_CODE_CAMERA, Manifest.permission.CAMERA)
     }
 
 
-    /* Function used to initialize components of activity */
-    fun initStuff() {
-
-        /* Initializing objects */
+    override fun intiView() {
+        initObservers()
 
         barcodeDetector = BarcodeDetector.Builder(context)
                 .setBarcodeFormats(Barcode.ALL_FORMATS)
@@ -96,6 +138,9 @@ class QrReaderFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
                     val intent = Intent(this@QrReaderFragment.context, ResultActivity::class.java)
                     intent.putExtra("ScanResult", scanResult) /* Sending text to next activity to display */
+
+
+                    qrReaderViewModel.sendAttendRequest(currentLat!!, currentLng!!)
  //                    var stream: ByteArrayOutputStream = ByteArrayOutputStream();
 //                    qrImg?.compress(Bitmap.CompressFormat.PNG, 100, stream);
 //                    val byteArray = stream.toByteArray()
@@ -106,15 +151,12 @@ class QrReaderFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         })
     }
 
+
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
         EasyPermissions.requestPermissions(this, getString(R.string.need_location_permation), Constants.REQUEST_CODE_CAMERA, Manifest.permission.CAMERA)
 
     }
 
-
-    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        initStuff()
-    }
 
     override fun onResume() {
         super.onResume()

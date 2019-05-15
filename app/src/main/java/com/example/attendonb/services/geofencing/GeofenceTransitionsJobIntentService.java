@@ -30,6 +30,7 @@ import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
 
 import com.example.attendonb.R;
+import com.example.attendonb.utilites.PrefUtil;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
@@ -191,8 +192,10 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
     private String getTransitionString(int transitionType) {
         switch (transitionType) {
             case Geofence.GEOFENCE_TRANSITION_ENTER:
+                PrefUtil.Companion.setIsInsideRadius(getBaseContext(),true);
                 return getString(R.string.geofence_transition_entered);
             case Geofence.GEOFENCE_TRANSITION_EXIT:
+                PrefUtil.Companion.setIsInsideRadius(getBaseContext(),false);
                 return getString(R.string.geofence_transition_exited);
             default:
                 return getString(R.string.unknown_geofence_transition);

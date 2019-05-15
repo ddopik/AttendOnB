@@ -29,7 +29,7 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
     private var curentLat: Double = 0.0
     private var curentLng: Double = 0.0
     private var isFromMockProvider: Boolean? = null
-    private var isPhoneStatePermationGranted: Boolean = false;
+    private var isPhoneStatePermeationGranted: Boolean = false;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +86,7 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
 
     private fun initListeners() {
         btn_login.setOnClickListener {
-            if (validateLoginInput() && isPhoneStatePermationGranted) {
+            if (validateLoginInput() && isPhoneStatePermeationGranted) {
                 loginViewModel?.loginUser(userName = login_user_name.text.toString(), password = login_password.text.toString(), currentLat = curentLat!!, currentLng = curentLng!!, deviceImei = Utilities.getDeviceIMEI(baseContext), context = baseContext)
             }
 
@@ -109,7 +109,7 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
             input_password.isErrorEnabled = false
         }
 
-        if (!isPhoneStatePermationGranted) {
+        if (!isPhoneStatePermeationGranted) {
 
             val builder1 = AlertDialog.Builder(this)
             builder1.setMessage(R.string.need_phone_state_permuation)
@@ -155,11 +155,11 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
     @AfterPermissionGranted(REQUEST_CODE_PHONE_STATE)
     private fun requestLoginPermeation() {
         if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_PHONE_STATE)) {
-            isPhoneStatePermationGranted = true
+            isPhoneStatePermeationGranted = true
             mapUtls?.startLocationUpdates(this, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
         } else {
             // Request one permission
-            isPhoneStatePermationGranted = false
+            isPhoneStatePermeationGranted = false
             EasyPermissions.requestPermissions(this, getString(R.string.need_phone_state_permuation), REQUEST_CODE_PHONE_STATE, Manifest.permission.READ_PHONE_STATE)
 
 
