@@ -48,7 +48,7 @@ class PrefUtil {
         fun setUserID(context: Context, userId: String) {
             getSharedPref(context)
                     .edit()
-                    .putString(USER_TOKEN, userId)
+                    .putString(USER_ID, userId)
                     .apply()
         }
         fun setUserName(context: Context, userName: String) {

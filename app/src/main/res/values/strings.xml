@@ -30,7 +30,7 @@
     <string name="password">Password</string>
     <string name="net_work_error">Network error</string>
     <string name="un_known_error">Unknowen error</string>
-    <string name="invalid_user_name">invalid_user_name</string>
+    <string name="invalid_user_name">invalid user name</string>
     <string name="invalid_password">Invalid password</string>
     <string name="need_phone_state_permuation">Need location Permeation and phone state Permeation</string>
     <string name="need_location_permation">Need location Permation</string>
@@ -79,4 +79,7 @@
     <string name="permission_denied_explanation">Permission was denied, but is needed for core
         functionality.</string>
     <string name="settings">Settings</string>
+    <string name="need_camera_permation">please accept camera pertuation in order to use this ap</string>
+    <string name="need_location_camera_permation">please provide us with locarion and camera permuation to be able to use this app</string>
+    <string name="you_are_out_of_area">you are out of area</string>
 </resources>

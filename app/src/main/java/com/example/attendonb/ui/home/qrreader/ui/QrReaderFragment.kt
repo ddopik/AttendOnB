@@ -19,15 +19,17 @@ import com.example.attendonb.ui.home.HomeActivity
 import com.example.attendonb.ui.home.qrreader.viewmodel.QrReaderViewModel
 import com.example.attendonb.ui.result.ResultActivity
 import com.example.attendonb.utilites.Constants
+import com.example.attendonb.utilites.Constants.Companion.REQUEST_CODE_CAMERA
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import kotlinx.android.synthetic.main.qr_reader_fragment.*
+import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 
 
-class QrReaderFragment : BaseFragment(), EasyPermissions.PermissionCallbacks {
+class QrReaderFragment : BaseFragment() {
 
     private val TAG = QrReaderFragment::class.java.simpleName
 
@@ -62,6 +64,7 @@ class QrReaderFragment : BaseFragment(), EasyPermissions.PermissionCallbacks {
     }
 
 
+
     override fun initObservers() {
         qrReaderViewModel.OnDataLoading().observe(activity as QrReaderActivity, Observer {
 
@@ -81,14 +84,12 @@ class QrReaderFragment : BaseFragment(), EasyPermissions.PermissionCallbacks {
         })
     }
 
-    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        intiView()
 
-    }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         qrReaderViewModel = ViewModelProviders.of(this).get(QrReaderViewModel::class.java)
-        EasyPermissions.requestPermissions(this, getString(R.string.need_location_permation), Constants.REQUEST_CODE_CAMERA, Manifest.permission.CAMERA)
+//        requestCameraPermutation()
+
     }
 
 
@@ -138,30 +139,27 @@ class QrReaderFragment : BaseFragment(), EasyPermissions.PermissionCallbacks {
 
                     val intent = Intent(this@QrReaderFragment.context, ResultActivity::class.java)
                     intent.putExtra("ScanResult", scanResult) /* Sending text to next activity to display */
-
-
                     qrReaderViewModel.sendAttendRequest(currentLat!!, currentLng!!)
- //                    var stream: ByteArrayOutputStream = ByteArrayOutputStream();
-//                    qrImg?.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                    val byteArray = stream.toByteArray()
-//                    intent.putExtra("img", byteArray)
-//                    startActivity(intent)
+
                 }
             }
         })
     }
 
 
-    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
-        EasyPermissions.requestPermissions(this, getString(R.string.need_location_permation), Constants.REQUEST_CODE_CAMERA, Manifest.permission.CAMERA)
+    @AfterPermissionGranted(REQUEST_CODE_CAMERA)
+    private fun requestCameraPermutation() {
+         if (EasyPermissions.hasPermissions(activity?.baseContext!!, Manifest.permission.CAMERA)) {
+            intiView()
+        } else {
+            EasyPermissions.requestPermissions(this, getString(com.example.attendonb.R.string.need_camera_permation), Constants.REQUEST_CODE_CAMERA, Manifest.permission.CAMERA)
 
+        }
     }
-
 
     override fun onResume() {
         super.onResume()
-        EasyPermissions.requestPermissions(this, getString(R.string.need_location_permation), Constants.REQUEST_CODE_CAMERA, Manifest.permission.CAMERA)
-
+        requestCameraPermutation()
     }
 
     ///////////

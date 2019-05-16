@@ -18,20 +18,12 @@ import android.content.Intent
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
 
-
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
+
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
         val toggle = ActionBarDrawerToggle(
@@ -40,11 +32,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
         navigationView.setNavigationItemSelectedListener(this)
 
+        startService(Intent(this, GeoFencingService::class.java))
         supportFragmentManager.beginTransaction()
                 .replace(R.id.home_swap_container, MainStatsFragment.newInstance(), MainStatsFragment::class.java.simpleName)
                 .commitNow()
 
-        startService(Intent(this, GeoFencingService::class.java))
 
     }
 

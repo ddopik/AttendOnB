@@ -2,6 +2,7 @@ package com.example.attendonb.ui.home.mainstats
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.example.attendonb.R
 import com.example.attendonb.base.BaseFragment
 import com.example.attendonb.ui.home.HomeActivity
@@ -18,7 +20,7 @@ import com.example.attendonb.utilites.Constants
 import com.example.attendonb.utilites.Constants.Companion.ENDED
 import com.example.attendonb.utilites.Constants.Companion.ENTER
 import com.example.attendonb.utilites.Constants.Companion.OUT
-import com.example.attendonb.utilites.Constants.Companion.REQUEST_CODE_LOCATION
+import com.example.attendonb.utilites.Constants.Companion.REQUEST_CODE_LOCATION_CAMERA
 import com.example.attendonb.utilites.MapUtls
 import com.example.attendonb.utilites.PrefUtil
 import com.google.android.material.snackbar.Snackbar
@@ -59,39 +61,32 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
         initObservers()
         intiView()
         intiListeners()
-        requestLocationPermeation()
+        requestLocationAndCameraPermeation()
     }
 
     override fun intiView() {
         stats_val.text = PrefUtil.getCurrentStatsMessage(context!!)
         apply_stats.text = resources.getString(R.string.apply)
-        snakBar=Snackbar.make(parent_view, resources.getString(R.string.mock_location_warrning), Snackbar.LENGTH_INDEFINITE)
 
     }
 
     private fun intiListeners() {
-
         apply_stats.setOnClickListener {
+            ///
+            isFromMockProvider?.let {
+                if (it) {
+                    showPhotoDialog(activity!!,"",resources.getString(R.string.please_disable_mock_location_apps)) }
+            }
+            if (!PrefUtil.isInsideRadius(context!!)) {
+                showPhotoDialog(activity!!,"",resources.getString(R.string.you_are_out_of_area))
+            }
+            /////////
             when (PrefUtil.getCurrentUserStatsID(context!!)) {
                 ENTER -> {
-                    if(requestLocationPermeation()){
-
-//                        main_state_progress.visibility=View.VISIBLE
-
-                        main_state_progress.visibility=View.GONE
-                        val intent = Intent(activity, QrReaderActivity::class.java)
-                        intent.putExtra(QrReaderActivity.CURRENT_LAT, currentLat)
-                        intent.putExtra(QrReaderActivity.CURRENT_LNG, currentLng)
-                        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                        startActivity(intent)
-                    }
-
+                    navigateToScanScreen()
                 }
                 OUT -> {
-
-                    val intent = Intent(activity, QrReaderActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    startActivity(intent)
+                    navigateToScanScreen()
                 }
                 ENDED -> {
                     apply_stats.visibility = View.GONE
@@ -102,66 +97,79 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
 
     }
 
-    override fun initObservers() {
-
-    }
 
     override fun onResume() {
         super.onResume()
+        mainStateViewModel?.checkAttendStatus(PrefUtil.getUserId(context!!))
         mapUtls?.startLocationUpdates(activity, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
     }
 
 
+    override fun initObservers() {
+        mainStateViewModel?.onAttendBtnChangeState()?.observe(this, Observer {
+            setBtnAttendBtnState(it)
+        })
 
+        mainStateViewModel?.onDataLoading()?.observe(this, Observer {
+            if (it) {
+                main_state_progress.visibility = View.VISIBLE
+            } else {
+                main_state_progress.visibility = View.GONE
+            }
+        })
+    }
     override fun onLocationUpdate(location: Location) {
-        // New location has now been determined
-//        val latLng = LatLng(location.latitude, location.longitude)
-
-//        val fakeLocation  = Location(LocationManager.GPS_PROVIDER)
-//        fakeLocation.latitude=30.101218
-//        fakeLocation.longitude=31.369461
-
-
         currentLat = location.latitude
         currentLng = location.longitude
         mainStateViewModel?.isCloseLocation(location)
 
-
-
         isFromMockProvider = location.isFromMockProvider
 
-        if (!isFromMockProvider!! && PrefUtil.isInsideRadius(context!!)) {
-
-
-
-            if (PrefUtil.getCurrentUserStatsID(activity?.baseContext!!).equals(ENDED)) {
-
-                apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.gray400))
-                apply_stats.isEnabled = false
-            } else {
-                apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.text_input_color))
-                apply_stats.isEnabled = true
-
-            }
-            snakBar?.dismiss()
-            mapUtls?.removeLocationRequest()
-        } else {
+        if (isFromMockProvider!!){
+            snakBar=Snackbar.make(parent_view, resources.getString(R.string.mock_location_warrning), Snackbar.LENGTH_INDEFINITE)
             snakBar?.show()
+        }else if(!PrefUtil.isInsideRadius(context!!)){
+            setBtnAttendBtnState(false)
+            snakBar=Snackbar.make(parent_view, resources.getString(R.string.you_are_out_of_area), Snackbar.LENGTH_INDEFINITE)
+            snakBar?.show()
+        }else{
+            snakBar?.dismiss()
+            if (PrefUtil.getCurrentUserStatsID(activity?.baseContext!!) == ENDED) {
+                setBtnAttendBtnState(true)
+            }
+            mapUtls?.removeLocationRequest()
         }
+
+
+
+
     }
 
+    private fun setBtnAttendBtnState(state: Boolean) {
+
+        stats_val.text = PrefUtil.getCurrentStatsMessage(context!!)
+        if (!state) {
+            apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.gray400))
+            apply_stats.isEnabled = false
+        } else {
+            apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.text_input_color))
+            apply_stats.isEnabled = true
+
+        }
+    }
     @SuppressLint("MissingPermission")
-    @AfterPermissionGranted(Constants.REQUEST_CODE_LOCATION)
-    private fun requestLocationPermeation()  :Boolean{
-        return if (EasyPermissions.hasPermissions(activity?.baseContext!!, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+    @AfterPermissionGranted(Constants.REQUEST_CODE_LOCATION_CAMERA)
+    private fun requestLocationAndCameraPermeation(): Boolean {
+        return if (EasyPermissions.hasPermissions(activity?.baseContext!!, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA)) {
             mapUtls?.startLocationUpdates(activity, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
             true
         } else {
             // Request one permission
-            EasyPermissions.requestPermissions(this, getString(R.string.need_location_permation), REQUEST_CODE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+            EasyPermissions.requestPermissions(this, getString(R.string.need_location_camera_permation), REQUEST_CODE_LOCATION_CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA)
             false
         }
     }
+
 
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
 
@@ -191,5 +199,23 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-
+    private fun navigateToScanScreen(){
+        if (requestLocationAndCameraPermeation()) {
+            main_state_progress.visibility = View.GONE
+            val intent = Intent(activity, QrReaderActivity::class.java)
+            intent.putExtra(QrReaderActivity.CURRENT_LAT, currentLat)
+            intent.putExtra(QrReaderActivity.CURRENT_LNG, currentLng)
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            startActivity(intent)
+        }
+    }
+    fun showPhotoDialog(activity: Activity, title: String?, message: CharSequence) {
+        val builder = androidx.appcompat.app.AlertDialog.Builder(activity)
+        if (title != null) builder.setTitle(title)
+        builder.setMessage(message)
+        builder.setPositiveButton(resources.getString(R.string.ok)) { dialog, id ->
+            dialog.dismiss()
+        }
+        builder.show()
+    }
 }

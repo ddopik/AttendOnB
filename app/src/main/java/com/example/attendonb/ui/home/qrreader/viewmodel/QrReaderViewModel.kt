@@ -63,8 +63,9 @@ class QrReaderViewModel : ViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ attendResponse: AttendResponse ->
                     takeIf { attendResponse.status!! }.apply {
-                        PrefUtil.setCurrentUserStatsID(AttendOnBApp.app?.baseContext!!, attendResponse?.attendData?.attendStatus?.status!!)
-                        PrefUtil.setCurrentStatsMessage(AttendOnBApp.app?.baseContext!!, attendResponse?.attendData?.attendStatus?.msg!!)
+                        Log.e(TAG,"--->${attendResponse.attendData?.attendStatus?.msg}")
+                        PrefUtil.setCurrentUserStatsID(AttendOnBApp.app?.baseContext!!, attendResponse.attendData?.attendStatus?.status!!)
+                        PrefUtil.setCurrentStatsMessage(AttendOnBApp.app?.baseContext!!, attendResponse.attendData?.attendStatus?.msg!!)
                     }
 
                     attendResponse.attendData?.attendStatus?.msg?.let {

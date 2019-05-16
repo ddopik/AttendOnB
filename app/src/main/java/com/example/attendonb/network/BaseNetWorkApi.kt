@@ -23,7 +23,7 @@ class BaseNetWorkApi {
         private const val BASE_URL = "https://nfc.spiderholidays.co/en/Api"
         private const val LOGIN_URL = "$BASE_URL/login_check"
         private const val ATTEND_ACTION_URL = "$BASE_URL/attend_action"
-        private const val ATTEND_CHECK_URL = "$BASE_URL/attend_action"
+        private const val ATTEND_CHECK_URL = "$BASE_URL/attend_check"
 
 
         fun login(userName: String, password: String, currentLat: String, currentLng: String,deviceImei:String): io.reactivex.Observable<LoginResponse> {
@@ -51,6 +51,7 @@ class BaseNetWorkApi {
                     .addBodyParameter("longitude",longitude)
                     .addBodyParameter("mobile_flag","1")
                     .setPriority(Priority.HIGH)
+                    .responseOnlyFromNetwork
                     .build()
                     .getObjectObservable(AttendResponse::class.java)
 
@@ -58,15 +59,16 @@ class BaseNetWorkApi {
         }
 
         fun sendAttendCheckRequest(uid :String) :io.reactivex.Observable<AttendResponse>{
-
             return Rx2AndroidNetworking.post(ATTEND_CHECK_URL)
                     .addBodyParameter("uid",uid)
                     .setPriority(Priority.HIGH)
+                    .responseOnlyFromNetwork
                     .build()
                     .getObjectObservable(AttendResponse::class.java)
 
-
         }
+
+
 
     }
 }

@@ -44,7 +44,7 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
     }
 
     override fun initObservers() {
-        loginViewModel?.isDataLoading?.observe(this, Observer {
+        loginViewModel?.onDataLoading()?.observe(this, Observer {
 
             if (it) {
                 login_progress.visibility = View.VISIBLE
@@ -54,26 +54,23 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
         })
 
 
-        loginViewModel?.isNetworkError?.observe(this, Observer {
+        loginViewModel?.onNetWorkError()?.observe(this, Observer {
             if (it) {
                 showToast(resources.getString(R.string.net_work_error))
             }
         })
 
 
-        loginViewModel?.isUnknownError?.observe(this, Observer {
+        loginViewModel?.onUnKnownError()?.observe(this, Observer {
             if (it) {
                 showToast(resources.getString(R.string.un_known_error))
             }
 
         })
 
-        loginViewModel?.loginErrorMessage?.observe(this, Observer {
 
-            showToast(it)
-        })
 
-        loginViewModel?.loginState?.observe(this, Observer { loginState ->
+        loginViewModel?.onLoginStateChanged()?.observe(this, Observer { loginState ->
             if (loginState) {
                 val intent = Intent(this, HomeActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -86,7 +83,11 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
 
     private fun initListeners() {
         btn_login.setOnClickListener {
-            if (validateLoginInput() && isPhoneStatePermeationGranted) {
+            if(!isPhoneStatePermeationGranted){
+                requestLoginPermeation()
+            }
+
+            if (validateLoginInput() ) {
                 loginViewModel?.loginUser(userName = login_user_name.text.toString(), password = login_password.text.toString(), currentLat = curentLat!!, currentLng = curentLng!!, deviceImei = Utilities.getDeviceIMEI(baseContext), context = baseContext)
             }
 

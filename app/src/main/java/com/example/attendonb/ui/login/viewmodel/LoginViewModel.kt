@@ -31,17 +31,16 @@ class LoginViewModel : ViewModel() {
     }
 
 
-    var isNetworkError: MutableLiveData<Boolean> = MutableLiveData()
-    var isUnknownError: MutableLiveData<Boolean> = MutableLiveData()
-    var loginState: MutableLiveData<Boolean> = MutableLiveData()
-    var isDataLoading: MutableLiveData<Boolean> = MutableLiveData()
-    var loginErrorMessage: MutableLiveData<String> = MutableLiveData()
+    private var isNetworkError: MutableLiveData<Boolean> = MutableLiveData()
+    private var isUnknownError: MutableLiveData<Boolean> = MutableLiveData()
+    private var loginState: MutableLiveData<Boolean> = MutableLiveData()
+    private var isDataLoading: MutableLiveData<Boolean> = MutableLiveData()
 
 
-    fun isDataLoading(): LiveData<Boolean> = isDataLoading
-    fun isNetWorkError(): LiveData<Boolean> = isNetworkError
-    fun isUnKnownError(): LiveData<Boolean> = isUnknownError
-
+    fun onDataLoading(): LiveData<Boolean> = isDataLoading
+    fun onNetWorkError(): LiveData<Boolean> = isNetworkError
+    fun onUnKnownError(): LiveData<Boolean> = isUnknownError
+    fun onLoginStateChanged(): LiveData<Boolean> = loginState
 
     init {
         if (PrefUtil.isLoggedIn(AttendOnBApp.app?.baseContext!!)) {
