@@ -10,22 +10,32 @@
     tools:openDrawer="start">
 
 
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-            <include
-                android:id="@+id/app_bar"
-                layout="@layout/app_bar_main"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar_main"
 
-                 />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        />
 
 
-            <FrameLayout
-                android:id="@+id/home_swap_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                  />
+    <FrameLayout
+        android:id="@+id/home_swap_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/app_bar"
 
+        />
+
+
+
+</RelativeLayout>
 
 
 
