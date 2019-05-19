@@ -8,6 +8,7 @@ class Constants {
     const val REQUEST_CODE_CAMERA = 1225
     const val REQUEST_CODE_LOCATION_CAMERA = 1225
     const val REQUEST_CODE_PHONE_STATE = 1226
+    const val REQUEST_CODE_LOGIN_PERMATION = 1227
 
         const val ENTER="1"
         const val OUT="2"

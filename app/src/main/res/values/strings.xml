@@ -32,7 +32,7 @@
     <string name="un_known_error">Unknowen error</string>
     <string name="invalid_user_name">invalid user name</string>
     <string name="invalid_password">Invalid password</string>
-    <string name="need_phone_state_permuation">Need location Permeation and phone state Permeation</string>
+    <string name="login_permutation_message">Please allow access permutation to be able to use the app</string>
     <string name="need_location_permation">Need location Permation</string>
     <string name="take_screen_shot">take screen shot</string>
     <string name="mock_location_warrning">Please disable mock Location aps</string>

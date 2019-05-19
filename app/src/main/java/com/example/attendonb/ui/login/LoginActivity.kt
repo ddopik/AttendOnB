@@ -14,6 +14,7 @@ import com.example.attendonb.R
 import com.example.attendonb.base.BaseActivity
 import com.example.attendonb.ui.home.HomeActivity
 import com.example.attendonb.ui.login.viewmodel.LoginViewModel
+import com.example.attendonb.utilites.Constants.Companion.REQUEST_CODE_LOGIN_PERMATION
 import com.example.attendonb.utilites.Constants.Companion.REQUEST_CODE_PHONE_STATE
 import com.example.attendonb.utilites.MapUtls
 import com.example.attendonb.utilites.Utilities
@@ -29,18 +30,16 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
     private var curentLat: Double = 0.0
     private var curentLng: Double = 0.0
     private var isFromMockProvider: Boolean? = null
-    private var isPhoneStatePermeationGranted: Boolean = false;
+    private var isPermissionGranted: Boolean = false;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         loginViewModel = LoginViewModel.getInstance(this)
-        mapUtls = MapUtls(this)
         requestLoginPermeation()
-
-        initObservers()
         initListeners()
+
     }
 
     override fun initObservers() {
@@ -69,8 +68,7 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
         })
 
 
-
-        loginViewModel?.onLoginStateChanged()?.observe(this, Observer { loginState ->
+         loginViewModel?.onLoginStateChanged()?.observe(this, Observer { loginState ->
             if (loginState) {
                 val intent = Intent(this, HomeActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -83,12 +81,11 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
 
     private fun initListeners() {
         btn_login.setOnClickListener {
-            if(!isPhoneStatePermeationGranted){
-                requestLoginPermeation()
-            }
 
-            if (validateLoginInput() ) {
-                loginViewModel?.loginUser(userName = login_user_name.text.toString(), password = login_password.text.toString(), currentLat = curentLat!!, currentLng = curentLng!!, deviceImei = Utilities.getDeviceIMEI(baseContext), context = baseContext)
+            if (validateLoginInput() && isPermissionGranted ) {
+                loginViewModel?.loginUser(userName = login_user_name.text.toString(), password = login_password.text.toString(), currentLat = curentLat, currentLng = curentLng, deviceImei = Utilities.getDeviceIMEI(baseContext), context = baseContext)
+            }else{
+                requestLoginPermeation()
             }
 
         }
@@ -110,10 +107,10 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
             input_password.isErrorEnabled = false
         }
 
-        if (!isPhoneStatePermeationGranted) {
+//        if (!isPhoneStatePermeationGranted) {
 
             val builder1 = AlertDialog.Builder(this)
-            builder1.setMessage(R.string.need_phone_state_permuation)
+            builder1.setMessage(R.string.login_permutation_message)
             builder1.setCancelable(true)
 
             builder1.setPositiveButton(resources.getString(R.string.ok)) { dialog, id ->
@@ -121,7 +118,7 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
                 dialog.cancel()
             }
 
-        }
+//        }
 
 
 //        if (curentLat == null && curentLng == null) {
@@ -153,16 +150,16 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
     }
 
     @SuppressLint("MissingPermission")
-    @AfterPermissionGranted(REQUEST_CODE_PHONE_STATE)
+    @AfterPermissionGranted(REQUEST_CODE_LOGIN_PERMATION)
     private fun requestLoginPermeation() {
-        if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_PHONE_STATE)) {
-            isPhoneStatePermeationGranted = true
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA)) {
             mapUtls?.startLocationUpdates(this, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
+            mapUtls = MapUtls(this)
+            initObservers()
+            isPermissionGranted=true
         } else {
-            // Request one permission
-            isPhoneStatePermeationGranted = false
-            EasyPermissions.requestPermissions(this, getString(R.string.need_phone_state_permuation), REQUEST_CODE_PHONE_STATE, Manifest.permission.READ_PHONE_STATE)
 
+            EasyPermissions.requestPermissions(this, getString(R.string.login_permutation_message), REQUEST_CODE_LOGIN_PERMATION, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA)
 
         }
     }
@@ -183,29 +180,6 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
     }
 
 
-    /**
-     * VM Consumer method 2
-     * */
-//        productDetailViewModel?.searchResult?.observe(this, Observer<Resource<SearchResponse>> { resource ->
-//            if (resource != null) {
-//                when (resource.status) {
-//                    Resource.Status.SUCCESS -> {
-//                        val product = resource.data;
-//                        val products = product?.products;
-//                        if (products != null) {
-//                            if (!products.isEmpty()) {
-//                                view?.populateProduct(products.first())
-//                            }
-//                        }
-//                    }
-//                    Resource.Status.ERROR->{
-//                        Toast.makeText(this, "Error: "+resource.exception?.message, Toast.LENGTH_LONG);
-//                    }
-//                    Resource.Status.LOADING->{
-//
-//                    }
-//                }
-//            }
-//        })
+
 
 }
