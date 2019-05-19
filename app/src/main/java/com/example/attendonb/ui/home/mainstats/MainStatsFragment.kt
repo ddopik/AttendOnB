@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.example.attendonb.R
 import com.example.attendonb.base.BaseFragment
+import com.example.attendonb.base.CustomDialog
 import com.example.attendonb.ui.home.HomeActivity
 import com.example.attendonb.ui.home.mainstats.viewmodel.MainStateViewModel
 import com.example.attendonb.ui.home.qrreader.ui.QrReaderActivity
@@ -58,7 +59,7 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
         super.onViewCreated(view, savedInstanceState)
         mainStateViewModel = MainStateViewModel.getInstance(activity as HomeActivity)
         mapUtls = MapUtls(this)
-        initObservers()
+         initObservers()
         intiView()
         intiListeners()
         requestLocationAndCameraPermeation()
@@ -135,7 +136,7 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
         }else{
             snakBar?.dismiss()
             if (PrefUtil.getCurrentUserStatsID(activity?.baseContext!!) == ENDED) {
-                setBtnAttendBtnState(true)
+                setBtnAttendBtnState(false)
             }
             mapUtls?.removeLocationRequest()
         }
@@ -210,12 +211,24 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
         }
     }
     fun showPhotoDialog(activity: Activity, title: String?, message: CharSequence) {
-        val builder = androidx.appcompat.app.AlertDialog.Builder(activity)
-        if (title != null) builder.setTitle(title)
-        builder.setMessage(message)
-        builder.setPositiveButton(resources.getString(R.string.ok)) { dialog, id ->
-            dialog.dismiss()
+//        val builder = androidx.appcompat.app.AlertDialog.Builder(activity)
+//        if (title != null) builder.setTitle(title)
+//        builder.setMessage(message)
+//        builder.setPositiveButton(resources.getString(R.string.ok)) { dialog, id ->
+//            dialog.dismiss()
+//        }
+//        builder.show()
+
+        val customDialog = CustomDialog.getInstance(activity);
+        customDialog.customDialogContent=title;
+        customDialog.onCustomDialogPositiveClick = object : CustomDialog.OnCustomDialogPositiveClick {
+            override fun onPositiveClicked() {
+                customDialog.dismiss()
+            }
+
         }
-        builder.show()
+        customDialog.show()
+
+
     }
 }
