@@ -1,79 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/parent_view"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/grayEDF0F3"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/cardView"
-
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="2dp"
+        android:layout_height="500dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         card_view:cardBackgroundColor="#fff"
         card_view:cardCornerRadius="5dp"
         card_view:cardElevation="4dp"
+        card_view:cardUseCompatPadding="true"
+        card_view:layout_constraintBottom_toBottomOf="parent"
+        card_view:layout_constraintEnd_toEndOf="parent"
+        card_view:layout_constraintStart_toStartOf="parent"
+        card_view:layout_constraintTop_toTopOf="parent">
 
-        card_view:cardUseCompatPadding="true">
-
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical"
-
-            >
-
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <AnalogClock
 
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="120dp"
+                android:id="@+id/analogClock"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="45dp"
+                android:layout_marginEnd="8dp"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="0.477"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toTopOf="parent" />
+
             <DigitalClock
 
-                android:layout_marginLeft="140dp"
-                android:textSize="25dp"
-                android:layout_marginTop="300dp"
+                android:id="@+id/digitalClock"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:textSize="25sp"
+                card_view:layout_constraintBottom_toTopOf="@+id/stats_val"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/analogClock" />
+
             <TextView
                 android:id="@+id/stats_val"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="64dp"
+                android:gravity="center"
                 android:lines="5"
                 android:maxLines="5"
                 android:padding="@dimen/widget_padding"
                 android:paddingBottom="32dp"
-                android:gravity="center"
                 android:textColor="#737078"
                 android:textSize="14sp"
+                card_view:layout_constraintBottom_toTopOf="@+id/apply_stats"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="0.0"
+                card_view:layout_constraintStart_toStartOf="parent"
                 tools:text="stories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detail" />
 
             <Button
                 android:id="@+id/apply_stats"
                 style="@style/Base.Widget.AppCompat.Button.Borderless"
-                android:layout_width="match_parent"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:background="@color/text_input_color"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="25dp"
+                android:background="@color/gray400"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:textStyle="bold"
+                android:enabled="false"
+
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintStart_toStartOf="parent"
                 tools:text="Button" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
     <ProgressBar
         android:id="@+id/main_state_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
         android:visibility="invisible"
-        tools:visibility="visible"/>
-</FrameLayout>
+        app:layout_constraintBottom_toBottomOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="@+id/cardView"
+        app:layout_constraintStart_toStartOf="@+id/cardView"
+        app:layout_constraintTop_toTopOf="@+id/cardView"
+        tools:visibility="visible" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,18 +1,29 @@
 package com.example.attendonb.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.attendonb.R
+import com.example.attendonb.base.CustomDialog
+import com.example.attendonb.network.BaseNetWorkApi.Companion.IMAGE_BASE_URL
+import com.example.attendonb.services.geofencing.GeoFencingService
 import com.example.attendonb.ui.home.mainstats.MainStatsFragment
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.attendonb.utilites.GlideApp
+import com.example.attendonb.utilites.PrefUtil
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
-import android.content.Intent
- import com.example.attendonb.services.geofencing.GeoFencingService
+import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.nav_header_main.*
+
+
 
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -37,7 +48,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .replace(R.id.home_swap_container, MainStatsFragment.newInstance(), MainStatsFragment::class.java.simpleName)
                 .commitNow()
 
-
+        initView()
     }
 
     override fun onBackPressed() {
@@ -80,12 +91,24 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         .commitNow()
             }
 
+        } else if(id == R.id.nav_home){
+//            val customDialog = CustomDialog.getInstance(activity);
+//            customDialog.customDialogContent=title;
+//            customDialog.onCustomDialogPositiveClick = object : CustomDialog.OnCustomDialogPositiveClick {
+//                override fun onPositiveClicked() {
+//                    customDialog.dismiss()
+//                }
+//
+//            }
+//            customDialog.show()
+
         }
-        // Handle the camera action
 
 //        else if (id == R.id.nav_gallery) {
 
-//        } else if (id == R.id.nav_slideshow) {
+//        }
+//
+//        else if (id == R.id.nav_slideshow) {
 //
 //        } else if (id == R.id.nav_tools) {
 //
@@ -111,5 +134,24 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
+    fun initView() {
+
+         val hView = nav_view.getHeaderView(0)
+        val profileNavImg=hView.findViewById<ImageView>(R.id.profile_nav_img)
+        val profileNavName=hView.findViewById<TextView>(R.id.nav_user_name)
+        val profileNavMail=hView.findViewById<TextView>(R.id.nav_user_mail)
+        var requestOptions = RequestOptions()
+        requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(16))
+        GlideApp.with(this)
+                .load(IMAGE_BASE_URL+PrefUtil.getUserProfilePic(this))
+                .placeholder(R.drawable.app_icon)
+                .error(R.drawable.app_icon)
+                .apply(requestOptions)
+                .into(profileNavImg)
+
+        profileNavName.text = PrefUtil.getUserName(this)
+        profileNavMail.text=PrefUtil.getUserMail(this)
+
+    }
 
 }

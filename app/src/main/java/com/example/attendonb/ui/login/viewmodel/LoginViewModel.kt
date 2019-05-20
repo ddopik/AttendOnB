@@ -61,6 +61,7 @@ class LoginViewModel : ViewModel() {
                         PrefUtil.setIsLoggedIn(context, true)
                         PrefUtil.setUserToken(context, loginResponse.loginData?.userData?.token!!)
                         PrefUtil.setUserID(context, loginResponse.loginData?.userData?.uid!!)
+                        PrefUtil.setUserName(context, loginResponse.loginData?.userData?.name!!)
                         PrefUtil.setUserMail(context, loginResponse.loginData?.userData?.email!!)
                         PrefUtil.setUserProfilePic(context, loginResponse.loginData?.userData?.img!!)
                         PrefUtil.setUserGender(context, loginResponse.loginData?.userData?.gender!!)

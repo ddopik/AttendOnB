@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#3F74B5</color>
+    <color name="colorPrimaryDark">#3F51B5</color>
      <color name="light_blue">#F25966D1</color>
     <color name="colorRed">#DA463A</color>
     <color name="colorGray">#4D4D4F</color>
@@ -42,7 +42,7 @@
     <color name="grayF6F8FA">#F6F8FA</color>
     <color name="black677078">#677078</color>
     <color name="black242B31">#242B31</color>
-    <color name="text_input_color">#008577</color>
+    <color name="text_input_color">#F25966D1</color>
     <color name="text_input_color_light">#0FF5C424</color>
     <color name="tab_background">#2f343a</color>
     <color name="bgBottomNavigation">#fe485a</color>

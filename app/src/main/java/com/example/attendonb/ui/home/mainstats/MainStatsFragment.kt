@@ -6,6 +6,7 @@ import android.app.Activity
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,10 @@ import io.reactivex.annotations.NonNull
 import kotlinx.android.synthetic.main.fragment_main_stats.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
+ import android.media.MediaPlayer
+import androidx.core.os.HandlerCompat.postDelayed
+
+
 
 
 /**
@@ -46,6 +51,7 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
     private var currentLng: Double? = null
     private var isFromMockProvider: Boolean? = null
     private  var snakBar :Snackbar ?=null
+    private var isSnackBarCurrentlyShowen = false
     companion object {
         fun newInstance() = MainStatsFragment()
     }
@@ -58,11 +64,13 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainStateViewModel = MainStateViewModel.getInstance(activity as HomeActivity)
+        requestLocationAndCameraPermeation()
         mapUtls = MapUtls(this)
-         initObservers()
+        initObservers()
         intiView()
         intiListeners()
-        requestLocationAndCameraPermeation()
+
+
     }
 
     override fun intiView() {
@@ -102,7 +110,10 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
     override fun onResume() {
         super.onResume()
         mainStateViewModel?.checkAttendStatus(PrefUtil.getUserId(context!!))
-        mapUtls?.startLocationUpdates(activity, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
+        Handler().postDelayed({
+            mapUtls?.startLocationUpdates(activity, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
+        }, 2000)
+
     }
 
 
@@ -127,14 +138,17 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
         isFromMockProvider = location.isFromMockProvider
 
         if (isFromMockProvider!!){
-            snakBar=Snackbar.make(parent_view, resources.getString(R.string.mock_location_warrning), Snackbar.LENGTH_INDEFINITE)
-            snakBar?.show()
+            setBtnAttendBtnState(false)
+            showSnackBar(resources.getString(R.string.mock_location_warrning))
+
         }else if(!PrefUtil.isInsideRadius(context!!)){
             setBtnAttendBtnState(false)
-            snakBar=Snackbar.make(parent_view, resources.getString(R.string.you_are_out_of_area), Snackbar.LENGTH_INDEFINITE)
-            snakBar?.show()
+            showSnackBar(resources.getString(R.string.you_are_out_of_area))
+
         }else{
+//            setBtnAttendBtnState(true)
             snakBar?.dismiss()
+            setBtnAttendBtnState(true)
             if (PrefUtil.getCurrentUserStatsID(activity?.baseContext!!) == ENDED) {
                 setBtnAttendBtnState(false)
             }
@@ -172,15 +186,7 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
     }
 
 
-    override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
 
-//        apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.gray400))
-        // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
-        // This will display a dialog directing them to enable the permission in app settings.
-//        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-//            AppSettingsDialog.Builder(this).build().show()
-//        }
-    }
 
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
@@ -210,7 +216,12 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
             startActivity(intent)
         }
     }
-    fun showPhotoDialog(activity: Activity, title: String?, message: CharSequence) {
+
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+
+    }
+
+    private fun showPhotoDialog(activity: Activity, title: String?, message: CharSequence) {
 //        val builder = androidx.appcompat.app.AlertDialog.Builder(activity)
 //        if (title != null) builder.setTitle(title)
 //        builder.setMessage(message)
@@ -230,5 +241,30 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
         customDialog.show()
 
 
+    }
+
+
+    fun showSnackBar(messag: String) {
+        snakBar = Snackbar.make(parent_view, messag, Snackbar.LENGTH_INDEFINITE)
+        snakBar?.addCallback(getSnackBarCallBack());
+        if (!isSnackBarCurrentlyShowen) {
+            snakBar?.show()
+
+        }
+    }
+
+
+    fun getSnackBarCallBack(): Snackbar.Callback {
+        return object : Snackbar.Callback() {
+            override fun onShown(sb: Snackbar?) {
+                super.onShown(sb)
+                isSnackBarCurrentlyShowen = true
+            }
+
+            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                super.onDismissed(transientBottomBar, event)
+                isSnackBarCurrentlyShowen = false
+            }
+        }
     }
 }

@@ -82,4 +82,5 @@
     <string name="need_camera_permation">please accept camera pertuation in order to use this ap</string>
     <string name="need_location_camera_permation">please provide us with locarion and camera permuation to be able to use this app</string>
     <string name="you_are_out_of_area">you are out of area</string>
+    <string name="log_out">Logout</string>
 </resources>

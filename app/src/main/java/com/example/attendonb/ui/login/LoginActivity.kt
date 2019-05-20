@@ -2,7 +2,6 @@ package com.example.attendonb.ui.login
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
@@ -15,15 +14,17 @@ import com.example.attendonb.base.BaseActivity
 import com.example.attendonb.ui.home.HomeActivity
 import com.example.attendonb.ui.login.viewmodel.LoginViewModel
 import com.example.attendonb.utilites.Constants.Companion.REQUEST_CODE_LOGIN_PERMATION
-import com.example.attendonb.utilites.Constants.Companion.REQUEST_CODE_PHONE_STATE
 import com.example.attendonb.utilites.MapUtls
 import com.example.attendonb.utilites.Utilities
 import io.reactivex.annotations.NonNull
 import kotlinx.android.synthetic.main.activity_login.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
+import pub.devrel.easypermissions.AppSettingsDialog
 
-class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
+
+
+class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate, EasyPermissions.PermissionCallbacks {
 
     private var loginViewModel: LoginViewModel? = null
     private var mapUtls: MapUtls? = null
@@ -107,19 +108,6 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
             input_password.isErrorEnabled = false
         }
 
-//        if (!isPhoneStatePermeationGranted) {
-
-            val builder1 = AlertDialog.Builder(this)
-            builder1.setMessage(R.string.login_permutation_message)
-            builder1.setCancelable(true)
-
-            builder1.setPositiveButton(resources.getString(R.string.ok)) { dialog, id ->
-                requestLoginPermeation()
-                dialog.cancel()
-            }
-
-//        }
-
 
 //        if (curentLat == null && curentLng == null) {
 //
@@ -152,20 +140,32 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
     @SuppressLint("MissingPermission")
     @AfterPermissionGranted(REQUEST_CODE_LOGIN_PERMATION)
     private fun requestLoginPermeation() {
-        if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA)) {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CAMERA)) {
             mapUtls?.startLocationUpdates(this, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
             mapUtls = MapUtls(this)
             initObservers()
-            isPermissionGranted=true
+            isPermissionGranted = true
         } else {
-
-            EasyPermissions.requestPermissions(this, getString(R.string.login_permutation_message), REQUEST_CODE_LOGIN_PERMATION, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA)
+            EasyPermissions.requestPermissions(this, getString(R.string.login_permutation_message), REQUEST_CODE_LOGIN_PERMATION, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CAMERA)
 
         }
     }
 
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+        if (requestCode == REQUEST_CODE_LOGIN_PERMATION && perms.size > 0) {
+            isPermissionGranted = false
+            if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+                AppSettingsDialog.Builder(this).build().show()
+            }
+        }
+    }
 
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+        if (requestCode == REQUEST_CODE_LOGIN_PERMATION) {
+            isPermissionGranted = true
+        }
 
+    }
 
     override fun onRequestPermissionsResult(requestCode: Int,
                                             @NonNull permissions: Array<String>,
@@ -177,6 +177,15 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+            if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CAMERA)) {
+                mapUtls?.startLocationUpdates(this, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
+                mapUtls = MapUtls(this)
+                initObservers()
+                isPermissionGranted = true
+            }
+        }
     }
 
 

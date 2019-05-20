@@ -65,7 +65,7 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
 
     @Override
     public void onCreate() {
-        Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
         // Empty list for storing geofences.
         mGeofenceList = new ArrayList<>();
 
@@ -87,7 +87,7 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
 
     @Override
     public void onDestroy() {
-        Toast.makeText(this, "Service stopped", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "Service stopped", Toast.LENGTH_LONG).show();
     }
 
 

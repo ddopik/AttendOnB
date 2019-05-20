@@ -18,6 +18,7 @@ class BaseNetWorkApi {
         val STATUS_500 = 500
         var STATUS_ERROR = "405"
         val ERROR_STATE_1 = "login-300"
+        val IMAGE_BASE_URL = "https://nfc.spiderholidays.co/uploads/thump/"
 
 
         private const val BASE_URL = "https://nfc.spiderholidays.co/en/Api"
