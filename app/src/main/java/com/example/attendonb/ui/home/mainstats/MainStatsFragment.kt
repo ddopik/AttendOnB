@@ -1,12 +1,10 @@
 package com.example.attendonb.ui.home.mainstats
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
-import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,22 +16,15 @@ import com.example.attendonb.base.CustomDialog
 import com.example.attendonb.ui.home.HomeActivity
 import com.example.attendonb.ui.home.mainstats.viewmodel.MainStateViewModel
 import com.example.attendonb.ui.home.qrreader.ui.QrReaderActivity
-import com.example.attendonb.utilites.Constants
 import com.example.attendonb.utilites.Constants.Companion.ENDED
 import com.example.attendonb.utilites.Constants.Companion.ENTER
 import com.example.attendonb.utilites.Constants.Companion.OUT
-import com.example.attendonb.utilites.Constants.Companion.REQUEST_CODE_LOCATION_CAMERA
 import com.example.attendonb.utilites.MapUtls
 import com.example.attendonb.utilites.PrefUtil
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.annotations.NonNull
 import kotlinx.android.synthetic.main.fragment_main_stats.*
-import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
- import android.media.MediaPlayer
-import androidx.core.os.HandlerCompat.postDelayed
-
-
 
 
 /**
@@ -42,16 +33,17 @@ import androidx.core.os.HandlerCompat.postDelayed
  * brandeda.net company,
  * cairo, Egypt.
  */
-class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissions.PermissionCallbacks {
-
+class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate {
+    private val TAG = MainStatsFragment::class.java.simpleName
     private var mainView: View? = null
     private var mainStateViewModel: MainStateViewModel? = null
     private var mapUtls: MapUtls? = null
     private var currentLat: Double? = null
     private var currentLng: Double? = null
     private var isFromMockProvider: Boolean? = null
-    private  var snakBar :Snackbar ?=null
+    private var snackBar: Snackbar? = null
     private var isSnackBarCurrentlyShowen = false
+
     companion object {
         fun newInstance() = MainStatsFragment()
     }
@@ -63,8 +55,8 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        snackBar = Snackbar.make(parent_view, "", Snackbar.LENGTH_INDEFINITE);
         mainStateViewModel = MainStateViewModel.getInstance(activity as HomeActivity)
-        requestLocationAndCameraPermeation()
         mapUtls = MapUtls(this)
         initObservers()
         intiView()
@@ -109,27 +101,11 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
 
     override fun onResume() {
         super.onResume()
-        mainStateViewModel?.checkAttendStatus(PrefUtil.getUserId(context!!))
-        Handler().postDelayed({
-            mapUtls?.startLocationUpdates(activity, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
-        }, 2000)
-
+        mapUtls?.startLocationUpdates(activity, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
     }
 
 
-    override fun initObservers() {
-        mainStateViewModel?.onAttendBtnChangeState()?.observe(this, Observer {
-            setBtnAttendBtnState(it)
-        })
 
-        mainStateViewModel?.onDataLoading()?.observe(this, Observer {
-            if (it) {
-                main_state_progress.visibility = View.VISIBLE
-            } else {
-                main_state_progress.visibility = View.GONE
-            }
-        })
-    }
     override fun onLocationUpdate(location: Location) {
         currentLat = location.latitude
         currentLng = location.longitude
@@ -140,22 +116,20 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
         if (isFromMockProvider!!){
             setBtnAttendBtnState(false)
             showSnackBar(resources.getString(R.string.mock_location_warrning))
+            Log.e(TAG, "----->isFromMockProvider")
 
         }else if(!PrefUtil.isInsideRadius(context!!)){
             setBtnAttendBtnState(false)
             showSnackBar(resources.getString(R.string.you_are_out_of_area))
+            Log.e(TAG, "----->Noy isInsideRadius")
 
         }else{
-//            setBtnAttendBtnState(true)
-            snakBar?.dismiss()
-            setBtnAttendBtnState(true)
-            if (PrefUtil.getCurrentUserStatsID(activity?.baseContext!!) == ENDED) {
-                setBtnAttendBtnState(false)
-            }
-            mapUtls?.removeLocationRequest()
+            Log.e(TAG, "----->true isInsideRadius")
+//             mainStateViewModel?.checkAttendStatus(PrefUtil.getUserId(context!!))
+            snackBar?.dismiss()
+
         }
-
-
+//        mapUtls?.removeLocationRequest()
 
 
     }
@@ -172,26 +146,23 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
 
         }
     }
-    @SuppressLint("MissingPermission")
-    @AfterPermissionGranted(Constants.REQUEST_CODE_LOCATION_CAMERA)
-    private fun requestLocationAndCameraPermeation(): Boolean {
-        return if (EasyPermissions.hasPermissions(activity?.baseContext!!, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA)) {
-            mapUtls?.startLocationUpdates(activity, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
-            true
-        } else {
-            // Request one permission
-            EasyPermissions.requestPermissions(this, getString(R.string.need_location_camera_permation), REQUEST_CODE_LOCATION_CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA)
-            false
-        }
-    }
 
+    override fun initObservers() {
+        mainStateViewModel?.onAttendBtnChangeState()?.observe(this, Observer {
+            setBtnAttendBtnState(it)
+        })
 
+        mainStateViewModel?.onDataLoading()?.observe(this, Observer {
+            if (it) {
+                main_state_progress.visibility = View.VISIBLE
+            } else {
+                main_state_progress.visibility = View.GONE
+            }
 
-
-
-    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        mapUtls?.startLocationUpdates(activity, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
-
+//            if(PrefUtil.getCurrentUserStatsID(context!!) ==ENDED){
+//                        mapUtls?.removeLocationRequest()
+//            }
+        })
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
@@ -207,28 +178,19 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
     }
 
     private fun navigateToScanScreen(){
-        if (requestLocationAndCameraPermeation()) {
-            main_state_progress.visibility = View.GONE
+
+        main_state_progress.visibility = View.GONE
             val intent = Intent(activity, QrReaderActivity::class.java)
             intent.putExtra(QrReaderActivity.CURRENT_LAT, currentLat)
             intent.putExtra(QrReaderActivity.CURRENT_LNG, currentLng)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(intent)
-        }
-    }
-
-    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
 
     }
+
 
     private fun showPhotoDialog(activity: Activity, title: String?, message: CharSequence) {
-//        val builder = androidx.appcompat.app.AlertDialog.Builder(activity)
-//        if (title != null) builder.setTitle(title)
-//        builder.setMessage(message)
-//        builder.setPositiveButton(resources.getString(R.string.ok)) { dialog, id ->
-//            dialog.dismiss()
-//        }
-//        builder.show()
+
 
         val customDialog = CustomDialog.getInstance(activity);
         customDialog.customDialogContent=title;
@@ -245,10 +207,10 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
 
 
     fun showSnackBar(messag: String) {
-        snakBar = Snackbar.make(parent_view, messag, Snackbar.LENGTH_INDEFINITE)
-        snakBar?.addCallback(getSnackBarCallBack());
+        snackBar?.setText(messag)
+        snackBar?.addCallback(getSnackBarCallBack())
         if (!isSnackBarCurrentlyShowen) {
-            snakBar?.show()
+            snackBar?.show()
 
         }
     }
@@ -264,6 +226,7 @@ class MainStatsFragment : BaseFragment(), MapUtls.OnLocationUpdate,EasyPermissio
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                 super.onDismissed(transientBottomBar, event)
                 isSnackBarCurrentlyShowen = false
+                snackBar?.dismiss()
             }
         }
     }

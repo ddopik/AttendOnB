@@ -21,7 +21,10 @@ import kotlinx.android.synthetic.main.activity_login.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import pub.devrel.easypermissions.AppSettingsDialog
-
+import android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
+import android.provider.Settings.Secure
+import android.provider.Settings.Secure.LOCATION_MODE
+ import android.provider.Settings
 
 
 class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate, EasyPermissions.PermissionCallbacks {
@@ -94,6 +97,12 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate, EasyPermissions.
 
 
     private fun validateLoginInput(): Boolean {
+        val off = Settings.Secure.getInt(contentResolver, Settings.Secure.LOCATION_MODE)
+        if (off == 0) {
+            val onGPS = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+            startActivity(onGPS)
+            return false
+        }
         if (login_user_name.text.isEmpty()) {
             input_user_name.error = resources.getString(R.string.invalid_user_name)
             return false
