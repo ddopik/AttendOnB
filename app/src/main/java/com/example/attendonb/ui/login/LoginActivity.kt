@@ -5,8 +5,9 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.example.attendonb.R
@@ -15,30 +16,34 @@ import com.example.attendonb.ui.home.HomeActivity
 import com.example.attendonb.ui.login.viewmodel.LoginViewModel
 import com.example.attendonb.utilites.Constants.Companion.REQUEST_CODE_LOGIN_PERMATION
 import com.example.attendonb.utilites.MapUtls
+import com.example.attendonb.utilites.PrefUtil
 import com.example.attendonb.utilites.Utilities
+import com.google.android.material.snackbar.Snackbar
 import io.reactivex.annotations.NonNull
 import kotlinx.android.synthetic.main.activity_login.*
 import pub.devrel.easypermissions.AfterPermissionGranted
-import pub.devrel.easypermissions.EasyPermissions
 import pub.devrel.easypermissions.AppSettingsDialog
-import android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
-import android.provider.Settings.Secure
-import android.provider.Settings.Secure.LOCATION_MODE
- import android.provider.Settings
+import pub.devrel.easypermissions.EasyPermissions
 
 
 class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate, EasyPermissions.PermissionCallbacks {
 
+    private val TAG = LoginActivity::class.java.simpleName
     private var loginViewModel: LoginViewModel? = null
     private var mapUtls: MapUtls? = null
     private var curentLat: Double = 0.0
     private var curentLng: Double = 0.0
     private var isFromMockProvider: Boolean? = null
-    private var isPermissionGranted: Boolean = false;
+    private var isPermissionGranted: Boolean = false
+    private var snackBar: Snackbar? = null
+    private var isSnackBarCurrentlyShowen = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        snackBar = Snackbar.make(login_main_paren_view, "", Snackbar.LENGTH_INDEFINITE);
+
 
         loginViewModel = LoginViewModel.getInstance(this)
         requestLoginPermeation()
@@ -58,9 +63,7 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate, EasyPermissions.
 
 
         loginViewModel?.onNetWorkError()?.observe(this, Observer {
-            if (it) {
-                showToast(resources.getString(R.string.net_work_error))
-            }
+            showToast(resources.getString(R.string.net_work_error))
         })
 
 
@@ -72,14 +75,27 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate, EasyPermissions.
         })
 
 
+//
+        loginViewModel?.sourceListener()?.observe(this, Observer { source ->
+
+            Log.e(TAG, "---->sourceListener() $source")
+
+        })
+
+
          loginViewModel?.onLoginStateChanged()?.observe(this, Observer { loginState ->
-            if (loginState) {
+
+             if (loginState && PrefUtil.isLoggedIn(this)) {
+                 Log.e(TAG, "---->onLoginStateChanged() $loginState")
                 val intent = Intent(this, HomeActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                 loginViewModel?.onLoginStateChanged()?.removeObservers(this)
+
                 startActivity(intent)
                 finish()
             }
         })
+
 
     }
 
@@ -138,7 +154,7 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate, EasyPermissions.
         isFromMockProvider = location.isFromMockProvider
         if (isFromMockProvider!!) {
             btn_login.isEnabled = false
-            Toast.makeText(this, resources.getString(R.string.mock_location_warrning), Toast.LENGTH_LONG).show()
+            showSnackBar(resources.getString(R.string.mock_location_warrning))
         } else {
             btn_login.setBackgroundColor(ContextCompat.getColor(baseContext, R.color.text_input_color))
             btn_login.isEnabled = true
@@ -197,7 +213,34 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate, EasyPermissions.
         }
     }
 
+    fun showSnackBar(messag: String) {
+        snackBar?.setText(messag)
+        snackBar?.addCallback(getSnackBarCallBack())
+        if (!isSnackBarCurrentlyShowen) {
+            snackBar?.show()
 
+        }
+    }
 
+    fun getSnackBarCallBack(): Snackbar.Callback {
+        return object : Snackbar.Callback() {
+            override fun onShown(sb: Snackbar?) {
+                super.onShown(sb)
+                isSnackBarCurrentlyShowen = true
+            }
 
+            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                super.onDismissed(transientBottomBar, event)
+                isSnackBarCurrentlyShowen = false
+                snackBar?.dismiss()
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapUtls?.removeLocationRequest()
+        loginViewModel?.fetchDataDisposable?.dispose()
+        Log.e(TAG, "onStop")
+    }
 }

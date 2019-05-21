@@ -3,6 +3,7 @@ package com.example.attendonb.ui.login.viewmodel
 import ErrorUtils
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,7 @@ import com.example.attendonb.network.BaseNetWorkApi
 import com.example.attendonb.ui.login.LoginActivity
 import com.example.attendonb.utilites.PrefUtil
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class LoginViewModel : ViewModel() {
@@ -31,32 +33,39 @@ class LoginViewModel : ViewModel() {
     }
 
 
-    private var isNetworkError: MutableLiveData<Boolean> = MutableLiveData()
+    private var isNetworkError: MutableLiveData<String> = MutableLiveData()
     private var isUnknownError: MutableLiveData<Boolean> = MutableLiveData()
     private var loginState: MutableLiveData<Boolean> = MutableLiveData()
     private var isDataLoading: MutableLiveData<Boolean> = MutableLiveData()
+    private var source: MutableLiveData<String> = MutableLiveData()
+
+    var fetchDataDisposable: Disposable? = null
 
 
     fun onDataLoading(): LiveData<Boolean> = isDataLoading
-    fun onNetWorkError(): LiveData<Boolean> = isNetworkError
+    fun onNetWorkError(): LiveData<String> = isNetworkError
     fun onUnKnownError(): LiveData<Boolean> = isUnknownError
     fun onLoginStateChanged(): LiveData<Boolean> = loginState
+    fun sourceListener(): LiveData<String> = source
 
     init {
+
         if (PrefUtil.isLoggedIn(AttendOnBApp.app?.baseContext!!)) {
+            Log.e(TAG, "----> init isLoggedIn()")
             loginState.postValue(true)
-        }
+            source.postValue("from init")
+         }
     }
 
     @SuppressLint("CheckResult")
     fun loginUser(context: Context, userName: String, currentLat: Double, currentLng: Double, password: String, deviceImei: String) {
          isDataLoading.postValue(true)
 //        if ( !Utilities.areThereMockPermissionApps(AttendOnBApp.app)) {
-            BaseNetWorkApi.login(userName = userName, password = password, currentLat = currentLat.toString(), currentLng = currentLng.toString(), deviceImei = deviceImei)
+        fetchDataDisposable = BaseNetWorkApi.login(userName = userName, password = password, currentLat = currentLat.toString(), currentLng = currentLng.toString(), deviceImei = deviceImei)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ loginResponse ->
-
+                        Log.e(TAG, "---->isLoggedIn()")
                         PrefUtil.setIsFirstTimeLogin(context, false)
                         PrefUtil.setIsLoggedIn(context, true)
                         PrefUtil.setUserToken(context, loginResponse.loginData?.userData?.token!!)
@@ -74,49 +83,23 @@ class LoginViewModel : ViewModel() {
 
                         isDataLoading.postValue(false)
                         loginState.postValue(true)
+                         source.postValue("from loginUser")
 
                     }, { t: Throwable? ->
 
                         run {
-                            isNetworkError.postValue(false)
+                            isNetworkError.postValue(t?.message)
                             isDataLoading.postValue(false)
-
                             loginState.postValue(false)
                             ErrorUtils.setError(TAG, t)
                         }
 
                     }
-
                     )
-//        }
-//        else {
-//
-//            isDataLoading.postValue(false)
-//            loginErrorMessage.postValue(AttendOnBApp.app?.resources?.getString(R.string.please_disable_mock_location_apps))
-//            loginState.postValue(false)
-//
-//        }
+
 
 
     }
-//    , deviceOS = "Android", deviceModel = Utilities.getDeviceName(), deviceIMEI = deviceIMEI
 
-    /**
-     * VM Publisher method 2
-     * */
-//    fun doSearch(q: String, limit: Int = 1, offset: Int = 0): LiveData<Resource<SearchResponse>>{
-//        val data = MutableLiveData<Resource<SearchResponse>>();
-//
-//        api.search(q, limit, offset).enqueue(object : Callback<SearchResponse> {
-//            override fun onResponse(call: Call<SearchResponse>?, response: Response<SearchResponse>?) {
-//                data.value = Resource.success(response?.body());
-//            }
-//
-//            override fun onFailure(call: Call<SearchResponse>?, t: Throwable?) {
-//                val exception = AppException(t)
-//                data.value = Resource.error( exception)
-//            }
-//        });
-//        return data;
-//    }
+
 }

@@ -21,14 +21,12 @@ import com.example.attendonb.utilites.GlideApp
 import com.example.attendonb.utilites.PrefUtil
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.nav_header_main.*
-
-
 
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
 
+    private var geoFencingService: Intent? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -42,8 +40,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer.addDrawerListener(toggle)
         toggle.syncState()
         navigationView.setNavigationItemSelectedListener(this)
-
-        startService(Intent(this, GeoFencingService::class.java))
+        geoFencingService = Intent(this, GeoFencingService::class.java)
+        startService(geoFencingService)
         supportFragmentManager.beginTransaction()
                 .replace(R.id.home_swap_container, MainStatsFragment.newInstance(), MainStatsFragment::class.java.simpleName)
                 .commitNow()
@@ -91,16 +89,23 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         .commitNow()
             }
 
-        } else if(id == R.id.nav_home){
-//            val customDialog = CustomDialog.getInstance(activity);
-//            customDialog.customDialogContent=title;
-//            customDialog.onCustomDialogPositiveClick = object : CustomDialog.OnCustomDialogPositiveClick {
-//                override fun onPositiveClicked() {
-//                    customDialog.dismiss()
-//                }
-//
-//            }
-//            customDialog.show()
+        } else if (id == R.id.log_out) {
+            val customDialog = CustomDialog.getInstance(this, CustomDialog.DialogOption.OPTION_2);
+            customDialog.customDialogContent = resources.getString(R.string.log_out);
+            customDialog.onCustomDialogPositiveClick = object : CustomDialog.OnCustomDialogPositiveClick {
+                override fun onPositiveClicked() {
+                    stopService(geoFencingService)
+                    customDialog.dismiss()
+                    PrefUtil.clearPrefUtil(baseContext)
+                    finish()
+                }
+
+                override fun onNectiveClicked() {
+                    customDialog.dismiss()
+
+                }
+            }
+            customDialog.show()
 
         }
 
@@ -154,4 +159,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+    override fun onStop() {
+        super.onStop()
+        stopService(geoFencingService)
+    }
 }

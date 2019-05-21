@@ -74,6 +74,7 @@ class QrReaderFragment : BaseFragment() {
 
         })
         qrReaderViewModel.onAttendResponse().observe(activity as QrReaderActivity, Observer {
+
             val intent = Intent(activity, HomeActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(intent)

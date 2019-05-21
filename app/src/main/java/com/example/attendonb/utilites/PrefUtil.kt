@@ -178,7 +178,7 @@ class PrefUtil {
 
         }
         fun getUserGender(mContext: Context): String {
-            return getSharedPref(mContext).getString(FIRST_TIME_LOGIN, "")
+            return getSharedPref(mContext).getString(USER_GENDER, "")
 
         }
         fun getCurrentStatsMessage(mContext: Context): String {
@@ -213,6 +213,11 @@ class PrefUtil {
 
         }
 
+
+        fun clearPrefUtil(context: Context){
+            val settings = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE)
+            settings.edit().clear().apply()
+        }
 
     }
 
