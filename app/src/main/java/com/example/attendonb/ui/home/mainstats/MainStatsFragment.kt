@@ -14,10 +14,10 @@ import com.example.attendonb.R
 import com.example.attendonb.base.BaseFragment
 import com.example.attendonb.base.CustomDialog
 import com.example.attendonb.ui.home.HomeActivity
+import com.example.attendonb.ui.home.mainstats.model.ApplyButtonStats
 import com.example.attendonb.ui.home.mainstats.viewmodel.MainStateViewModel
 import com.example.attendonb.ui.home.model.AttendMessage
 import com.example.attendonb.ui.home.qrreader.ui.QrReaderActivity
-import com.example.attendonb.utilites.Constants.Companion.ENTER
 import com.example.attendonb.utilites.PrefUtil
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_main_stats.*
@@ -33,8 +33,6 @@ class MainStatsFragment : BaseFragment() {
     private val TAG = MainStatsFragment::class.java.simpleName
     private var mainView: View? = null
     private var mainStateViewModel: MainStateViewModel? = null
-    private var currentLat: Double? = null
-    private var currentLng: Double? = null
     private var snackBar: Snackbar? = null
     private var isSnackBarCurrentlyShowen = false
 
@@ -72,6 +70,7 @@ class MainStatsFragment : BaseFragment() {
     override fun initObservers() {
 
         mainStateViewModel?.onAttendBtnChangeState()?.observe(this, Observer { stats ->
+
             setBtnAttendBtnState(stats)
         })
 
@@ -91,6 +90,7 @@ class MainStatsFragment : BaseFragment() {
         mainStateViewModel?.onAttendAction()?.observe(this, Observer {
             when (it.attendFlag) {
                 AttendMessage.AttendFlags.ENTER -> {
+
                     navigateToScanScreen(it.currentLocation!!)
 
                 }
@@ -99,8 +99,7 @@ class MainStatsFragment : BaseFragment() {
 
                 }
                 AttendMessage.AttendFlags.ENDED -> {
-//                    navigateToScanScreen(it.currentLocation!!)
-                }
+                 }
 
 
             }
@@ -109,10 +108,11 @@ class MainStatsFragment : BaseFragment() {
 
     private fun intiListeners() {
         apply_stats.setOnClickListener {
-
+            val applyButtonStats = ApplyButtonStats()
             val off = Settings.Secure.getInt(context?.contentResolver, Settings.Secure.LOCATION_MODE)
             if (off == 0) {
-                setBtnAttendBtnState(false)
+                applyButtonStats.isEnable = false
+                setBtnAttendBtnState(applyButtonStats)
                 val onGPS = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 startActivity(onGPS)
             } else {
@@ -125,16 +125,18 @@ class MainStatsFragment : BaseFragment() {
     }
 
 
-    private fun setBtnAttendBtnState(state: Boolean) {
+    private fun setBtnAttendBtnState(applyButtonStats: ApplyButtonStats) {
 
         stats_val.text = PrefUtil.getCurrentStatsMessage(context!!)
-        if (!state) {
-            apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.gray400))
-            apply_stats.isEnabled = false
-        } else {
+        apply_stats.visibility = View.VISIBLE
+        if (applyButtonStats.isEnable!!) {
             apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.text_input_color))
             apply_stats.isEnabled = true
-
+        } else if (applyButtonStats.isViable !=null && !applyButtonStats.isViable!!) {
+            apply_stats.visibility = View.INVISIBLE
+        } else {
+            apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.gray400))
+            apply_stats.isEnabled = false
         }
     }
 

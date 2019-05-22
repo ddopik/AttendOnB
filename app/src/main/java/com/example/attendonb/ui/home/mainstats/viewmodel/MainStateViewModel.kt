@@ -7,13 +7,14 @@ import android.location.Location
 import android.location.LocationManager
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.example.attendonb.R
 import com.example.attendonb.app.AttendOnBApp
+import com.example.attendonb.base.SingleLiveEvent
 import com.example.attendonb.network.BaseNetWorkApi
 import com.example.attendonb.ui.home.HomeActivity
+import com.example.attendonb.ui.home.mainstats.model.ApplyButtonStats
 import com.example.attendonb.ui.home.model.AttendMessage
 import com.example.attendonb.ui.home.qrreader.model.AttendResponse
 import com.example.attendonb.utilites.Constants.Companion.CHECK_STATS_TIME_OUT
@@ -38,18 +39,20 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
     private val TAG = MainStateViewModel::class.java.simpleName
 
 
-    private var attendBtnState: MutableLiveData<Boolean> = MutableLiveData()
+    private var attendBtnState: SingleLiveEvent<ApplyButtonStats> = SingleLiveEvent()
+    private var attendBtnRefreshState: SingleLiveEvent<Boolean> = SingleLiveEvent()
 
-    private var progressBarState: MutableLiveData<Boolean> = MutableLiveData()
+    private var progressBarState: SingleLiveEvent<Boolean> = SingleLiveEvent()
 
-    private var currentStats: MutableLiveData<String> = MutableLiveData()
+    private var currentStats: SingleLiveEvent<String> = SingleLiveEvent()
 
 
-    private var attendActionCurrentStats: MutableLiveData<AttendMessage> = MutableLiveData()
+    private var attendActionCurrentStats: SingleLiveEvent<AttendMessage> = SingleLiveEvent()
 
     private var mapUtls: MapUtls? = null
 
-    fun onAttendBtnChangeState(): LiveData<Boolean> = attendBtnState
+    fun onAttendBtnChangeState(): LiveData<ApplyButtonStats> = attendBtnState
+    fun onAttendBtnRefreshState(): LiveData<Boolean> = attendBtnRefreshState
     fun onDataLoading(): LiveData<Boolean> = progressBarState
     fun getCurrentMessageStats(): LiveData<String> = currentStats
      fun onAttendAction(): LiveData<AttendMessage> = attendActionCurrentStats
@@ -79,17 +82,21 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
                     attendResponse?.attendData?.attendStatus?.let {
                         PrefUtil.setCurrentUserStatsID(AttendOnBApp.app?.baseContext!!, attendResponse.attendData?.attendStatus?.status!!)
                         PrefUtil.setCurrentStatsMessage(AttendOnBApp.app?.baseContext!!, attendResponse.attendData?.attendStatus?.msg!!)
+                        val applyButtonStats=ApplyButtonStats();
                          when (attendResponse.attendData?.attendStatus?.status) {
                             ENTER -> {
-
-                                attendBtnState.postValue(true)
+                                applyButtonStats.isEnable=true
+                                attendBtnState.postValue(applyButtonStats)
                             }
                             OUT -> {
-                                attendBtnState.postValue(true)
+                                applyButtonStats.isEnable=true
+                                attendBtnState.postValue(applyButtonStats)
 
                             }
                             ENDED -> {
-                                attendBtnState.postValue(false)
+                                applyButtonStats.isEnable=false
+                                applyButtonStats.isViable=false
+                                attendBtnState.postValue(applyButtonStats)
                             }
                         }
                     }
@@ -128,9 +135,9 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
                                 attendActionCurrentStats.postValue(attendMessage)
                             }
                             ENDED -> {
-                                attendMessage.currentLocation=currentLocation;
                                 attendMessage.attendFlag= AttendMessage.AttendFlags.ENDED
                             }
+                            else -> Log.e(TAG,"sendAttendCheckRequest ----> ${attendResponse.attendData?.attendStatus.toString()}")
                         }
                     }
                     mapUtls?.removeLocationRequest()
@@ -146,15 +153,19 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
     override fun onLocationUpdate(location: Location) {
 
          progressBarState.postValue(false)
+        val applyButtonStats=ApplyButtonStats()
         if (location.isFromMockProvider) {
             currentStats.postValue(AttendOnBApp.app?.getString(R.string.mock_location_warrning))
-            attendBtnState.postValue(false)
+            applyButtonStats.isEnable=false
+            attendBtnState.postValue(applyButtonStats)
+
             Log.e(TAG, "----->isFromMockProvider")
 
         } else if (!PrefUtil.isInsideRadius(AttendOnBApp.app!!)) {
             currentStats.postValue(AttendOnBApp.app?.getString(R.string.you_are_out_of_area))
-            attendBtnState.postValue(false)
-            Log.e(TAG, "----->Noy isInsideRadius")
+            applyButtonStats.isEnable=false
+            attendBtnState.postValue(applyButtonStats)
+            Log.e(TAG, "----->Not InsideRadius")
 
         } else {
             sendAttendAction(PrefUtil.getUserId(AttendOnBApp.app!!), location)
@@ -167,7 +178,9 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
     fun attendRequest(context: Context) {
         mapUtls=MapUtls(this);
         progressBarState.postValue(true)
-        attendBtnState.postValue(false)
+        val applyButtonStats=ApplyButtonStats()
+        applyButtonStats.isEnable=false
+        attendBtnState.postValue(applyButtonStats)
         mapUtls?.startLocationUpdates(context, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
     }
 
