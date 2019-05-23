@@ -91,7 +91,7 @@ class CustomErrorUtils {
         fun viewSnackBarError(errorType: Constants.ErrorType) {
             when (errorType){
                 Constants.ErrorType.GPS_PROVIDER->{
-                    RxEventBus.getInstance().post(RxAppStatsEvent(AttendOnBApp.app?.getString(R.string.mock_location_warrning)!!,Constants.ErrorType.GPS_PROVIDER))
+                    RxEventBus.getInstance().post(RxAppStatsEvent(AttendOnBApp.app?.getString(R.string.please_enaple_location_provider)!!, Constants.ErrorType.GPS_PROVIDER))
                 }
                 Constants.ErrorType.MOCK_LOCATION ->{
                     RxEventBus.getInstance().post(RxAppStatsEvent(AttendOnBApp.app?.getString(R.string.please_disable_mock_location_apps)!!,Constants.ErrorType.MOCK_LOCATION))
