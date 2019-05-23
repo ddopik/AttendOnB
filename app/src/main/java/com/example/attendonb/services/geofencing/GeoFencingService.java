@@ -129,14 +129,7 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
         return builder.build();
     }
 
-    /**
-     * Adds geofences, which sets alerts to be notified when the device enters or exits one of the
-     * specified geofences. Handles the success or failure results returned by addGeofences().
-     */
-    public void addGeofencesButtonHandler(View view) {
 
-        addGeofences();
-    }
 
     /**
      * Adds geofences. This method should be called after the user has granted the location
@@ -144,19 +137,11 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
      */
     @SuppressWarnings("MissingPermission")
     private void addGeofences() {
-
-
         mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
                 .addOnCompleteListener(this);
     }
 
-    /**
-     * Removes geofences, which stops further notifications when the device enters or exits
-     * previously registered geofences.
-     */
-    public void removeGeofencesButtonHandler(View view) {
-        removeGeofences();
-    }
+
 
     /**
      * Removes geofences. This method should be called after the user has granted the location
@@ -175,12 +160,10 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
     @Override
     public void onComplete(@NonNull Task<Void> task) {
         if (task.isSuccessful()) {
-            updateGeofencesAdded(!getGeofencesAdded());
 
-            int messageId = getGeofencesAdded() ? R.string.geofences_added :
-                    R.string.geofences_removed;
-            Toast.makeText(this, getString(messageId), Toast.LENGTH_SHORT).show();
-        } else {
+
+            Log.e(TAG, "isSuccessful");
+         } else {
             // Get the status code for the error and log it using a user-friendly message.
             String errorMessage = GeofenceErrorMessages.getErrorString(this, task.getException());
             Log.e(TAG, errorMessage);
@@ -241,66 +224,10 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
 
 
 
-    /**
-     * Shows a {@link Snackbar} using {@code text}.
-     *
-     * @param text The Snackbar text.
-     */
-    private void showSnackbar(final String text) {
-//        View container = findViewById(android.R.id.content);
-//        if (container != null) {
-//            Snackbar.make(container, text, Snackbar.LENGTH_LONG).show();
-//        }
-//
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * Shows a {@link Snackbar}.
-     *
-     * @param mainTextStringId The id for the string resource for the Snackbar text.
-     * @param actionStringId   The text of the action item.
-     * @param listener         The listener associated with the Snackbar action.
-     */
-    private void showSnackbar(final int mainTextStringId, final int actionStringId,
-                              View.OnClickListener listener) {
-//        Snackbar.make(
-//                findViewById(android.R.id.content),
-//                getString(mainTextStringId),
-//                Snackbar.LENGTH_INDEFINITE)
-//                .setAction(getString(actionStringId), listener).show();
 
 
-        new AlertDialog.Builder(this)
-                .setTitle("Delete entry")
-                .setMessage("Are you sure you want to delete this entry?")
-
-                // Specifying a listener allows you to take an action before dismissing the dialog.
-                // The dialog is automatically dismissed when a dialog button is clicked.
-                .setPositiveButton(android.R.string.yes, (DialogInterface.OnClickListener) listener);
 
 
-    }
-
-    /**
-     * Returns true if geofences were added, otherwise false.
-     */
-    private boolean getGeofencesAdded() {
-        return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
-                Constants.GEOFENCES_ADDED_KEY, false);
-    }
-
-    /**
-     * Stores whether geofences were added ore removed in {@link SharedPreferences};
-     *
-     * @param added Whether geofences were added or removed.
-     */
-    private void updateGeofencesAdded(boolean added) {
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .edit()
-                .putBoolean(Constants.GEOFENCES_ADDED_KEY, added)
-                .apply();
-    }
 
 //    /**
 //     * Performs the geofencing task that was pending until location permission was granted.

@@ -1,6 +1,6 @@
 package com.example.attendonb.ui.home.qrreader.viewmodel
 
-import ErrorUtils
+import CustomErrorUtils
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -79,7 +79,7 @@ class QrReaderViewModel : ViewModel() {
                     isNetworkError.postValue(t?.message)
                     isUnknownError.postValue(t?.message)
                     isDataLoading.postValue(false)
-                    ErrorUtils.setError(TAG, t)
+                    CustomErrorUtils.setError(TAG, t)
                     OnattendResponseCallBack.postValue(false)
                 }
                 )

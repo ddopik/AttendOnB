@@ -5,6 +5,7 @@ import android.content.Intent
 import android.location.Location
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +19,10 @@ import com.example.attendonb.ui.home.mainstats.model.ApplyButtonStats
 import com.example.attendonb.ui.home.mainstats.viewmodel.MainStateViewModel
 import com.example.attendonb.ui.home.model.AttendMessage
 import com.example.attendonb.ui.home.qrreader.ui.QrReaderActivity
+import com.example.attendonb.utilites.Constants
 import com.example.attendonb.utilites.PrefUtil
-import com.google.android.material.snackbar.Snackbar
+import com.example.attendonb.utilites.rxeventbus.RxEventBus
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_main_stats.*
 
 
@@ -33,8 +36,8 @@ class MainStatsFragment : BaseFragment() {
     private val TAG = MainStatsFragment::class.java.simpleName
     private var mainView: View? = null
     private var mainStateViewModel: MainStateViewModel? = null
-    private var snackBar: Snackbar? = null
-    private var isSnackBarCurrentlyShowen = false
+    private val disposables = CompositeDisposable()
+
 
     companion object {
         fun newInstance() = MainStatsFragment()
@@ -47,7 +50,6 @@ class MainStatsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        snackBar = Snackbar.make(parent_view, "", Snackbar.LENGTH_INDEFINITE);
         mainStateViewModel = MainStateViewModel.getInstance(activity as HomeActivity)
         initObservers()
         intiView()
@@ -82,10 +84,6 @@ class MainStatsFragment : BaseFragment() {
             }
         })
 
-        mainStateViewModel?.getCurrentMessageStats()?.observe(this, Observer {
-            showSnackBar(it)
-
-        })
 
         mainStateViewModel?.onAttendAction()?.observe(this, Observer {
             when (it.attendFlag) {
@@ -111,16 +109,23 @@ class MainStatsFragment : BaseFragment() {
             val applyButtonStats = ApplyButtonStats()
             val off = Settings.Secure.getInt(context?.contentResolver, Settings.Secure.LOCATION_MODE)
             if (off == 0) {
-                applyButtonStats.isEnable = false
-                setBtnAttendBtnState(applyButtonStats)
-                val onGPS = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                startActivity(onGPS)
+//                applyButtonStats.isEnable = false
+//                setBtnAttendBtnState(applyButtonStats)
+                CustomErrorUtils.viewSnackBarError(Constants.ErrorType.GPS_PROVIDER)
             } else {
                 mainStateViewModel?.attendRequest(context!!)
             }
 
 
         }
+
+        val disposable = RxEventBus.getInstance().refreshStatsSubject.subscribe({ reFreshStats ->
+            mainStateViewModel?.checkAttendStatus(PrefUtil.getUserId(context!!))
+
+        }, { throwable ->
+            Log.e(TAG, throwable.message)
+        })
+        disposables.add(disposable)
 
     }
 
@@ -154,8 +159,6 @@ class MainStatsFragment : BaseFragment() {
 
 
     private fun showPhotoDialog(activity: Activity, title: String?, message: CharSequence) {
-
-
         val customDialog = CustomDialog.getInstance(activity, CustomDialog.DialogOption.OPTION_1);
         customDialog.customDialogContent=title;
         customDialog.onCustomDialogPositiveClick = object : CustomDialog.OnCustomDialogPositiveClick {
@@ -173,37 +176,8 @@ class MainStatsFragment : BaseFragment() {
 
     }
 
-
-    fun showSnackBar(messag: String) {
-
-        if (messag != "") {
-            snackBar?.setText(messag)
-            snackBar?.addCallback(getSnackBarCallBack())
-            if (!isSnackBarCurrentlyShowen) {
-                snackBar?.show()
-
-            }
-        } else {
-            snackBar?.dismiss()
-        }
-
+    override fun onStop() {
+        super.onStop()
+//        disposables.clear()
     }
-
-
-    fun getSnackBarCallBack(): Snackbar.Callback {
-        return object : Snackbar.Callback() {
-            override fun onShown(sb: Snackbar?) {
-                super.onShown(sb)
-                isSnackBarCurrentlyShowen = true
-            }
-
-            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                super.onDismissed(transientBottomBar, event)
-                isSnackBarCurrentlyShowen = false
-                snackBar?.dismiss()
-            }
-        }
-    }
-
-
 }

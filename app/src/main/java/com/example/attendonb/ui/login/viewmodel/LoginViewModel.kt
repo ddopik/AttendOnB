@@ -1,6 +1,6 @@
 package com.example.attendonb.ui.login.viewmodel
 
-import ErrorUtils
+import CustomErrorUtils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
@@ -91,7 +91,7 @@ class LoginViewModel : ViewModel() {
                             isNetworkError.postValue(t?.message)
                             isDataLoading.postValue(false)
                             loginState.postValue(false)
-                            ErrorUtils.setError(TAG, t)
+                            CustomErrorUtils.setError(TAG, t)
                         }
 
                     }

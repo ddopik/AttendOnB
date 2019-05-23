@@ -6,13 +6,13 @@ import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.attendonb.R
+import com.example.attendonb.base.BaseActivity
 import com.example.attendonb.base.CustomDialog
 import com.example.attendonb.network.BaseNetWorkApi.Companion.IMAGE_BASE_URL
 import com.example.attendonb.services.geofencing.GeoFencingService
@@ -23,7 +23,7 @@ import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_home.*
 
 
-class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
 
     private var geoFencingService: Intent? = null
@@ -40,13 +40,21 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer.addDrawerListener(toggle)
         toggle.syncState()
         navigationView.setNavigationItemSelectedListener(this)
-        geoFencingService = Intent(this, GeoFencingService::class.java)
-        startService(geoFencingService)
+
         supportFragmentManager.beginTransaction()
                 .replace(R.id.home_swap_container, MainStatsFragment.newInstance(), MainStatsFragment::class.java.simpleName)
                 .commitNow()
 
         initView()
+    }
+
+    override fun initObservers() {
+     }
+
+    override fun onResume() {
+        super.onResume()
+        geoFencingService = Intent(this, GeoFencingService::class.java)
+        startService(geoFencingService)
     }
 
     override fun onBackPressed() {
@@ -139,7 +147,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-    fun initView() {
+    private fun initView() {
 
          val hView = nav_view.getHeaderView(0)
         val profileNavImg=hView.findViewById<ImageView>(R.id.profile_nav_img)

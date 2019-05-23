@@ -1,6 +1,6 @@
 package com.example.attendonb.ui.home.mainstats.viewmodel
 
-import ErrorUtils
+import CustomErrorUtils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
@@ -9,7 +9,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
-import com.example.attendonb.R
 import com.example.attendonb.app.AttendOnBApp
 import com.example.attendonb.base.SingleLiveEvent
 import com.example.attendonb.network.BaseNetWorkApi
@@ -17,6 +16,7 @@ import com.example.attendonb.ui.home.HomeActivity
 import com.example.attendonb.ui.home.mainstats.model.ApplyButtonStats
 import com.example.attendonb.ui.home.model.AttendMessage
 import com.example.attendonb.ui.home.qrreader.model.AttendResponse
+import com.example.attendonb.utilites.Constants
 import com.example.attendonb.utilites.Constants.Companion.CHECK_STATS_TIME_OUT
 import com.example.attendonb.utilites.Constants.Companion.ENDED
 import com.example.attendonb.utilites.Constants.Companion.ENTER
@@ -40,11 +40,8 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
 
 
     private var attendBtnState: SingleLiveEvent<ApplyButtonStats> = SingleLiveEvent()
-    private var attendBtnRefreshState: SingleLiveEvent<Boolean> = SingleLiveEvent()
 
     private var progressBarState: SingleLiveEvent<Boolean> = SingleLiveEvent()
-
-    private var currentStats: SingleLiveEvent<String> = SingleLiveEvent()
 
 
     private var attendActionCurrentStats: SingleLiveEvent<AttendMessage> = SingleLiveEvent()
@@ -52,10 +49,8 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
     private var mapUtls: MapUtls? = null
 
     fun onAttendBtnChangeState(): LiveData<ApplyButtonStats> = attendBtnState
-    fun onAttendBtnRefreshState(): LiveData<Boolean> = attendBtnRefreshState
     fun onDataLoading(): LiveData<Boolean> = progressBarState
-    fun getCurrentMessageStats(): LiveData<String> = currentStats
-     fun onAttendAction(): LiveData<AttendMessage> = attendActionCurrentStats
+    fun onAttendAction(): LiveData<AttendMessage> = attendActionCurrentStats
 
 
     companion object {
@@ -103,8 +98,9 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
                     mapUtls?.removeLocationRequest()
                     progressBarState.postValue(false)
                  }, { t: Throwable? ->
+                    mapUtls?.removeLocationRequest()
                     progressBarState.postValue(false)
-                    ErrorUtils.setError(TAG, t)
+                    CustomErrorUtils.setError(TAG, t)
 
                 })
     }
@@ -144,8 +140,9 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
                     progressBarState.postValue(false)
 
                 }, { t: Throwable? ->
+                    mapUtls?.removeLocationRequest()
                     progressBarState.postValue(false)
-                    ErrorUtils.setError(TAG, t)
+                    CustomErrorUtils.setError(TAG, t)
 
                 })
     }
@@ -154,21 +151,30 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
 
          progressBarState.postValue(false)
         val applyButtonStats=ApplyButtonStats()
-        if (location.isFromMockProvider) {
-            currentStats.postValue(AttendOnBApp.app?.getString(R.string.mock_location_warrning))
-            applyButtonStats.isEnable=false
-            attendBtnState.postValue(applyButtonStats)
+        when {
+            location.isFromMockProvider -> {
+                CustomErrorUtils.viewSnackBarError(Constants.ErrorType.MOCK_LOCATION)
+                applyButtonStats.isEnable = true
+                attendBtnState.postValue(applyButtonStats)
+                mapUtls?.removeLocationRequest()
+                Log.e(TAG, "----->isFromMockProvider")
 
-            Log.e(TAG, "----->isFromMockProvider")
+            }
+            !PrefUtil.isInsideRadius(AttendOnBApp.app!!) -> {
+                CustomErrorUtils.viewSnackBarError(Constants.ErrorType.OUT_OF_AREA)
+                applyButtonStats.isEnable = true
+                attendBtnState.postValue(applyButtonStats)
+                mapUtls?.removeLocationRequest()
+                Log.e(TAG, "----->Not InsideRadius")
 
-        } else if (!PrefUtil.isInsideRadius(AttendOnBApp.app!!)) {
-            currentStats.postValue(AttendOnBApp.app?.getString(R.string.you_are_out_of_area))
-            applyButtonStats.isEnable=false
-            attendBtnState.postValue(applyButtonStats)
-            Log.e(TAG, "----->Not InsideRadius")
-
-        } else {
-            sendAttendAction(PrefUtil.getUserId(AttendOnBApp.app!!), location)
+            }
+            CustomErrorUtils.haveNetworkConnection(AttendOnBApp.app?.baseContext!!) -> {
+                sendAttendAction(PrefUtil.getUserId(AttendOnBApp.app!!), location)
+            }
+            else -> {
+                CustomErrorUtils.viewSnackBarError(Constants.ErrorType.ONLINE_DISCONNECTED)
+                mapUtls?.removeLocationRequest()
+            }
         }
 
 
@@ -176,8 +182,7 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
 
 
     fun attendRequest(context: Context) {
-        mapUtls=MapUtls(this);
-        progressBarState.postValue(true)
+        mapUtls=MapUtls(this)
         val applyButtonStats=ApplyButtonStats()
         applyButtonStats.isEnable=false
         attendBtnState.postValue(applyButtonStats)

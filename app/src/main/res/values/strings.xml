@@ -62,10 +62,10 @@
         Unknown error: the Geofence service is not available now
     </string>
     <string name="geofence_transition_invalid_type">
-        Geofence transition error: invalid transition type %1$d
+        Geofence transition error: invalid transition errorType %1$d
     </string>
 
-    <!-- Transition type strings -->
+    <!-- Transition errorType strings -->
     <string name="geofence_transition_entered">Entered</string>
     <string name="geofence_transition_exited">Exited</string>
     <string name="unknown_geofence_transition">Unknown Transition</string>
@@ -85,4 +85,7 @@
     <string name="log_out">Logout</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="please_check_your_internet_conniction">Please check your internet conniction</string>
+    <string name="please_enaple_location_provider">Please Enale location provider</string>
+    <string name="enable">Enable</string>
 </resources>

@@ -18,4 +18,13 @@ class Constants {
 
 
     }
+    enum class ErrorType {
+        ONLINE_DISCONNECTED,ONLINE_CONNECTED ,GPS_PROVIDER, MOCK_LOCATION,OUT_OF_AREA
+    }
+
+    enum class ErrorTypeStateAction {
+        OPEN_SETTING
+    }
+
+
 }

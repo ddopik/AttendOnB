@@ -2,10 +2,15 @@ package com.example.attendonb.app
 
 import android.app.Application
 import android.content.Context
+import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.os.Build
 import com.androidnetworking.AndroidNetworking
 import com.example.attendonb.network.BasicAuthInterceptor
 import com.example.attendonb.realm.RealmConfigFile
 import com.example.attendonb.realm.RealmDbMigration
+import com.example.attendonb.utilites.networkstatus.NetworkChangeBroadcastReceiver
+import com.example.attendonb.utilites.networkstatus.NetworkStateChangeManager
 import com.facebook.stetho.Stetho
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider
 import okhttp3.OkHttpClient
@@ -17,7 +22,8 @@ class AttendOnBApp : Application() {
 
 
     var realm: Realm? = null
-
+    private var networkStateChangeManager: NetworkStateChangeManager? = null
+    private var networkChangeBroadcastReceiver: NetworkChangeBroadcastReceiver? = null
     companion object {
 
         var app: AttendOnBApp? = null
@@ -35,7 +41,14 @@ class AttendOnBApp : Application() {
         //        intializeSteatho();
         //        deleteCache(app);   ///for developing        ##################
         //        initializeDepInj(); ///intializing Dagger Dependancy
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            networkStateChangeManager = NetworkStateChangeManager(this)
+            networkStateChangeManager?.listen()
+        } else {
+            networkChangeBroadcastReceiver = NetworkChangeBroadcastReceiver()
+            val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+            registerReceiver(networkChangeBroadcastReceiver, filter)
+        }
 
     }
 
