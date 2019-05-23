@@ -77,7 +77,7 @@ class CustomErrorUtils {
 
                     when (errorMessageResponse.code) {
                         ERROR_STATE_1 -> {
-                            Toast.makeText(context, errorMessageResponse.data.msg, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, errorMessageResponse.data.msg, Toast.LENGTH_LONG).show()
                         }
                         else -> {
                             Toast.makeText(context, errorMessageResponse.data.msg, Toast.LENGTH_SHORT).show()
