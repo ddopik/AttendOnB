@@ -5,68 +5,66 @@
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="true"/>
+        android:required="true" />
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-
     <application
+        android:name=".app.AttendOnBApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
-        android:name=".app.AttendOnBApp"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="com.example.attendonb.ui.home.qrreader.ui.QrReaderActivity"
-            android:resizeableActivity="false"
-            android:screenOrientation="portrait"
-            >
-
-        </activity>
         <activity
-            android:name=".ui.home.HomeActivity"
-            android:label="@string/app_name"
+            android:name=".ui.splash.SplashScreenActivity"
+            android:resizeableActivity="false"
             android:theme="@style/AppTheme.NoActionBar"
-            android:resizeableActivity="false"
-            android:screenOrientation="portrait">
-
-        </activity>
-
-
-        <activity android:name=".ui.login.LoginActivity"
-            android:resizeableActivity="false"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden">
-
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|keyboardHidden|screenSize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.result.ResultActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.test.Cam_View" >
-
-        </activity>
+        <activity
+            android:name=".ui.home.qrreader.ui.QrReaderActivity"
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.home.HomeActivity"
+            android:label="@string/app_name"
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name=".ui.result.ResultActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.test.Cam_View" />
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
 
-
         <receiver
             android:name=".services.geofencing.GeofenceBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
+
         <service
             android:name=".services.geofencing.GeoFencingService"
-            android:label="MainActivity" >
-        </service>
+            android:label="MainActivity" />
         <service
             android:name=".services.geofencing.GeofenceTransitionsJobIntentService"
             android:exported="true"

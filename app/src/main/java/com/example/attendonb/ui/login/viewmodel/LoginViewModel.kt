@@ -48,14 +48,6 @@ class LoginViewModel : ViewModel() {
     fun onLoginStateChanged(): LiveData<Boolean> = loginState
     fun sourceListener(): LiveData<String> = source
 
-    init {
-
-        if (PrefUtil.isLoggedIn(AttendOnBApp.app?.baseContext!!)) {
-            Log.e(TAG, "----> init isLoggedIn()")
-            loginState.postValue(true)
-            source.postValue("from init")
-         }
-    }
 
     @SuppressLint("CheckResult")
     fun loginUser(context: Context, userName: String, currentLat: Double, currentLng: Double, password: String, deviceImei: String) {

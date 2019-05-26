@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#3F74B5</color>
     <color name="colorPrimaryDark">#3F51B5</color>
-     <color name="light_blue">#F25966D1</color>
+    <color name="light_blue">#F25966D1</color>
     <color name="colorRed">#DA463A</color>
     <color name="colorGray">#4D4D4F</color>
     <color name="colorlightGray">#54545C</color>
@@ -54,4 +54,6 @@
     <color name="filter_label_normal">#EEEEEE</color>
     <color name="filter_label_selected">#FFFFFF</color>
     <color name="black_transparent">#80000000</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>
