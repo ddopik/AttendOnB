@@ -24,6 +24,9 @@ import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
+import com.spidersholidays.attendonb.ui.home.HomeActivity.Companion.VIEW_CONFIRM_DIALOG
+import com.spidersholidays.attendonb.ui.home.mainstate.stateconfirmdialog.StateConfirmDialog
+import com.spidersholidays.attendonb.utilites.PrefUtil
 import kotlinx.android.synthetic.main.qr_reader_fragment.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -75,9 +78,15 @@ class QrReaderFragment : BaseFragment() {
         })
         qrReaderViewModel.onAttendResponse().observe(activity as QrReaderActivity, Observer {
 
+
             val intent = Intent(activity, HomeActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            intent.putExtra(VIEW_CONFIRM_DIALOG,true)
             startActivity(intent)
+
+
+
+
 
         })
         qrReaderViewModel.isUnKnownError().observe(activity as QrReaderActivity, Observer {
@@ -89,7 +98,6 @@ class QrReaderFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         qrReaderViewModel = ViewModelProviders.of(this).get(QrReaderViewModel::class.java)
-//        requestCameraPermutation()
 
     }
 
@@ -140,7 +148,10 @@ class QrReaderFragment : BaseFragment() {
 
                     val intent = Intent(this@QrReaderFragment.context, ResultActivity::class.java)
                     intent.putExtra("ScanResult", scanResult) /* Sending text to next activity to display */
+
                     qrReaderViewModel.sendAttendRequest(currentLat!!, currentLng!!)
+//                    cameraSource?.stop()
+
 
                 }
             }

@@ -59,7 +59,9 @@ class QrReaderViewModel : ViewModel() {
                 , device = android.os.Build.MODEL.toString(),
                 deviceDetails = android.os.Build.PRODUCT.toString(),
                 latitude = lat.toString(),
-                longitude = lng.toString()).subscribeOn(Schedulers.io())
+                longitude = lng.toString())
+                .subscribeOn(Schedulers.io())
+                .distinct()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ attendResponse: AttendResponse ->
                     takeIf { attendResponse.status!! }.apply {

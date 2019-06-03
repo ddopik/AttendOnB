@@ -16,16 +16,21 @@ import com.spidersholidays.attendonb.base.BaseActivity
 import com.spidersholidays.attendonb.base.CustomDialog
 import com.spidersholidays.attendonb.network.BaseNetWorkApi.Companion.IMAGE_BASE_URL
 import com.spidersholidays.attendonb.services.geofencing.GeoFencingService
-import com.spidersholidays.attendonb.ui.home.mainstats.MainStatsFragment
+import com.spidersholidays.attendonb.ui.home.mainstate.ui.MainStateFragment
 import com.spidersholidays.attendonb.utilites.GlideApp
 import com.spidersholidays.attendonb.utilites.PrefUtil
 import com.google.android.material.navigation.NavigationView
+import com.spidersholidays.attendonb.ui.home.mainstate.stateconfirmdialog.StateConfirmDialog
+import com.spidersholidays.attendonb.utilites.Constants
 import kotlinx.android.synthetic.main.activity_home.*
 
 
 class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
 
+    companion object{
+        val VIEW_CONFIRM_DIALOG="view_confirm_dialog"
+    }
     private var geoFencingService: Intent? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,10 +47,11 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         navigationView.setNavigationItemSelectedListener(this)
 
         supportFragmentManager.beginTransaction()
-                .replace(R.id.home_swap_container, MainStatsFragment.newInstance(), MainStatsFragment::class.java.simpleName)
+                .replace(R.id.home_swap_container, MainStateFragment.newInstance(), MainStateFragment::class.java.simpleName)
                 .commitNow()
 
         initView()
+        initListeneres()
     }
 
     override fun initObservers() {
@@ -90,10 +96,10 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val id = item.itemId
 
         if (id == R.id.nav_home) {
-            val currentScreenIndex = getCurrentViewIndex(MainStatsFragment::class.java.simpleName);
+            val currentScreenIndex = getCurrentViewIndex(MainStateFragment::class.java.simpleName);
             if (currentScreenIndex < supportFragmentManager.backStackEntryCount) {
                 supportFragmentManager.beginTransaction()
-                        .replace(R.id.home_swap_container, MainStatsFragment.newInstance(),MainStatsFragment::class.java.simpleName)
+                        .replace(R.id.home_swap_container, MainStateFragment.newInstance(), MainStateFragment::class.java.simpleName)
                         .commitNow()
             }
 
@@ -165,6 +171,17 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         profileNavName.text = PrefUtil.getUserName(this)
         profileNavMail.text=PrefUtil.getUserMail(this)
 
+    }
+
+    fun initListeneres(){
+        intent.getBooleanExtra(VIEW_CONFIRM_DIALOG,false).takeIf { it ==true }.apply {
+            if (PrefUtil.getCurrentUserStatsID(baseContext) == Constants.OUT){
+                StateConfirmDialog.getInstance(PrefUtil.getUserName(baseContext), Constants.OUT).show(supportFragmentManager.beginTransaction(), StateConfirmDialog::javaClass.name)
+            }else  if (PrefUtil.getCurrentUserStatsID(baseContext) == Constants.ENDED){
+                StateConfirmDialog.getInstance(PrefUtil.getUserName(baseContext), Constants.ENDED).show(supportFragmentManager.beginTransaction(), StateConfirmDialog::javaClass.name)
+            }
+            intent.putExtra(VIEW_CONFIRM_DIALOG,false) //clear intent history to avoid dialog occupancy through onResume
+        }
     }
 
     override fun onStop() {
