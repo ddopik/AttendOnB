@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Build
+import androidx.multidex.MultiDexApplication
 import com.androidnetworking.AndroidNetworking
 import com.spidersholidays.attendonb.network.BasicAuthInterceptor
 import com.spidersholidays.attendonb.realm.RealmConfigFile
@@ -17,13 +18,16 @@ import okhttp3.OkHttpClient
 import java.io.File
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import com.google.android.gms.security.ProviderInstaller
 
-class AttendOnBApp : Application() {
+
+class AttendOnBApp : MultiDexApplication() {
 
 
     var realm: Realm? = null
     private var networkStateChangeManager: NetworkStateChangeManager? = null
     private var networkChangeBroadcastReceiver: NetworkChangeBroadcastReceiver? = null
+
     companion object {
 
         var app: AttendOnBApp? = null
@@ -34,13 +38,20 @@ class AttendOnBApp : Application() {
         super.onCreate()
         app = this
         AttendOnBApp.app = app as AttendOnBApp
-        initFastAndroidNetworking(null,baseContext)
-        //        MultiDex.install(app);
+//        initFastAndroidNetworking(null,baseContext)
         //        initRealm(); //--> [1]order is must
         //        setRealmDefaultConfiguration(); //--> [2]order is must
         //        intializeSteatho();
         //        deleteCache(app);   ///for developing        ##################
         //        initializeDepInj(); ///intializing Dagger Dependancy
+        if (Build.VERSION.SDK_INT == 19) {
+            try {
+                ProviderInstaller.installIfNeeded(this)
+            } catch (ignored: Exception) {
+            }
+
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             networkStateChangeManager = NetworkStateChangeManager(this)
             networkStateChangeManager?.listen()
@@ -53,14 +64,12 @@ class AttendOnBApp : Application() {
     }
 
 
-
     fun getApp(): AttendOnBApp {
         if (app != null) {
             return app as AttendOnBApp
         }
         throw NullPointerException("u should init AppContext  first")
     }
-
 
 
     /**
@@ -151,7 +160,7 @@ class AttendOnBApp : Application() {
         if (userToken != null) {
             val basicAuthInterceptor = BasicAuthInterceptor(context)
             basicAuthInterceptor.setUserToken(userToken)
-             val okHttpClient = OkHttpClient().newBuilder()
+            val okHttpClient = OkHttpClient().newBuilder()
                     .addNetworkInterceptor(basicAuthInterceptor)
                     .build()
             AndroidNetworking.initialize(context, okHttpClient)
