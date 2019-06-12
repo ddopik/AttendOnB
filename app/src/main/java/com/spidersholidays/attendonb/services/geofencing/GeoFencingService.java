@@ -152,9 +152,7 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
     @Override
     public void onComplete(@NonNull Task<Void> task) {
         if (task.isSuccessful()) {
-
-
-            Log.e(TAG, "isSuccessful");
+            Log.e(TAG, "is Started");
          } else {
             // Get the status code for the error and log it using a user-friendly message.
             String errorMessage = GeofenceErrorMessages.getErrorString(this, task.getException());

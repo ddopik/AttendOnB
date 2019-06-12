@@ -28,10 +28,12 @@ import kotlinx.android.synthetic.main.activity_home.*
 class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
 
-    companion object{
-        val VIEW_CONFIRM_DIALOG="view_confirm_dialog"
+    companion object {
+        val VIEW_CONFIRM_DIALOG = "view_confirm_dialog"
     }
+
     private var geoFencingService: Intent? = null
+    private var stateConfirmDialog: StateConfirmDialog? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -55,7 +57,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun initObservers() {
-     }
+    }
 
     override fun onResume() {
         super.onResume()
@@ -155,33 +157,38 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     private fun initView() {
 
-         val hView = nav_view.getHeaderView(0)
-        val profileNavImg=hView.findViewById<ImageView>(R.id.profile_nav_img)
-        val profileNavName=hView.findViewById<TextView>(R.id.nav_user_name)
-        val profileNavMail=hView.findViewById<TextView>(R.id.nav_user_mail)
+        val hView = nav_view.getHeaderView(0)
+        val profileNavImg = hView.findViewById<ImageView>(R.id.profile_nav_img)
+        val profileNavName = hView.findViewById<TextView>(R.id.nav_user_name)
+        val profileNavMail = hView.findViewById<TextView>(R.id.nav_user_mail)
         var requestOptions = RequestOptions()
         requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(16))
         GlideApp.with(this)
-                .load(IMAGE_BASE_URL+PrefUtil.getUserProfilePic(this))
+                .load(IMAGE_BASE_URL + PrefUtil.getUserProfilePic(this))
                 .placeholder(R.drawable.app_icon)
                 .error(R.drawable.app_icon)
                 .apply(requestOptions)
                 .into(profileNavImg)
 
         profileNavName.text = PrefUtil.getUserName(this)
-        profileNavMail.text=PrefUtil.getUserMail(this)
+        profileNavMail.text = PrefUtil.getUserMail(this)
 
     }
 
-    fun initListeneres(){
-        intent.getBooleanExtra(VIEW_CONFIRM_DIALOG,false).takeIf { it ==true }.apply {
-            if (PrefUtil.getCurrentUserStatsID(baseContext) == Constants.OUT){
-                StateConfirmDialog.getInstance(PrefUtil.getUserName(baseContext), Constants.OUT).show(supportFragmentManager.beginTransaction(), StateConfirmDialog::javaClass.name)
-            }else  if (PrefUtil.getCurrentUserStatsID(baseContext) == Constants.ENDED){
-                StateConfirmDialog.getInstance(PrefUtil.getUserName(baseContext), Constants.ENDED).show(supportFragmentManager.beginTransaction(), StateConfirmDialog::javaClass.name)
+    fun initListeneres() {
+        intent.getBooleanExtra(VIEW_CONFIRM_DIALOG, false).takeIf { it }.apply {
+            if (PrefUtil.getCurrentUserStatsID(baseContext) == Constants.OUT) {
+                stateConfirmDialog = StateConfirmDialog.getInstance(PrefUtil.getUserName(baseContext), Constants.OUT)
+            } else if (PrefUtil.getCurrentUserStatsID(baseContext) == Constants.ENDED) {
+                stateConfirmDialog = StateConfirmDialog.getInstance(PrefUtil.getUserName(baseContext), Constants.ENDED)
             }
-            intent.putExtra(VIEW_CONFIRM_DIALOG,false) //clear intent history to avoid dialog occupancy through onResume
+            stateConfirmDialog?.show(supportFragmentManager.beginTransaction(), StateConfirmDialog::javaClass.name)
+            intent.removeExtra(VIEW_CONFIRM_DIALOG) //clear intent history to avoid dialog occupancy through onResume
         }
+        intent.getBooleanExtra(VIEW_CONFIRM_DIALOG, false).takeIf { !it }.apply {
+            stateConfirmDialog?.dismiss()
+        }
+
     }
 
     override fun onStop() {

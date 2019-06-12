@@ -12,8 +12,10 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <application
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera.flash" />
+     <application
         android:name="com.spidersholidays.attendonb.app.AttendOnBApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -70,6 +72,7 @@
             android:name="com.spidersholidays.attendonb.services.geofencing.GeofenceTransitionsJobIntentService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
     </application>
 
 </manifest>
