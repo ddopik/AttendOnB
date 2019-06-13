@@ -34,13 +34,18 @@ class CustomDialog(val activity: Activity) : Dialog(activity) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState?: Bundle())
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
         when (dialogOption){
             DialogOption.OPTION_1 ->{
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
                 setContentView(R.layout.custom_dialog)
             }
             DialogOption.OPTION_2 ->{
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
                 setContentView(R.layout.custom_dialog_2)
+            }
+            DialogOption.LANGUAGE ->{
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setContentView(R.layout.custom_lang_dialog)
             }
         }
 
@@ -73,6 +78,7 @@ class CustomDialog(val activity: Activity) : Dialog(activity) {
 
     enum class DialogOption{
         OPTION_1,
-        OPTION_2
+        OPTION_2,
+        LANGUAGE
     }
 }

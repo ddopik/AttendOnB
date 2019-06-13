@@ -24,6 +24,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.spidersholidays.attendonb.app.AttendOnBApp;
 import com.spidersholidays.attendonb.utilites.PrefUtil;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
@@ -35,6 +36,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Demonstrates how to create and remove geofences using the GeofencingApi. Uses an IntentService
@@ -57,24 +59,26 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
 
     @Override
     public void onCreate() {
-//        Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
-        // Empty list for storing geofences.
-        mGeofenceList = new ArrayList<>();
-
-        // Initially set the PendingIntent used in addGeofences() and removeGeofences() to null.
-        mGeofencePendingIntent = null;
+        if (PrefUtil.Companion.isLoggedIn(Objects.requireNonNull(AttendOnBApp.Companion.getApp()))) {
 
 
-        // Get the geofences used. Geofence data is hard coded in this sample.
-        populateGeofenceList();
+            // Empty list for storing geofences.
+            mGeofenceList = new ArrayList<>();
 
-        mGeofencingClient = LocationServices.getGeofencingClient(this);
+            // Initially set the PendingIntent used in addGeofences() and removeGeofences() to null.
+            mGeofencePendingIntent = null;
+
+
+            // Get the geofences used. Geofence data is hard coded in this sample.
+            populateGeofenceList();
+
+            mGeofencingClient = LocationServices.getGeofencingClient(this);
 
 
 //        performPendingGeofenceTask();
-        addGeofences();
+            addGeofences();
 
-
+        }
     }
 
     @Override
@@ -99,9 +103,6 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
     private PendingIntent mGeofencePendingIntent;
 
 
-
-
-
     /**
      * Builds and returns a GeofencingRequest. Specifies the list of geofences to be monitored.
      * Also specifies how the geofence notifications are initially triggered.
@@ -122,7 +123,6 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
     }
 
 
-
     /**
      * Adds geofences. This method should be called after the user has granted the location
      * permission.
@@ -132,7 +132,6 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
         mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
                 .addOnCompleteListener(this);
     }
-
 
 
     /**
@@ -147,13 +146,14 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
     /**
      * Runs when the result of calling {@link #addGeofences()} and/or {@link #removeGeofences()}
      * is available.
+     *
      * @param task the resulting Task, containing either a result or error.
      */
     @Override
     public void onComplete(@NonNull Task<Void> task) {
         if (task.isSuccessful()) {
             Log.e(TAG, "is Started");
-         } else {
+        } else {
             // Get the status code for the error and log it using a user-friendly message.
             String errorMessage = GeofenceErrorMessages.getErrorString(this, task.getException());
             Log.e(TAG, errorMessage);
@@ -184,12 +184,14 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
      * the user's location.
      */
     private void populateGeofenceList() {
+
         for (Map.Entry<String, LatLng> entry : Constants.BAY_AREA_LANDMARKS.entrySet()) {
 
             mGeofenceList.add(new Geofence.Builder()
                     // Set the request ID of the geofence. This is a string to identify this
                     // geofence.
                     .setRequestId(entry.getKey())
+
 
                     // Set the circular region of this geofence.
                     .setCircularRegion(
@@ -213,12 +215,6 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
     }
 
 
-
-
-
-
-
-
 //    /**
 //     * Performs the geofencing task that was pending until location permission was granted.
 //     */
@@ -229,7 +225,6 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
 //            removeGeofences();
 //        }
 //    }
-
 
 
 }

@@ -91,4 +91,8 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="welcome">Welcome</string>
     <string name="by_by">Bye Bye</string>
+    <string name="language">Language</string>
+    <string name="arabic">Arabic</string>
+    <string name="english">English</string>
+    <string name="choose_language">Choose Language</string>
 </resources>

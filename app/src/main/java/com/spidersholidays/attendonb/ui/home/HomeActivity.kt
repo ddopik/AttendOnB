@@ -2,6 +2,7 @@ package com.spidersholidays.attendonb.ui.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
@@ -22,6 +23,9 @@ import com.spidersholidays.attendonb.utilites.PrefUtil
 import com.google.android.material.navigation.NavigationView
 import com.spidersholidays.attendonb.ui.home.mainstate.stateconfirmdialog.StateConfirmDialog
 import com.spidersholidays.attendonb.utilites.Constants
+import com.spidersholidays.attendonb.utilites.PrefUtil.Companion.ARABIC_LANG
+import com.spidersholidays.attendonb.utilites.PrefUtil.Companion.ENGLISH_LANG
+import com.spidersholidays.attendonb.utilites.Utilities
 import kotlinx.android.synthetic.main.activity_home.*
 
 
@@ -53,7 +57,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 .commitNow()
 
         initView()
-        initListeneres()
+        initListeners()
     }
 
     override fun initObservers() {
@@ -106,7 +110,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
 
         } else if (id == R.id.log_out) {
-            val customDialog = CustomDialog.getInstance(this, CustomDialog.DialogOption.OPTION_2);
+            val customDialog = CustomDialog.getInstance(this, CustomDialog.DialogOption.OPTION_2)
             customDialog.customDialogContent = resources.getString(R.string.log_out);
             customDialog.onCustomDialogPositiveClick = object : CustomDialog.OnCustomDialogPositiveClick {
                 override fun onPositiveClicked() {
@@ -119,6 +123,23 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 override fun onNectiveClicked() {
                     customDialog.dismiss()
 
+                }
+            }
+            customDialog.show()
+
+        }else if(id== R.id.language){
+            val customDialog = CustomDialog.getInstance(this, CustomDialog.DialogOption.LANGUAGE)
+            customDialog.customDialogContent = resources.getString(R.string.language);
+            customDialog.onCustomDialogPositiveClick = object : CustomDialog.OnCustomDialogPositiveClick {
+                override fun onPositiveClicked() {
+                    Utilities.changeAppLanguage(baseContext,ARABIC_LANG)
+                    PrefUtil.setAppLang(baseContext,ARABIC_LANG)
+                    Utilities.restartContext(baseContext)
+                }
+                override fun onNectiveClicked() {
+                    Utilities.changeAppLanguage(baseContext, ENGLISH_LANG)
+                    PrefUtil.setAppLang(baseContext,ENGLISH_LANG)
+                    Utilities.restartContext(baseContext)
                 }
             }
             customDialog.show()
@@ -175,8 +196,10 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     }
 
-    fun initListeneres() {
-        intent.getBooleanExtra(VIEW_CONFIRM_DIALOG, false).takeIf { it }.apply {
+    fun initListeners() {
+         intent.getBooleanExtra(VIEW_CONFIRM_DIALOG, false).takeIf {
+            it
+        }?.apply {
             if (PrefUtil.getCurrentUserStatsID(baseContext) == Constants.OUT) {
                 stateConfirmDialog = StateConfirmDialog.getInstance(PrefUtil.getUserName(baseContext), Constants.OUT)
             } else if (PrefUtil.getCurrentUserStatsID(baseContext) == Constants.ENDED) {
@@ -185,9 +208,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             stateConfirmDialog?.show(supportFragmentManager.beginTransaction(), StateConfirmDialog::javaClass.name)
             intent.removeExtra(VIEW_CONFIRM_DIALOG) //clear intent history to avoid dialog occupancy through onResume
         }
-        intent.getBooleanExtra(VIEW_CONFIRM_DIALOG, false).takeIf { !it }.apply {
-            stateConfirmDialog?.dismiss()
-        }
+
 
     }
 

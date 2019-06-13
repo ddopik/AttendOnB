@@ -19,6 +19,8 @@ import java.io.File
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import com.google.android.gms.security.ProviderInstaller
+import com.spidersholidays.attendonb.utilites.PrefUtil
+import com.spidersholidays.attendonb.utilites.Utilities
 
 
 class AttendOnBApp : MultiDexApplication() {
@@ -60,6 +62,8 @@ class AttendOnBApp : MultiDexApplication() {
             val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
             registerReceiver(networkChangeBroadcastReceiver, filter)
         }
+
+        Utilities.changeAppLanguage(this,PrefUtil.getAppLanguage(this))
 
     }
 

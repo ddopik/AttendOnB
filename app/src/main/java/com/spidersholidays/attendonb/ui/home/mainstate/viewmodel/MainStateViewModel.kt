@@ -5,7 +5,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
 import android.location.LocationManager
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
@@ -48,9 +50,9 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
 
     private var mapUtls: MapUtls? = null
 
-    fun onAttendBtnChangeState(): LiveData<ApplyButtonState> = attendBtnState
+    fun onAttendBtnChangeState(): SingleLiveEvent<ApplyButtonState> = attendBtnState
     fun onDataLoading(): LiveData<Boolean> = progressBarState
-    fun onAttendAction(): LiveData<AttendMessage> = attendActionCurrentStats
+    fun onAttendAction(): SingleLiveEvent<AttendMessage> = attendActionCurrentStats
 
 
     companion object {
@@ -142,11 +144,19 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
                 }, { t: Throwable? ->
                     mapUtls?.removeLocationRequest()
                     progressBarState.postValue(false)
+
+                    if(PrefUtil.getCurrentUserStatsID(AttendOnBApp.app!!) != ENDED){
+                        val applyButtonStats=ApplyButtonState()
+                        applyButtonStats.isEnable=true
+                        attendBtnState.postValue(applyButtonStats)
+                    }
+
                     CustomErrorUtils.setError(TAG, t)
 
                 })
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     override fun onLocationUpdate(location: Location) {
 
          progressBarState.postValue(false)

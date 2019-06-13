@@ -20,7 +20,7 @@ class QrReaderActivity : AppCompatActivity() {
 
         intent.getDoubleExtra(CURRENT_LAT,0.0).let {
             if(it >0.0 && intent.getDoubleExtra(CURRENT_LAT,0.0) >0.0 ){
-                QrSpareReaderFragment.newInstance(it,intent.getDoubleExtra(CURRENT_LAT,0.0))?.let {
+                QrReaderFragment.newInstance(it,intent.getDoubleExtra(CURRENT_LAT,0.0))?.let {
                     supportFragmentManager.beginTransaction()
                             .replace(R.id.main_container,it )
                             .commitNow()

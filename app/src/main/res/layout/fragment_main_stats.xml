@@ -88,10 +88,10 @@
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                 card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintStart_toStartOf="parent"
-                tools:text="Apply"
+                android:text="@string/apply"
                 tools:visibility="visible" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
