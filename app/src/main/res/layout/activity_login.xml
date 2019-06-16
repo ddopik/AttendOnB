@@ -81,7 +81,8 @@
                 android:layout_marginBottom="24dp"
                 android:gravity="center"
                 android:text="@string/forgot_password"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="invisible" />
 
         </LinearLayout>
     </ScrollView>
