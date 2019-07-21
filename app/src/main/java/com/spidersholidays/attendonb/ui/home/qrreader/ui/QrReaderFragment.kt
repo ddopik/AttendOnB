@@ -85,9 +85,6 @@ class QrReaderFragment : BaseFragment() {
             startActivity(intent)
 
 
-
-
-
         })
         qrReaderViewModel.isUnKnownError().observe(activity as QrReaderActivity, Observer {
             Log.e(TAG, it)

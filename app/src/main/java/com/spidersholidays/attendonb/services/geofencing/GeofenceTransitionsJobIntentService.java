@@ -192,6 +192,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
         switch (transitionType) {
             case Geofence.GEOFENCE_TRANSITION_ENTER:
                 PrefUtil.Companion.setIsInsideRadius(getBaseContext(),true);
+                // send an RxEventBus if you wan't to depand on GeoFencing Event
                 return getString(R.string.geofence_transition_entered);
             case Geofence.GEOFENCE_TRANSITION_EXIT:
                 PrefUtil.Companion.setIsInsideRadius(getBaseContext(),false);

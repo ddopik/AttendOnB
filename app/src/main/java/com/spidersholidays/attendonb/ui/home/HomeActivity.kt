@@ -21,6 +21,7 @@ import com.spidersholidays.attendonb.utilites.GlideApp
 import com.spidersholidays.attendonb.utilites.PrefUtil
 import com.google.android.material.navigation.NavigationView
 import com.spidersholidays.attendonb.ui.home.mainstate.stateconfirmdialog.StateConfirmDialog
+import com.spidersholidays.attendonb.ui.login.LoginActivity
 import com.spidersholidays.attendonb.utilites.Constants
 import kotlinx.android.synthetic.main.activity_home.*
 
@@ -51,7 +52,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 .commitNow()
 
         initView()
-        initListeneres()
+        initListeners()
     }
 
     override fun initObservers() {
@@ -72,24 +73,6 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        menuInflater.inflate(R.menu.main, menu)
-//        return true
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        val id = item.itemId
-//
-//
-//        return if (id == R.id.action_settings) {
-//            true
-//        } else super.onOptionsItemSelected(item)
-//
-//    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
@@ -112,6 +95,12 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                     customDialog.dismiss()
                     PrefUtil.clearPrefUtil(baseContext)
                     finish()
+                    val intent = Intent (this@HomeActivity,LoginActivity::class.java)
+
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+
                 }
 
                 override fun onNectiveClicked() {
@@ -173,7 +162,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     }
 
-    fun initListeneres(){
+    fun initListeners(){
         intent.getBooleanExtra(VIEW_CONFIRM_DIALOG,false).takeIf { it ==true }.apply {
             if (PrefUtil.getCurrentUserStatsID(baseContext) == Constants.OUT){
                 StateConfirmDialog.getInstance(PrefUtil.getUserName(baseContext), Constants.OUT).show(supportFragmentManager.beginTransaction(), StateConfirmDialog::javaClass.name)

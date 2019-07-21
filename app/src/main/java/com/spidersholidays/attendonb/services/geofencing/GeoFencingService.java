@@ -45,6 +45,36 @@ import java.util.Map;
  * the ACCESS_FINE_LOCATION permission, as specified in AndroidManifest.xml.
  * <p>
  */
+
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.spidersholidays.attendonb.app.AttendOnBApp;
+import com.spidersholidays.attendonb.utilites.PrefUtil;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
+import java.util.ArrayList;
+import java.util.Objects;
+
+/**
+ * Demonstrates how to create and remove geofences using the GeofencingApi. Uses an IntentService
+ * to monitor geofence transitions and creates notifications whenever a device enters or exits
+ * a geofence.
+ * <p>
+ * This sample requires a device's Location settings to be turned on. It also requires
+ * the ACCESS_FINE_LOCATION permission, as specified in AndroidManifest.xml.
+ * <p>
+ */
 public class GeoFencingService extends Service implements OnCompleteListener<Void> {
 
     private static final String TAG = GeoFencingService.class.getSimpleName();
@@ -57,24 +87,24 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
 
     @Override
     public void onCreate() {
-//        Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
-        // Empty list for storing geofences.
-        mGeofenceList = new ArrayList<>();
+        if (PrefUtil.Companion.isLoggedIn(Objects.requireNonNull(AttendOnBApp.Companion.getApp())) &&  PrefUtil.Companion.getCurrentCentralLat(getBaseContext()) == 0.0) {
+            // Empty list for storing geofences.
+            mGeofenceList = new ArrayList<>();
 
-        // Initially set the PendingIntent used in addGeofences() and removeGeofences() to null.
-        mGeofencePendingIntent = null;
+            // Initially set the PendingIntent used in addGeofences() and removeGeofences() to null.
+            mGeofencePendingIntent = null;
 
 
-        // Get the geofences used. Geofence data is hard coded in this sample.
-        populateGeofenceList();
+            // Get the geofences used. Geofence data is hard coded in this sample.
+            populateGeofenceList();
 
-        mGeofencingClient = LocationServices.getGeofencingClient(this);
+            mGeofencingClient = LocationServices.getGeofencingClient(this);
 
 
 //        performPendingGeofenceTask();
-        addGeofences();
+            addGeofences();
 
-
+        }
     }
 
     @Override
@@ -99,9 +129,6 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
     private PendingIntent mGeofencePendingIntent;
 
 
-
-
-
     /**
      * Builds and returns a GeofencingRequest. Specifies the list of geofences to be monitored.
      * Also specifies how the geofence notifications are initially triggered.
@@ -122,7 +149,6 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
     }
 
 
-
     /**
      * Adds geofences. This method should be called after the user has granted the location
      * permission.
@@ -132,7 +158,6 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
         mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
                 .addOnCompleteListener(this);
     }
-
 
 
     /**
@@ -147,15 +172,14 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
     /**
      * Runs when the result of calling {@link #addGeofences()} and/or {@link #removeGeofences()}
      * is available.
+     *
      * @param task the resulting Task, containing either a result or error.
      */
     @Override
     public void onComplete(@NonNull Task<Void> task) {
         if (task.isSuccessful()) {
-
-
-            Log.e(TAG, "isSuccessful");
-         } else {
+            Log.e(TAG, "is Started");
+        } else {
             // Get the status code for the error and log it using a user-friendly message.
             String errorMessage = GeofenceErrorMessages.getErrorString(this, task.getException());
             Log.e(TAG, errorMessage);
@@ -186,39 +210,44 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
      * the user's location.
      */
     private void populateGeofenceList() {
+
+/// user this loop to add multiple Area
 //        for (Map.Entry<String, LatLng> entry : Constants.BAY_AREA_LANDMARKS.entrySet()) {
 
-            mGeofenceList.add(new Geofence.Builder()
-                    // Set the request ID of the geofence. This is a string to identify this
-                    // geofence.
-                    .setRequestId("Area_1")
+
+
+
+
+        mGeofenceList.clear();
+        mGeofenceList.add(new Geofence.Builder()
+                // Set the request ID of the geofence. This is a string to identify this
+                // geofence.
+                .setRequestId("Area_1")
 
                     // Set the circular region of this geofence.
                     .setCircularRegion(
-                            Double.parseDouble(PrefUtil.Companion.getCurrentCentralLat(getBaseContext())),
-                            Double.parseDouble(PrefUtil.Companion.getCurrentCentralLng(getBaseContext())),
-                            Integer.parseInt(PrefUtil.Companion.getCurrentCentralRadius(getBaseContext()))
+                             PrefUtil.Companion.getCurrentCentralLat(getBaseContext()),
+                           PrefUtil.Companion.getCurrentCentralLng(getBaseContext()),
+                           PrefUtil.Companion.getCurrentCentralRadius(getBaseContext())
                     )
 
-                    // Set the expiration duration of the geofence. This geofence gets automatically
-                    // removed after this period of time.
-                    .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                // Set the expiration duration of the geofence. This geofence gets automatically
+                // removed after this period of time.
+                .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
 
-                    // Set the transition types of interest. Alerts are only generated for these
-                    // transition. We track entry and exit transitions in this sample.
-                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-                            Geofence.GEOFENCE_TRANSITION_EXIT)
+                // Set the transition types of interest. Alerts are only generated for these
+                // transition. We track entry and exit transitions in this sample.
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                        Geofence.GEOFENCE_TRANSITION_EXIT)
 
-                    // Create the geofence.
-                    .build());
+                // Create the geofence.
+                .build());
+
+
+
+
 //        }
     }
-
-
-
-
-
-
 
 
 //    /**
@@ -231,7 +260,6 @@ public class GeoFencingService extends Service implements OnCompleteListener<Voi
 //            removeGeofences();
 //        }
 //    }
-
 
 
 }

@@ -52,6 +52,7 @@
             android:name="com.spidersholidays.attendonb.ui.result.ResultActivity"
             android:screenOrientation="portrait" />
         <activity android:name="com.spidersholidays.attendonb.ui.test.Cam_View" />
+        <activity android:name=".ui.home.qrreader.ui.QrSpareReaderActivity" />
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"

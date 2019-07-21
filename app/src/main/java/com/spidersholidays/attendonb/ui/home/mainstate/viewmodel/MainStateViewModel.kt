@@ -105,6 +105,67 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
                 })
     }
 
+
+    fun attendRequest(context: Context) {
+        progressBarState.postValue(true)
+        mapUtls=MapUtls(this)
+        val applyButtonStats=ApplyButtonState()
+        applyButtonStats.isEnable=false
+        attendBtnState.postValue(applyButtonStats)
+        mapUtls?.startLocationUpdates(context, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
+    }
+
+
+    override fun onLocationUpdate(location: Location) {
+
+         progressBarState.postValue(false)
+        val applyButtonStats=ApplyButtonState()
+        val centralLocation = Location("centrla")
+        centralLocation.latitude=PrefUtil.getCurrentCentralLat(AttendOnBApp.app!!)
+        centralLocation.longitude=PrefUtil.getCurrentCentralLng(AttendOnBApp.app!!)
+        Log.e(TAG,"onLocationUpdate() ---> CentralLocation is "+ PrefUtil.getCurrentCentralRadius(AttendOnBApp.app!!) )
+        Log.e(TAG,"onLocationUpdate() ---> CurrentLocation to Central Location is "+ location.distanceTo(centralLocation)  )
+
+        when {
+            location.isFromMockProvider -> {
+                CustomErrorUtils.viewSnackBarError(Constants.ErrorType.MOCK_LOCATION)
+                applyButtonStats.isEnable = true
+                attendBtnState.postValue(applyButtonStats)
+                mapUtls?.removeLocationRequest()
+                Log.e(TAG, "----->isFromMockProvider")
+                return
+
+            }
+
+//// listen to this block with RxEnvent if you wan't to use GeoFencing
+//            !PrefUtil.isInsideRadius(AttendOnBApp.app!!) -> {
+//                CustomErrorUtils.viewSnackBarError(Constants.ErrorType.OUT_OF_AREA)
+//                applyButtonStats.isEnable = true
+//                attendBtnState.postValue(applyButtonStats)
+//                mapUtls?.removeLocationRequest()
+//                Log.e(TAG, "----->Not InsideRadius")
+//            }
+
+            location.distanceTo(centralLocation) > PrefUtil.getCurrentCentralRadius(AttendOnBApp.app!!)  -> {
+                CustomErrorUtils.viewSnackBarError(Constants.ErrorType.OUT_OF_AREA)
+                applyButtonStats.isEnable = true
+                attendBtnState.postValue(applyButtonStats)
+                mapUtls?.removeLocationRequest()
+                Log.e(TAG, "----->Not InsideRadius")
+            }
+
+
+            CustomErrorUtils.haveNetworkConnection(AttendOnBApp.app?.baseContext!!) -> {
+                sendAttendAction(PrefUtil.getUserId(AttendOnBApp.app!!), location)
+            }
+            else -> {
+                CustomErrorUtils.viewSnackBarError(Constants.ErrorType.ONLINE_DISCONNECTED)
+                mapUtls?.removeLocationRequest()
+            }
+        }
+
+
+    }
     @SuppressLint("CheckResult")
     fun sendAttendAction(uid: String, currentLocation: Location) {
         progressBarState.postValue(true)
@@ -131,7 +192,7 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
                                 attendActionCurrentStats.postValue(attendMessage)
                             }
                             ENDED -> {
-                                attendMessage.attendFlag= AttendMessage.AttendFlags.ENDED
+//                                attendMessage.attendFlag= AttendMessage.AttendFlags.ENDED
                             }
                             else -> Log.e(TAG,"sendAttendCheckRequest ----> ${attendResponse.attendData?.attendStatus.toString()}")
                         }
@@ -147,47 +208,9 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
                 })
     }
 
-    override fun onLocationUpdate(location: Location) {
-
-         progressBarState.postValue(false)
-        val applyButtonStats=ApplyButtonState()
-        when {
-            location.isFromMockProvider -> {
-                CustomErrorUtils.viewSnackBarError(Constants.ErrorType.MOCK_LOCATION)
-                applyButtonStats.isEnable = true
-                attendBtnState.postValue(applyButtonStats)
-                mapUtls?.removeLocationRequest()
-                Log.e(TAG, "----->isFromMockProvider")
-
-            }
-            !PrefUtil.isInsideRadius(AttendOnBApp.app!!) -> {
-                CustomErrorUtils.viewSnackBarError(Constants.ErrorType.OUT_OF_AREA)
-                applyButtonStats.isEnable = true
-                attendBtnState.postValue(applyButtonStats)
-                mapUtls?.removeLocationRequest()
-                Log.e(TAG, "----->Not InsideRadius")
-
-            }
-            CustomErrorUtils.haveNetworkConnection(AttendOnBApp.app?.baseContext!!) -> {
-                sendAttendAction(PrefUtil.getUserId(AttendOnBApp.app!!), location)
-            }
-            else -> {
-                CustomErrorUtils.viewSnackBarError(Constants.ErrorType.ONLINE_DISCONNECTED)
-                mapUtls?.removeLocationRequest()
-            }
-        }
 
 
-    }
 
-
-    fun attendRequest(context: Context) {
-        mapUtls=MapUtls(this)
-        val applyButtonStats=ApplyButtonState()
-        applyButtonStats.isEnable=false
-        attendBtnState.postValue(applyButtonStats)
-        mapUtls?.startLocationUpdates(context, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
-    }
 
 
 

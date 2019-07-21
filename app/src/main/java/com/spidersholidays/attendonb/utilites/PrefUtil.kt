@@ -186,17 +186,17 @@ class PrefUtil {
 
         }
 
-        fun getCurrentCentralLat(mContext: Context): String {
-            return getSharedPref(mContext).getString(CURRENT_CENTRAL_LAT, "")
+        fun getCurrentCentralLat(mContext: Context): Double {
+            return getSharedPref(mContext).getString(CURRENT_CENTRAL_LAT, "").toDouble()
 
         }
 
-        fun getCurrentCentralLng(mContext: Context): String {
-            return getSharedPref(mContext).getString(CURRENT_CENTRAL_LNG, "")
+        fun getCurrentCentralLng(mContext: Context): Double {
+            return getSharedPref(mContext).getString(CURRENT_CENTRAL_LNG, "").toDouble()
 
         }
-        fun getCurrentCentralRadius(mContext: Context): String {
-            return getSharedPref(mContext).getString(CURRENT_CENTRAL_RADIOUS, "")
+        fun getCurrentCentralRadius(mContext: Context): Float {
+            return getSharedPref(mContext).getString(CURRENT_CENTRAL_RADIOUS, "").toFloat()
 
         }
 

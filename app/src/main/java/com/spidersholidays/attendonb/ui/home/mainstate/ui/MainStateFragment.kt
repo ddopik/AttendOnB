@@ -19,6 +19,7 @@ import com.spidersholidays.attendonb.ui.home.mainstate.model.ApplyButtonState
 import com.spidersholidays.attendonb.ui.home.mainstate.viewmodel.MainStateViewModel
 import com.spidersholidays.attendonb.ui.home.model.AttendMessage
 import com.spidersholidays.attendonb.ui.home.qrreader.ui.QrReaderActivity
+import com.spidersholidays.attendonb.ui.home.qrreader.ui.QrSpareReaderActivity
 import com.spidersholidays.attendonb.utilites.Constants
 import com.spidersholidays.attendonb.utilites.PrefUtil
 import com.spidersholidays.attendonb.utilites.rxeventbus.RxEventBus
@@ -149,7 +150,7 @@ class MainStateFragment : BaseFragment() {
     private fun navigateToScanScreen(location:Location){
 
         main_state_progress.visibility = View.GONE
-            val intent = Intent(activity, QrReaderActivity::class.java)
+            val intent = Intent(activity, QrSpareReaderActivity::class.java)
             intent.putExtra(QrReaderActivity.CURRENT_LAT, location.latitude)
             intent.putExtra(QrReaderActivity.CURRENT_LNG, location.longitude)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
