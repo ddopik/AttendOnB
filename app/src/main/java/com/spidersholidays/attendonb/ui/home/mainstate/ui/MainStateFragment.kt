@@ -73,8 +73,7 @@ class MainStateFragment : BaseFragment() {
     override fun initObservers() {
 
         mainStateViewModel?.onAttendBtnChangeState()?.observe(this, Observer { stats ->
-
-            setBtnAttendBtnState(stats)
+//            setBtnAttendBtnState(stats)
         })
 
         mainStateViewModel?.onDataLoading()?.observe(this, Observer {
@@ -131,20 +130,20 @@ class MainStateFragment : BaseFragment() {
     }
 
 
-    private fun setBtnAttendBtnState(applyButtonState: ApplyButtonState) {
-
-        stats_val.text = PrefUtil.getCurrentStatsMessage(context!!)
-        apply_stats.visibility = View.VISIBLE
-        if (applyButtonState.isEnable!!) {
-            apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.text_input_color))
-            apply_stats.isEnabled = true
-        } else if (applyButtonState.isViable !=null && !applyButtonState.isViable!!) {
-            apply_stats.visibility = View.INVISIBLE
-        } else {
-            apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.gray400))
-            apply_stats.isEnabled = false
-        }
-    }
+//    private fun setBtnAttendBtnState(applyButtonState: ApplyButtonState) {
+//
+//        stats_val.text = PrefUtil.getCurrentStatsMessage(context!!)
+//        apply_stats.visibility = View.VISIBLE
+//        if (applyButtonState.isEnable!!) {
+//            apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.text_input_color))
+//            apply_stats.isEnabled = true
+//        } else if (applyButtonState.isViable !=null && !applyButtonState.isViable!!) {
+//            apply_stats.visibility = View.INVISIBLE
+//        } else {
+//            apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.gray400))
+//            apply_stats.isEnabled = false
+//        }
+//    }
 
 
     private fun navigateToScanScreen(location:Location){

@@ -20,6 +20,7 @@ import com.spidersholidays.attendonb.ui.home.mainstate.ui.MainStateFragment
 import com.spidersholidays.attendonb.utilites.GlideApp
 import com.spidersholidays.attendonb.utilites.PrefUtil
 import com.google.android.material.navigation.NavigationView
+import com.spidersholidays.attendonb.ui.attend.view.AttendFragment
 import com.spidersholidays.attendonb.ui.home.mainstate.stateconfirmdialog.StateConfirmDialog
 import com.spidersholidays.attendonb.ui.login.LoginActivity
 import com.spidersholidays.attendonb.utilites.Constants
@@ -79,12 +80,12 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val id = item.itemId
 
         if (id == R.id.nav_home) {
-            val currentScreenIndex = getCurrentViewIndex(MainStateFragment::class.java.simpleName);
-            if (currentScreenIndex < supportFragmentManager.backStackEntryCount) {
+//            val currentScreenIndex = getCurrentViewIndex(MainStateFragment::class.java.simpleName)
+//            if (currentScreenIndex < supportFragmentManager.backStackEntryCount) {
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.home_swap_container, MainStateFragment.newInstance(), MainStateFragment::class.java.simpleName)
                         .commitNow()
-            }
+//            }
 
         } else if (id == R.id.log_out) {
             val customDialog = CustomDialog.getInstance(this, CustomDialog.DialogOption.OPTION_2);
@@ -111,19 +112,12 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             customDialog.show()
 
         }
+        else if (id == R.id.nav_attend) {
+                 supportFragmentManager.beginTransaction()
+                        .replace(R.id.home_swap_container, AttendFragment.getInstance(), AttendFragment::class.java.simpleName)
+                        .commitNow()
 
-//        else if (id == R.id.nav_gallery) {
-
-//        }
-//
-//        else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_tools) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
+        }
 
 
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
@@ -131,15 +125,6 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         return true
     }
 
-    private fun getCurrentViewIndex(tagname: String): Int {
-        val manager = supportFragmentManager
-        for (i in 0 until manager.backStackEntryCount) {
-            if (manager.getBackStackEntryAt(i).name.equals(tagname)) {
-                return i
-            }
-        }
-        return 0
-    }
 
 
     private fun initView() {
@@ -163,12 +148,18 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     fun initListeners(){
-        intent.getBooleanExtra(VIEW_CONFIRM_DIALOG,false).takeIf { it ==true }.apply {
+      val state=  intent.getBooleanExtra(VIEW_CONFIRM_DIALOG,false)
+
+        if (state){
+
             if (PrefUtil.getCurrentUserStatsID(baseContext) == Constants.OUT){
                 StateConfirmDialog.getInstance(PrefUtil.getUserName(baseContext), Constants.OUT).show(supportFragmentManager.beginTransaction(), StateConfirmDialog::javaClass.name)
             }else  if (PrefUtil.getCurrentUserStatsID(baseContext) == Constants.ENDED){
                 StateConfirmDialog.getInstance(PrefUtil.getUserName(baseContext), Constants.ENDED).show(supportFragmentManager.beginTransaction(), StateConfirmDialog::javaClass.name)
             }
+
+
+
             intent.putExtra(VIEW_CONFIRM_DIALOG,false) //clear intent history to avoid dialog occupancy through onResume
         }
     }
@@ -177,4 +168,15 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         super.onStop()
         stopService(geoFencingService)
     }
+
+    private fun getCurrentViewIndex(tagname: String): Int {
+        val manager = supportFragmentManager
+        for (i in 0 until manager.backStackEntryCount) {
+            if (manager.getBackStackEntryAt(i).name.equals(tagname)) {
+                return i
+            }
+        }
+        return 0
+    }
+
 }

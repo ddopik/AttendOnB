@@ -6,9 +6,11 @@ package com.spidersholidays.attendonb.ui.home.mainstate.model
  * brandeda.net company,
  * cairo, Egypt.
  */
-class ApplyButtonState {
+class ApplyButtonState(btnEnabled: Boolean? = null, btnVisable: Boolean? = null, btnText: String? = null) {
 
-    var isEnable :Boolean ?=null
-    var isViable :Boolean ?=null
-    var buttonText :String ?=null
+    var isEnable :Boolean ?=btnEnabled
+    var isViable :Boolean ?=btnVisable
+    var buttonText :String ?=btnText
 }
+
+ 

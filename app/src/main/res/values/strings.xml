@@ -91,4 +91,15 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="welcome">Welcome</string>
     <string name="by_by">Bye Bye</string>
+    <string name="menu_attend_stats">Attend (in / out)</string>
+    <string name="menu_vacation">Vacation (Coming Soon)</string>
+    <string name="menu_pay_roll">Payroll (Coming Soon)</string>
+    <string name="qr">Qr</string>
+    <string name="local_netWork">Local NetWork</string>
+    <string name="nfc">nfc</string>
+    <string name="please_select_attend_type">please select method to </string>
+    <string name="attend">Attend</string>
+    <string name="out">Leave</string>
+    <string name="leave">taken</string>
+    <string name="attend_taken">your attend has been taken today</string>
 </resources>
