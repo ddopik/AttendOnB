@@ -54,7 +54,6 @@ class MainStateFragment : BaseFragment() {
         mainStateViewModel = MainStateViewModel.getInstance(activity as HomeActivity)
         initObservers()
         intiView()
-        intiListeners()
 
 
     }
@@ -66,15 +65,12 @@ class MainStateFragment : BaseFragment() {
 
     override fun intiView() {
         stats_val.text = PrefUtil.getCurrentStatsMessage(context!!)
-        apply_stats.text = resources.getString(R.string.apply)
 
     }
 
     override fun initObservers() {
 
-        mainStateViewModel?.onAttendBtnChangeState()?.observe(this, Observer { stats ->
-//            setBtnAttendBtnState(stats)
-        })
+
 
         mainStateViewModel?.onDataLoading()?.observe(this, Observer {
             if (it) {
@@ -85,99 +81,12 @@ class MainStateFragment : BaseFragment() {
         })
 
 
-        mainStateViewModel?.onAttendAction()?.observe(this, Observer {
-            when (it.attendFlag) {
-                AttendMessage.AttendFlags.ENTER -> {
-
-                    navigateToScanScreen(it.currentLocation!!)
-
-                }
-                AttendMessage.AttendFlags.OUT -> {
-                    navigateToScanScreen(it.currentLocation!!)
-
-                }
-                AttendMessage.AttendFlags.ENDED -> {
-                 }
-
-
-            }
-        })
-    }
-
-    private fun intiListeners() {
-        apply_stats.setOnClickListener {
-            val applyButtonStats = ApplyButtonState()
-            val off = Settings.Secure.getInt(context?.contentResolver, Settings.Secure.LOCATION_MODE)
-            if (off == 0) {
-//                applyButtonStats.isEnable = false
-//                setBtnAttendBtnState(applyButtonStats)
-                CustomErrorUtils.viewSnackBarError(Constants.ErrorType.GPS_PROVIDER)
-            } else {
-                mainStateViewModel?.attendRequest(context!!)
-            }
-
-
-        }
-
-        val disposable = RxEventBus.getInstance().refreshStatsSubject.subscribe({ reFreshStats ->
-            mainStateViewModel?.checkAttendStatus(PrefUtil.getUserId(context!!))
-
-        }, { throwable ->
-            Log.e(TAG, throwable.message)
-        })
-        disposables.add(disposable)
 
     }
 
 
-//    private fun setBtnAttendBtnState(applyButtonState: ApplyButtonState) {
-//
-//        stats_val.text = PrefUtil.getCurrentStatsMessage(context!!)
-//        apply_stats.visibility = View.VISIBLE
-//        if (applyButtonState.isEnable!!) {
-//            apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.text_input_color))
-//            apply_stats.isEnabled = true
-//        } else if (applyButtonState.isViable !=null && !applyButtonState.isViable!!) {
-//            apply_stats.visibility = View.INVISIBLE
-//        } else {
-//            apply_stats.setBackgroundColor(ContextCompat.getColor(context!!, R.color.gray400))
-//            apply_stats.isEnabled = false
-//        }
-//    }
 
 
-    private fun navigateToScanScreen(location:Location){
-
-        main_state_progress.visibility = View.GONE
-            val intent = Intent(activity, QrSpareReaderActivity::class.java)
-            intent.putExtra(QrReaderActivity.CURRENT_LAT, location.latitude)
-            intent.putExtra(QrReaderActivity.CURRENT_LNG, location.longitude)
-            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-            startActivity(intent)
-
-    }
 
 
-    private fun showPhotoDialog(activity: Activity, title: String?, message: CharSequence) {
-        val customDialog = CustomDialog.getInstance(activity, CustomDialog.DialogOption.OPTION_1);
-        customDialog.customDialogContent=title;
-        customDialog.onCustomDialogPositiveClick = object : CustomDialog.OnCustomDialogPositiveClick {
-            override fun onPositiveClicked() {
-                customDialog.dismiss()
-            }
-
-            override fun onNectiveClicked() {
-                customDialog.dismiss()
-
-            }
-        }
-        customDialog.show()
-
-
-    }
-
-    override fun onStop() {
-        super.onStop()
-//        disposables.clear()
-    }
 }
