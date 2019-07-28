@@ -14,6 +14,13 @@ import com.spidersholidays.attendonb.utilites.rxeventbus.RxEventBus
 import com.spidersholidays.attendonb.utilites.rxeventbus.RxForceRefreshEvent
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.disposables.CompositeDisposable
+import android.icu.util.ULocale.getLanguage
+ import android.content.Context
+import com.spidersholidays.attendonb.app.AttendOnBApp
+import com.spidersholidays.attendonb.utilites.ContextWrapper
+import com.spidersholidays.attendonb.utilites.PrefUtil
+import java.util.*
+
 
 abstract class BaseActivity : AppCompatActivity() {
 
@@ -111,6 +118,20 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
 
+    override fun attachBaseContext(newBase: Context) {
+
+        val newLocale: Locale
+
+        val lang = PrefUtil.getAppLanguage(AttendOnBApp.app?.baseContext!!);
+
+        if (lang == "zh_CN") {
+            newLocale = Locale("zh")
+        } else {
+            newLocale = Locale(lang)
+        }
 
 
+        val context = ContextWrapper.wrap(newBase, newLocale)
+        super.attachBaseContext(context)
+    }
 }

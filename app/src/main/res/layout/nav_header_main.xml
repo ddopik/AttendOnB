@@ -19,6 +19,7 @@
         android:contentDescription="@string/nav_header_desc"
         android:paddingTop="16dp"
         android:scaleType="centerCrop"
+        android:layout_gravity="start"
         app:srcCompat="@mipmap/ic_launcher_round" />
 
     <TextView
@@ -27,7 +28,8 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="@string/nav_header_title"
-
+        android:layout_gravity="start"
+        android:textAlignment="viewStart"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView

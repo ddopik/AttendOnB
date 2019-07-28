@@ -17,8 +17,7 @@
         android:layout_above="@+id/btn_view"
         android:layout_marginBottom="24dp"
         android:gravity="center"
-        android:text="CLICK TO VIEW CUSTOM ALERT DIALOG"
-        android:textSize="18sp"
+         android:textSize="18sp"
         android:textStyle="normal|bold"
         tools:ignore="HardcodedText" />
 

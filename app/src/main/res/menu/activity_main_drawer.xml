@@ -23,11 +23,25 @@
             android:id="@+id/nav_pay_roll"
             app:actionLayout="@layout/view_slide_menu_payroll_item"
             android:enabled="false"/>
+
+
+        <item
+            android:id="@+id/language"
+            android:icon="@drawable/ic_language"
+            android:title="@string/language" />
         <item
             android:id="@+id/log_out"
             android:icon="@drawable/ic_log_out"
             android:title="@string/log_out" />
-     </group>
+        <!--<item-->
+            <!--android:id="@+id/nav_slideshow"-->
+            <!--android:icon="@drawable/ic_menu_slideshow"-->
+            <!--android:title="@string/menu_slideshow" />-->
+        <!--<item-->
+            <!--android:id="@+id/nav_tools"-->
+            <!--android:icon="@drawable/ic_menu_manage"-->
+            <!--android:title="@string/menu_tools" />-->
+    </group>
 
     <!--<item android:title="Communicate">-->
         <!--<menu>-->

@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.bikomobile:circleindicatorpager:1.0.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/37ee41681c73c3d41d3eaeed9793da91/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/37ee41681c73c3d41d3eaeed9793da91/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/24d6418c7ffacf186d1d17a22118f114/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/24d6418c7ffacf186d1d17a22118f114/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

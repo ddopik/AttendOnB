@@ -47,6 +47,7 @@ import java.util.regex.Pattern;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
+
 /**
  * Created by ddopik @_@....
  */
@@ -182,13 +183,15 @@ public class Utilities {
 
         password.setSelection(password.getText().length());
     }
+
     @SuppressLint("MissingPermission")
-    public static String getDeviceIMEI(Context context){
+    public static String getDeviceIMEI(Context context) {
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         return telephonyManager.getDeviceId();
     }
+
     @SuppressLint("HardwareIds")
-    public static String getDeviceUniqueID(Activity activity){
+    public static String getDeviceUniqueID(Activity activity) {
         String device_unique_id = Settings.Secure.getString(activity.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         return device_unique_id;
@@ -238,14 +241,29 @@ public class Utilities {
     }
 
     public static void changeAppLanguage(Context context, String localType) {
-        Locale locale = new Locale(localType);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        context.getApplicationContext().getResources().updateConfiguration(config, null);
 
+        if (localType.equals(PrefUtil.Companion.getENGLISH_LANG())) {
+            Locale locale = new Locale(PrefUtil.Companion.getENGLISH_LANG());
+            Locale.setDefault(locale);
+            Configuration config = new Configuration();
+            config.locale = locale;
+            context.getApplicationContext().getResources().updateConfiguration(config, context.getApplicationContext().getResources().getDisplayMetrics());
+        } else if (localType.equals(PrefUtil.Companion.getARABIC_LANG())) {
+            Locale locale = new Locale(PrefUtil.Companion.getARABIC_LANG());
+            Locale.setDefault(locale);
+            Configuration config = new Configuration();
+            config.locale = locale;
+            context.getApplicationContext().getResources().updateConfiguration(config, context.getApplicationContext().getResources().getDisplayMetrics());
+        }
+
+//        Locale locale = new Locale(localType);
+//        Locale.setDefault(locale);
+//        Configuration config = new Configuration();
+//        config.locale = locale;
+//        context.getApplicationContext().getResources().updateConfiguration(config,  context.getApplicationContext().getResources().getDisplayMetrics());
 
     }
+
 
     public static void restartContext(Context context) {
         Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
@@ -319,9 +337,7 @@ public class Utilities {
         }
     }
 
-    public static List<String> getMentionsList(String comment)
-
-    {
+    public static List<String> getMentionsList(String comment) {
 
 
         String regex = "@+([a-zA-Z0-9_]+)";
@@ -378,6 +394,7 @@ public class Utilities {
         }
         return null;
     }
+
     public static void hideKeyboard(Activity activity) {
         View view = activity.getCurrentFocus();
         if (view != null) {
@@ -409,7 +426,6 @@ public class Utilities {
         else
             return true;
     }
-
 
 
     public static boolean areThereMockPermissionApps(Context context) {

@@ -14,7 +14,11 @@ class PrefUtil {
 
 
     companion object {
+        var ARABIC_LANG = "ar"
+        var ENGLISH_LANG = "en_US"
         private val PREF_FILE_NAME = "AttendOnB"
+        private val APP_LANG = "APP_LNG"
+
         private val USER_ID = "id"
         private val USER_TOKEN = "user_token"
         private val USER_NAME = "user_name"
@@ -51,6 +55,7 @@ class PrefUtil {
                     .putString(USER_ID, userId)
                     .apply()
         }
+
         fun setUserName(context: Context, userName: String) {
             getSharedPref(context)
                     .edit()
@@ -71,6 +76,7 @@ class PrefUtil {
                     .putBoolean(FIRST_TIME_LOGIN, isFirstTime)
                     .apply()
         }
+
         fun setIsLoggedIn(context: Context, isLoggedIn: Boolean) {
             getSharedPref(context)
                     .edit()
@@ -127,7 +133,6 @@ class PrefUtil {
         }
 
 
-
         fun setCurrentCentralRadius(context: Context, currentCentralRadious: String) {
             getSharedPref(context)
                     .edit()
@@ -142,6 +147,9 @@ class PrefUtil {
                     .apply()
         }
 
+        fun setAppLang(context: Context, appLang: String) {
+            getSharedPref(context).edit().putString(APP_LANG, appLang).apply()
+        }
 
         fun getUseToken(mContext: Context): String {
             return getSharedPref(mContext).getString(USER_TOKEN, "")
@@ -177,10 +185,12 @@ class PrefUtil {
             return getSharedPref(mContext).getString(CURRENT_USER_STATS_ID, "-1")
 
         }
+
         fun getUserGender(mContext: Context): String {
             return getSharedPref(mContext).getString(USER_GENDER, "")
 
         }
+
         fun getCurrentStatsMessage(mContext: Context): String {
             return getSharedPref(mContext).getString(CURRENT_STATS_MESSAGE, "")
 
@@ -200,14 +210,21 @@ class PrefUtil {
 
         }
 
+        fun getAppLanguage(mContext: Context): String {
+            return getSharedPref(mContext).getString(APP_LANG, "en_US")
+
+        }
+
         fun isInsideRadius(mContext: Context): Boolean {
             return getSharedPref(mContext).getBoolean(IS_INSIDE_RADIOUS, false)
 
         }
+
         fun isFirstTimeLogin(mContext: Context): Boolean {
             return getSharedPref(mContext).getBoolean(FIRST_TIME_LOGIN, true)
 
         }
+
         fun isLoggedIn(mContext: Context): Boolean {
             return getSharedPref(mContext).getBoolean(IS_LOGGED_IN, false)
 

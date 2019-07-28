@@ -7,12 +7,15 @@
         android:name="android.hardware.camera"
         android:required="true" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <application
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera.flash" />
+     <application
         android:name="com.spidersholidays.attendonb.app.AttendOnBApp"
         android:allowBackup="true"
         android:icon="@drawable/app_icon"
@@ -54,7 +57,7 @@
         <activity android:name="com.spidersholidays.attendonb.ui.test.Cam_View" />
         <activity android:name=".ui.home.qrreader.ui.QrSpareReaderActivity" />
 
-        <meta-data
+         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
 
@@ -70,6 +73,7 @@
             android:name="com.spidersholidays.attendonb.services.geofencing.GeofenceTransitionsJobIntentService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
     </application>
 
 </manifest>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">الحضور والانصراف الخاص ب اسبيدر</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">الاعدادات</string>
+
+    <string name="menu_home">الرئيسية</string>
+    <string name="menu_gallery">المعرض</string>
+    <string name="menu_slideshow">عرض الشرائح</string>
+    <string name="menu_tools">أدوات</string>
+    <string name="menu_share">شارك</string>
+    <string name="menu_send">إرسال</string>
+
+    <string name="general_photo_chooser_gallery">معرض</string>
+    <string name="general_photo_chooser_title">تحميل الصورة</string>
+    <string name="map_fragment_open_gps">يرجى فتح نظام تحديد المواقع</string>
+    <string name="map_fragment_yes">تمكين نظام تحديد المواقع</string>
+    <string name="map_fragment_no">لا نظام تحديد المواقع</string>
+    <string name="general_photo_chooser_camera">كاميرا</string>
+    <string name="general_gallery_chooser_title">اختر صورة:</string>
+    <string name="send_feed_back">ارسل رأيك</string>
+    <string name="client_email_feedback_subject">client_feed_back</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="forgot_password">هل نسيت كلمة المرور</string>
+    <string name="user_name">اسم المستخدم</string>
+    <string name="password">كلمه السر</string>
+    <string name="net_work_error">خطأ في الشبكة</string>
+    <string name="un_known_error">خطأ غير معروف</string>
+    <string name="invalid_user_name">اسم مستخدم غير صالح</string>
+    <string name="invalid_password">رمز مرور خاطئ</string>
+    <string name="login_permutation_message">يرجى السماح بإذن الوصول لتكون قادرعلى استخدام التطبيق</string>
+    <string name="need_location_permation">تحتاج إذن الموقع</string>
+    <string name="take_screen_shot">خد لقطة للشاشة</string>
+    <string name="mock_location_warrning">يرجى تعطيل تطبيقات الموقع وهمية</string>
+    <string name="please_disable_mock_location_apps">يرجى تعطيل تطبيقات الموقع وهمية الفعالة </string>
+    <string name="apply">تطبيق</string>
+    <string name="permation_required">إذن مطلوب</string>
+    <string name="ok">حسنا</string>
+
+
+    <!-- Buttons strings -->
+    <string name="add_geofences">Add geofences</string>
+    <string name="remove_geofences">Remove geofences</string>
+
+    <string name="geofences_added">Geofences added</string>
+    <string name="geofences_removed">Geofences removed</string>
+
+    <!-- Error strings -->
+    <string name="geofence_not_available">Geofence service is not available now</string>
+    <string name="geofence_too_many_geofences">Your app has registered too many geofences</string>
+    <string name="geofence_too_many_pending_intents">
+        You have provided too many PendingIntents to the addGeofences() call
+    </string>
+    <string name="unknown_geofence_error">
+        Unknown error: the Geofence service is not available now
+    </string>
+    <string name="geofence_transition_invalid_type">
+        Geofence transition error: invalid transition errorType %1$d
+    </string>
+
+    <!-- Transition errorType strings -->
+    <string name="geofence_transition_entered">دخل</string>
+    <string name="geofence_transition_exited">geoFence Out</string>
+    <string name="unknown_geofence_transition">انتقال غير معروف</string>
+
+    <string name="geofence_transition_notification_text">
+        انقر على الإشعار للعودة إلى التطبيق
+    </string>
+
+    <string name="insufficient_permissions">أذونات غير كافية.</string>
+    <string name="permission_rationale">مطلوب إذن الموقع للوظيفة الأساسية</string>
+    <string name="permission_denied_explanation">تم رفض الإذن ، ولكن هناك حاجة للوظيفة الأساسية.</string>
+    <string name="settings">الإعدادات</string>
+    <string name="need_camera_permation">يرجى قبول إذن الكاميرا من أجل استخدام هذا التطبيق</string>
+    <string name="need_location_camera_permation">يرجى تزويدنا باذن الموقع والكاميرا لتكون قادرة على استخدام هذا التطبيق</string>
+    <string name="you_are_out_of_area">أنت خارج المنطقة</string>
+    <string name="log_out">خروج</string>
+    <string name="yes">نعم </string>
+    <string name="no">لا</string>
+    <string name="please_check_your_internet_conniction">الرجاء التحقق من اتصال الانترنت الخاص بك</string>
+    <string name="please_enaple_location_provider">يرجى تمكين مزود الموقع</string>
+    <string name="enable">تمكين</string>
+
+    <string name="title_activity_splash_screen">نشاط شاشة البداية</string>
+    <string name="dummy_button">زر الدمية</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="welcome">أهلا بك</string>
+    <string name="by_by">مع السلامة</string>
+    <string name="language">الغة</string>
+    <string name="arabic">عربى</string>
+    <string name="english">الإنجليزية</string>
+    <string name="choose_language">اختر اللغة</string>
+</resources>

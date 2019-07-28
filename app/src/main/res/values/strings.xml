@@ -102,4 +102,8 @@
     <string name="out">Leave</string>
     <string name="leave">taken</string>
     <string name="attend_taken">your attend has been taken today</string>
+    <string name="language">Language</string>
+    <string name="arabic">Arabic</string>
+    <string name="english">English</string>
+    <string name="choose_language">Choose Language</string>
 </resources>
