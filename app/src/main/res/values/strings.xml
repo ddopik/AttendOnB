@@ -95,8 +95,8 @@
     <string name="menu_vacation">Vacation (Coming Soon)</string>
     <string name="menu_pay_roll">Payroll (Coming Soon)</string>
     <string name="qr">Qr</string>
-    <string name="local_netWork">Local NetWork</string>
-    <string name="nfc">nfc</string>
+    <string name="local_netWork">Local NetWork\n(coming soon)</string>
+    <string name="nfc">NFC\n(coming soon)</string>
     <string name="please_select_attend_type">please select method to </string>
     <string name="attend">Attend</string>
     <string name="out">Leave</string>

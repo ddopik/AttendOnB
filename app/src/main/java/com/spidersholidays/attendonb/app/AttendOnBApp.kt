@@ -12,6 +12,8 @@ import com.spidersholidays.attendonb.realm.RealmDbMigration
 import com.spidersholidays.attendonb.utilites.networkstatus.NetworkChangeBroadcastReceiver
 import com.spidersholidays.attendonb.utilites.networkstatus.NetworkStateChangeManager
 import com.facebook.stetho.Stetho
+import com.spidersholidays.attendonb.utilites.PrefUtil
+import com.spidersholidays.attendonb.utilites.Utilities
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider
 import okhttp3.OkHttpClient
 import java.io.File

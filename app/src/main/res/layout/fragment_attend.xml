@@ -42,6 +42,8 @@
         android:layout_margin="12dp"
         android:textColor="@color/white"
         android:textSize="@dimen/title_sub_head"
+        android:textAllCaps="false"
+
         />
 
 
@@ -54,6 +56,8 @@
         android:layout_margin="12dp"
         android:textColor="@color/white"
         android:textSize="@dimen/title_sub_head"
+        android:textAllCaps="false"
+
         />
 
 
@@ -66,6 +70,8 @@
          android:layout_margin="12dp"
         android:textColor="@color/white"
         android:textSize="@dimen/title_sub_head"
+        android:textAllCaps="false"
+
         />
 
 </LinearLayout>
