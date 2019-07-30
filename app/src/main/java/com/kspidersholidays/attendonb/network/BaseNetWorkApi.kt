@@ -1,14 +1,30 @@
 package com.kspidersholidays.attendonb.network
 
+import android.util.Log
 import com.androidnetworking.common.Priority
+import com.kspidersholidays.attendonb.app.AttendOnBApp
 import com.kspidersholidays.attendonb.ui.home.qrreader.model.AttendResponse
 import com.kspidersholidays.attendonb.ui.login.viewmodel.model.LoginResponse
+import com.kspidersholidays.attendonb.utilites.PrefUtil
 import com.rx2androidnetworking.Rx2AndroidNetworking
 
 class BaseNetWorkApi {
     companion object {
 
 
+//        init {
+//            BASE_URL = if (PrefUtil.getAppLanguage(AttendOnBApp.app!!) == PrefUtil.ARABIC_LANG ){
+//                Log.e(BaseNetWorkApi::class.java.simpleName,"BASE_URL ---> AR")
+//                "https://kuwait.spiderholidays.co/ar/Api"
+//            } else{
+//                Log.e(BaseNetWorkApi::class.java.simpleName,"BASE_URL ---> EN")
+//
+//                "https://kuwait.spiderholidays.co/en/Api"
+//            }
+//
+//
+//
+//}
         //Network Status
         var STATUS_OK = "200"
         var DEFAULT_USER_TYPE = "0"
@@ -20,12 +36,11 @@ class BaseNetWorkApi {
         val ERROR_STATE_1 = "login-400"
         val IMAGE_BASE_URL = "https://kuwait.spiderholidays.co/uploads/thump/"
 
-
-        private const val BASE_URL = "https://kuwait.spiderholidays.co/en/"
-        private const val LOGIN_URL = "$BASE_URL/login_check"
-        private const val ATTEND_ACTION_URL = "$BASE_URL/attend_action"
-        private const val ATTEND_CHECK_URL = "$BASE_URL/attend_check"
-
+        private  var BASE_URL :String ?="https://kuwait.spiderholidays.co/{lang}/Api"
+        private   val LOGIN_URL = "$BASE_URL/login_check"
+        private   val ATTEND_ACTION_URL = "$BASE_URL/attend_action"
+        private   val ATTEND_CHECK_URL = "$BASE_URL/attend_check"
+        private val LANGUAGE_PATH_PARAMETER="lang"
 
         fun login(userName: String, password: String, currentLat: String, currentLng: String,deviceImei:String): io.reactivex.Observable<LoginResponse> {
             return Rx2AndroidNetworking.post(LOGIN_URL)
@@ -34,6 +49,7 @@ class BaseNetWorkApi {
                     .addBodyParameter("latitude", currentLat)
                     .addBodyParameter("longitude", currentLng)
                     .addBodyParameter("imei", deviceImei)
+                    .addPathParameter(LANGUAGE_PATH_PARAMETER,PrefUtil.getAppLanguage(AttendOnBApp.app!!) )
                     .setPriority(Priority.HIGH)
                     .build()
                     .getObjectObservable(LoginResponse::class.java)
@@ -51,6 +67,8 @@ class BaseNetWorkApi {
                     .addBodyParameter("latitude",latitude)
                     .addBodyParameter("longitude",longitude)
                     .addBodyParameter("mobile_flag","1")
+                    .addPathParameter(LANGUAGE_PATH_PARAMETER,PrefUtil.getAppLanguage(AttendOnBApp.app!!) )
+
                     .setPriority(Priority.HIGH)
                     .responseOnlyFromNetwork
                     .build()
@@ -62,6 +80,7 @@ class BaseNetWorkApi {
         fun sendAttendCheckRequest(uid :String) :io.reactivex.Observable<AttendResponse>{
             return Rx2AndroidNetworking.post(ATTEND_CHECK_URL)
                     .addBodyParameter("uid",uid)
+                    .addPathParameter(LANGUAGE_PATH_PARAMETER,PrefUtil.getAppLanguage(AttendOnBApp.app!!) )
                     .setPriority(Priority.HIGH)
                     .responseOnlyFromNetwork
                     .build()

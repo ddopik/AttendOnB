@@ -15,7 +15,7 @@ class PrefUtil {
 
     companion object {
         var ARABIC_LANG = "ar"
-        var ENGLISH_LANG = "en_US"
+        var ENGLISH_LANG = "en"
         private val PREF_FILE_NAME = "AttendOnB"
         private val APP_LANG = "APP_LNG"
 
@@ -211,7 +211,8 @@ class PrefUtil {
         }
 
         fun getAppLanguage(mContext: Context): String? {
-            return getSharedPref(mContext).getString(APP_LANG, "en_US")
+            val currenLang= getSharedPref(mContext).getString(APP_LANG, "en")
+            return getSharedPref(mContext).getString(APP_LANG, "en")
 
         }
 

@@ -9,8 +9,10 @@ import com.kspidersholidays.attendonb.R
 import com.kspidersholidays.attendonb.base.BaseFragment
 import com.kspidersholidays.attendonb.ui.home.HomeActivity
 import com.kspidersholidays.attendonb.ui.home.mainstate.viewmodel.MainStateViewModel
+import com.kspidersholidays.attendonb.utilites.Constants
 import com.kspidersholidays.attendonb.utilites.PrefUtil
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.fragment_attend.*
 import kotlinx.android.synthetic.main.fragment_main_stats.*
 
 
@@ -48,11 +50,11 @@ class MainStateFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         mainStateViewModel?.checkAttendStatus(PrefUtil.getUserId(context!!)!!)
+
     }
 
     override fun intiView() {
         stats_val.text = PrefUtil.getCurrentStatsMessage(context!!)
-
     }
 
     override fun initObservers() {
@@ -67,8 +69,11 @@ class MainStateFragment : BaseFragment() {
             }
         })
 
+        mainStateViewModel?.onAttendBtnChangeState()?.observe(this, Observer { stats ->
 
+            stats_val.text = PrefUtil.getCurrentStatsMessage(context!!)
 
+        })
     }
 
 

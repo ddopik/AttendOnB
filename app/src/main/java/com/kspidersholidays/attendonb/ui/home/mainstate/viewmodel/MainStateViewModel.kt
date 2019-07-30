@@ -77,7 +77,7 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
                     attendResponse?.attendData?.attendStatus?.let {
                         PrefUtil.setCurrentUserStatsID(AttendOnBApp.app?.baseContext!!, attendResponse.attendData?.attendStatus?.status!!)
                         PrefUtil.setCurrentStatsMessage(AttendOnBApp.app?.baseContext!!, attendResponse.attendData?.attendStatus?.msg!!)
-                        val applyButtonStats=ApplyButtonState();
+                        val applyButtonStats=ApplyButtonState()
                          when (attendResponse.attendData?.attendStatus?.status) {
                             ENTER -> {
                                 applyButtonStats.isEnable=true

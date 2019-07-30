@@ -9,10 +9,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 
 import com.google.zxing.Result;
+import com.kspidersholidays.attendonb.R
 import com.kspidersholidays.attendonb.base.BaseActivity
+import com.kspidersholidays.attendonb.base.CustomDialog
 import com.kspidersholidays.attendonb.ui.home.HomeActivity
 import com.kspidersholidays.attendonb.ui.home.qrreader.viewmodel.QrReaderViewModel
+import com.kspidersholidays.attendonb.utilites.Constants
+import com.kspidersholidays.attendonb.utilites.PrefUtil
+import com.kspidersholidays.attendonb.utilites.Utilities
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 class QrSpareReaderActivity : BaseActivity(), ZXingScannerView.ResultHandler {
     private val TAG = QrSpareReaderActivity::class.java.simpleName
@@ -71,9 +77,22 @@ class QrSpareReaderActivity : BaseActivity(), ZXingScannerView.ResultHandler {
 
 
     override fun handleResult(p0: Result?) {
-        qrReaderViewModel.sendAttendRequest(currentLat!!, currentLng!!)
-    }
 
+        if(scanResult == Constants.QR_SCANNER_CONSTANT){
+            qrReaderViewModel.sendAttendRequest(currentLat!!, currentLng!!)
+        }else {
+            val alertDialog = CustomDialog.getInstance(this, CustomDialog.DialogOption.OPTION_1)
+            alertDialog.customDialogContent = resources.getString(R.string.wrong_qr)
+            alertDialog.onCustomDialogPositiveClick = object : CustomDialog.OnCustomDialogPositiveClick {
+                override fun onNectiveClicked() {
+                }
+                override fun onPositiveClicked() {
+                    finish()
+                }
+            }
+            alertDialog.show()
+        }
+    }
     public override fun onResume() {
         super.onResume()
 

@@ -38,6 +38,11 @@ class CustomDialog(val activity: Activity) : Dialog(activity) {
             DialogOption.OPTION_1 ->{
                 requestWindowFeature(Window.FEATURE_NO_TITLE)
                 setContentView(R.layout.custom_dialog)
+                customDialogContent?.let {
+                    custom_dialog_content.text =it
+                }
+
+
             }
             DialogOption.OPTION_2 ->{
                 requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -61,6 +66,9 @@ class CustomDialog(val activity: Activity) : Dialog(activity) {
     fun initListener() {
         custom_dialog_btn?.setOnClickListener {
             onCustomDialogPositiveClick?.onPositiveClicked()
+            if( onCustomDialogPositiveClick ==null){
+              dismiss()
+            }
         }
         custom_dialog_yes_btn?.setOnClickListener {
             onCustomDialogPositiveClick?.onPositiveClicked()

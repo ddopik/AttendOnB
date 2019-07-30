@@ -91,8 +91,20 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="welcome">أهلا بك</string>
     <string name="by_by">مع السلامة</string>
-    <string name="language">الغة</string>
+    <string name="language">اللغة</string>
     <string name="arabic">عربى</string>
     <string name="english">الإنجليزية</string>
     <string name="choose_language">اختر اللغة</string>
+    <string name="menu_attend_stats">حضور (دخول / خروج)</string>
+    <string name="menu_vacation">الاجازات (قريبا)</string>
+    <string name="menu_pay_roll">كشف المرتبات (قريبا)</string>
+    <string name="qr">Qr</string>
+    <string name="local_netWork">Local NetWork\n(coming soon)</string>
+    <string name="nfc">NFC\n(coming soon)</string>
+    <string name="please_select_attend_type">please select method to </string>
+    <string name="attend">الحضور</string>
+    <string name="out">الخروج</string>
+    <string name="leave">تم</string>
+    <string name="attend_taken">لقد تم تسجيل حضورك اليوم</string>
+    <string name="wrong_qr">كود خاطئ</string>
 </resources>
