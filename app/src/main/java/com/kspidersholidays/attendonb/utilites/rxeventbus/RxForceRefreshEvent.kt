@@ -1,4 +1,4 @@
-package com.spidersholidays.attendonb.utilites.rxeventbus
+package com.kspidersholidays.attendonb.utilites.rxeventbus
 
 /**
  * Created by ddopik on 23,May,2019

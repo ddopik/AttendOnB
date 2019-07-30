@@ -1,4 +1,4 @@
-package com.spidersholidays.attendonb.utilites.networkstatus
+package com.kspidersholidays.attendonb.utilites.networkstatus
 
 import android.app.Application
 import android.content.Context
@@ -12,7 +12,7 @@ import android.util.Log
 
 import androidx.annotation.RequiresApi
 
-import com.spidersholidays.attendonb.utilites.Constants
+import com.kspidersholidays.attendonb.utilites.Constants
 
 
 @RequiresApi(api = Build.VERSION_CODES.M)

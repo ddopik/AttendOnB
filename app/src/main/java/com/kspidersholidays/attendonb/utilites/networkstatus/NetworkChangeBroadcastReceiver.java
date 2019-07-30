@@ -1,4 +1,4 @@
-package com.spidersholidays.attendonb.utilites.networkstatus;
+package com.kspidersholidays.attendonb.utilites.networkstatus;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

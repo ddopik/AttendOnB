@@ -1,6 +1,6 @@
-package com.spidersholidays.attendonb.base.commonModel;
+package com.kspidersholidays.attendonb.base.commonModel;
 
-import com.spidersholidays.attendonb.base.BaseErrorData;
+import com.kspidersholidays.attendonb.base.BaseErrorData;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

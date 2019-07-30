@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.spidersholidays.attendonb.services.geofencing;
+package com.kspidersholidays.attendonb.services.geofencing;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -29,8 +29,8 @@ import android.util.Log;
 import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
 
-import com.spidersholidays.attendonb.R;
-import com.spidersholidays.attendonb.utilites.PrefUtil;
+import com.kspidersholidays.attendonb.R;
+import com.kspidersholidays.attendonb.utilites.PrefUtil;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
