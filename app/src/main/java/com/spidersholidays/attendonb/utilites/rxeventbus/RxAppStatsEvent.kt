@@ -1,5 +1,5 @@
-package com.kspidersholidays.attendonb.utilites.rxeventbus
+package com.spidersholidays.attendonb.utilites.rxeventbus
 
-import com.kspidersholidays.attendonb.utilites.Constants
+import com.spidersholidays.attendonb.utilites.Constants
 
 class RxAppStatsEvent(val message: String,val messageType:Constants.ErrorType)

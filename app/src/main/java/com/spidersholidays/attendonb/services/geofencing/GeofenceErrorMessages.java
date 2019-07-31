@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.kspidersholidays.attendonb.services.geofencing;
+package com.spidersholidays.attendonb.services.geofencing;
 
 import android.content.Context;
 import android.content.res.Resources;
 
-import com.kspidersholidays.attendonb.R;
+import com.spidersholidays.attendonb.R;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.GeofenceStatusCodes;
 

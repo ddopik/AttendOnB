@@ -1,4 +1,4 @@
-package com.kspidersholidays.attendonb.utilites.rxeventbus;
+package com.spidersholidays.attendonb.utilites.rxeventbus;
 
 import io.reactivex.subjects.PublishSubject;
 
