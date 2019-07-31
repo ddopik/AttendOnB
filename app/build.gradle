@@ -21,7 +21,7 @@ ext {
 android {
     compileSdkVersion 29
     defaultConfig {
-        applicationId "com.kspidersholidays.attendonb"
+        applicationId "com.spidersholidays.attendonb"
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
