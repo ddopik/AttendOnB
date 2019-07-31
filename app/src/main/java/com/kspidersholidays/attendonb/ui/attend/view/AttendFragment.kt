@@ -166,11 +166,11 @@ class AttendFragment :BaseFragment() {
 
         when (currentAttendState){
             Constants.ENTER ->{
-                attend_message_type.text=resources.getString(R.string.please_select_attend_type)+" "+ resources.getString(R.string.attend)
+                attend_message_type.text= " "+ resources.getString(R.string.attend)
 
             }
             Constants.OUT ->{
-            attend_message_type.text=resources.getString(R.string.please_select_attend_type)+" "+resources.getString(R.string.out)
+            attend_message_type.text =" "+resources.getString(R.string.out)
 
             }
             Constants.ENDED ->{

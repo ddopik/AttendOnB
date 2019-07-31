@@ -78,7 +78,8 @@ class QrSpareReaderActivity : BaseActivity(), ZXingScannerView.ResultHandler {
 
     override fun handleResult(p0: Result?) {
 
-        if(scanResult == Constants.QR_SCANNER_CONSTANT){
+        val var1= p0?.text
+        if(p0?.text == Constants.QR_SCANNER_CONSTANT){
             qrReaderViewModel.sendAttendRequest(currentLat!!, currentLng!!)
         }else {
             val alertDialog = CustomDialog.getInstance(this, CustomDialog.DialogOption.OPTION_1)
