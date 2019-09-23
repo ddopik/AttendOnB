@@ -21,7 +21,7 @@
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="350dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="24dp"
                 app:srcCompat="@drawable/app_icon" />
