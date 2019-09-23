@@ -1,4 +1,4 @@
-package com.arabjet.attendonb.utilites.rxeventbus;
+package com.spidersattend.attendonb.utilites.rxeventbus;
 
 import io.reactivex.subjects.PublishSubject;
 

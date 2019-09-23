@@ -1,4 +1,4 @@
-package com.arabjet.attendonb.utilites.rxeventbus
+package com.spidersattend.attendonb.utilites.rxeventbus
 
 /**
  * Created by ddopik on 23,May,2019

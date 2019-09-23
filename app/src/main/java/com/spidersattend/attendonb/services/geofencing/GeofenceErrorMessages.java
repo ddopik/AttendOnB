@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.arabjet.attendonb.services.geofencing;
+package com.spidersattend.attendonb.services.geofencing;
 
 import android.content.Context;
 import android.content.res.Resources;
 
-import com.arabjet.attendonb.R;
+import com.spidersattend.attendonb.R;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.GeofenceStatusCodes;
 

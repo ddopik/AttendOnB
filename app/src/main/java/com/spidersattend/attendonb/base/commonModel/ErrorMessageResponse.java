@@ -1,6 +1,6 @@
-package com.arabjet.attendonb.base.commonModel;
+package com.spidersattend.attendonb.base.commonModel;
 
-import com.arabjet.attendonb.base.BaseErrorData;
+import com.spidersattend.attendonb.base.BaseErrorData;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

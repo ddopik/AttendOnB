@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.arabjet.attendonb.services.geofencing;
+package com.spidersattend.attendonb.services.geofencing;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -29,8 +29,8 @@ import android.util.Log;
 import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
 
-import com.arabjet.attendonb.R;
-import com.arabjet.attendonb.utilites.PrefUtil;
+import com.spidersattend.attendonb.R;
+import com.spidersattend.attendonb.utilites.PrefUtil;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 

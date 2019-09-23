@@ -1,4 +1,4 @@
-package com.arabjet.attendonb.utilites.networkstatus
+package com.spidersattend.attendonb.utilites.networkstatus
 
 import android.app.Application
 import android.content.Context
@@ -12,7 +12,7 @@ import android.util.Log
 
 import androidx.annotation.RequiresApi
 
-import com.arabjet.attendonb.utilites.Constants
+import com.spidersattend.attendonb.utilites.Constants
 
 
 @RequiresApi(api = Build.VERSION_CODES.M)

@@ -1,4 +1,4 @@
-package com.arabjet.attendonb.utilites.networkstatus;
+package com.spidersattend.attendonb.utilites.networkstatus;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
