@@ -21,8 +21,8 @@ ext {
 android {
     compileSdkVersion 29
     defaultConfig {
-        applicationId "com.spidersattend.attendonb"
-        minSdkVersion 19
+        applicationId "com.spidersholidays.attendonb"
+        minSdkVersion 14
         targetSdkVersion 29
         versionCode 8
         versionName "1.0.6"
@@ -72,7 +72,7 @@ dependencies {
 
 
     //circleindicatorpager
-    implementation 'com.bikomobile:circleindicatorpager:1.0.0'
+//    implementation 'com.bikomobile:circleindicatorpager:1.0.0'
     //ImagePicker
     implementation 'com.github.esafirm.android-image-picker:imagepicker:2.0.0'
     // for experimental rx picker
@@ -91,7 +91,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.10'
     //Event bus
     implementation "org.greenrobot:eventbus:$event_bus_version"
-    implementation 'com.google.firebase:firebase-messaging:19.0.1'
+//    implementation 'com.google.firebase:firebase-messaging:19.0.1'
 
     ////google-Maps
     implementation "com.google.android.gms:play-services-maps:$location_Services"

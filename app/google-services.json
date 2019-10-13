@@ -2,15 +2,15 @@
   "project_info": {
     "project_number": "81949716121",
     "firebase_url": "https://spidres-attend.firebaseio.com",
-    "project_id": "spidres-attend",
-    "storage_bucket": "spidres-attend.appspot.com"
+    "project_id": "spidersholidays",
+    "storage_bucket": "spidersholidays.appspot.com"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:81949716121:android:dbd922a3d3740026",
         "android_client_info": {
-          "package_name": "com.spidersattend.attendonb"
+          "package_name": "com.spidersholidays.attendonb"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "81949716121-ous5faj2f1spvrqhagnldsjs99rpnvbq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.kpidersholidays.attendonb",
+            "package_name": "com.spidersholidays.attendonb",
             "certificate_hash": "a9b8eed4a13c45ee679074663b04c88fba44be0a"
           }
         },
