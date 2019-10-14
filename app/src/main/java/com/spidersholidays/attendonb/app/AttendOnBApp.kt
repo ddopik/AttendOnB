@@ -12,14 +12,16 @@ import com.spidersholidays.attendonb.realm.RealmDbMigration
 import com.spidersholidays.attendonb.utilites.networkstatus.NetworkChangeBroadcastReceiver
 import com.spidersholidays.attendonb.utilites.networkstatus.NetworkStateChangeManager
 import com.facebook.stetho.Stetho
- import com.uphyca.stetho_realm.RealmInspectorModulesProvider
+import com.uphyca.stetho_realm.RealmInspectorModulesProvider
 import okhttp3.OkHttpClient
 import java.io.File
 import io.realm.Realm
- import com.google.android.gms.security.ProviderInstaller
+import com.google.android.gms.security.ProviderInstaller
 import com.spidersholidays.attendonb.utilites.PrefUtil
 import com.spidersholidays.attendonb.utilites.Utilities
 import io.realm.RealmConfiguration
+import java.security.NoSuchAlgorithmException
+import javax.net.ssl.SSLContext
 
 
 class AttendOnBApp : MultiDexApplication() {
@@ -37,14 +39,29 @@ class AttendOnBApp : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+
+        /**
+         * Required for Network Authority Access prior Api 19
+         * */
+        ProviderInstaller.installIfNeeded(getApplicationContext());
+        try {
+            val sslContext = SSLContext.getInstance("TLSv1.2")
+            sslContext.init(null, null, null)
+            sslContext.createSSLEngine();
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+
         app = this
         AttendOnBApp.app = app as AttendOnBApp
+
 //        initFastAndroidNetworking(null,baseContext)
         //        initRealm(); //--> [1]order is must
         //        setRealmDefaultConfiguration(); //--> [2]order is must
         //        intializeSteatho();
         //        deleteCache(app);   ///for developing        ##################
         //        initializeDepInj(); ///intializing Dagger Dependancy
+
         if (Build.VERSION.SDK_INT == 19) {
             try {
                 ProviderInstaller.installIfNeeded(this)
@@ -62,7 +79,7 @@ class AttendOnBApp : MultiDexApplication() {
             registerReceiver(networkChangeBroadcastReceiver, filter)
         }
 
-        Utilities.changeAppLanguage(this,PrefUtil.getAppLanguage(this))
+        Utilities.changeAppLanguage(this, PrefUtil.getAppLanguage(this))
 
     }
 

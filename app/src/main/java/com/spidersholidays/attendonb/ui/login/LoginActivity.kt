@@ -2,16 +2,20 @@ package com.spidersholidays.attendonb.ui.login
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.location.Location
+import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.spidersholidays.attendonb.R
+import com.spidersholidays.attendonb.app.AttendOnBApp
 import com.spidersholidays.attendonb.base.BaseActivity
 import com.spidersholidays.attendonb.base.BaseErrorData
 import com.spidersholidays.attendonb.ui.home.HomeActivity
@@ -82,13 +86,13 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate, EasyPermissions.
         })
 
 
-         loginViewModel?.onLoginStateChanged()?.observe(this, Observer { loginState ->
+        loginViewModel?.onLoginStateChanged()?.observe(this, Observer { loginState ->
 
-             if (loginState && PrefUtil.isLoggedIn(this)) {
-                 Log.e(TAG, "---->onLoginStateChanged() $loginState")
+            if (loginState && PrefUtil.isLoggedIn(this)) {
+                Log.e(TAG, "---->onLoginStateChanged() $loginState")
                 val intent = Intent(this, HomeActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                 loginViewModel?.onLoginStateChanged()?.removeObservers(this)
+                loginViewModel?.onLoginStateChanged()?.removeObservers(this)
 
                 startActivity(intent)
                 finish()
@@ -101,9 +105,9 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate, EasyPermissions.
     private fun initListeners() {
         btn_login.setOnClickListener {
 
-            if (validateLoginInput() && isPermissionGranted ) {
+            if (validateLoginInput() && isPermissionGranted) {
                 loginViewModel?.loginUser(userName = login_user_name.text.toString(), password = login_password.text.toString(), currentLat = curentLat, currentLng = curentLng, deviceImei = Utilities.getDeviceIMEI(baseContext), context = baseContext)
-            }else{
+            } else {
                 requestLoginPermeation()
             }
 
@@ -112,12 +116,19 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate, EasyPermissions.
 
 
     private fun validateLoginInput(): Boolean {
-        val off = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Settings.Secure.getInt(contentResolver, Settings.Secure.LOCATION_MODE)
-        } else {
-            TODO("VERSION.SDK_INT < KITKAT")
-        }
-        if (off == 0) {
+//        val off = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            Settings.Secure.getInt(contentResolver, Settings.Secure.LOCATION_MODE)
+//        } else {
+//            val stats :LocationManager= AttendOnBApp.app?.baseContext?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+//              stats.isProviderEnabled(LocationManager.GPS_PROVIDER)
+//         }
+//
+        val gpsStats: LocationManager = AttendOnBApp.app?.baseContext?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        val off = gpsStats.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
+
+        if (off == false) {
             val onGPS = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             startActivity(onGPS)
             return false
@@ -149,13 +160,16 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate, EasyPermissions.
     }
 
 
+//    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     override fun onLocationUpdate(location: Location) {
         // New location has now been determined
 //        val latLng = LatLng(location.latitude, location.longitude)
         curentLat = location.latitude
         curentLng = location.longitude
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
         isFromMockProvider = location.isFromMockProvider
-        if (isFromMockProvider!!) {
+    }
+    if (isFromMockProvider!!) {
             btn_login.isEnabled = false
             CustomErrorUtils.viewSnackBarError(Constants.ErrorType.MOCK_LOCATION)
 
