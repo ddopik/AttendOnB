@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.spidersholidays.attendonb">
+    package="com.attendance735.attendonb">
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -19,7 +19,7 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-feature android:name="android.hardware.camera.flash" />
      <application
-        android:name="com.spidersholidays.attendonb.app.AttendOnBApp"
+        android:name="com.attendance735.attendonb.app.AttendOnBApp"
         android:allowBackup="true"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
@@ -28,7 +28,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name="com.spidersholidays.attendonb.ui.splash.SplashScreenActivity"
+            android:name="com.attendance735.attendonb.ui.splash.SplashScreenActivity"
             android:resizeableActivity="false"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize"
@@ -40,39 +40,39 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.spidersholidays.attendonb.ui.home.qrreader.ui.QrSpareReaderActivity"
+            android:name="com.attendance735.attendonb.ui.home.qrreader.ui.QrSpareReaderActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.spidersholidays.attendonb.ui.home.HomeActivity"
+            android:name="com.attendance735.attendonb.ui.home.HomeActivity"
             android:label="@string/app_name"
             android:resizeableActivity="false"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.spidersholidays.attendonb.ui.login.LoginActivity"
+            android:name="com.attendance735.attendonb.ui.login.LoginActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name="com.spidersholidays.attendonb.ui.result.ResultActivity"
+            android:name="com.attendance735.attendonb.ui.result.ResultActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.spidersholidays.attendonb.ui.test.Cam_View" />
+        <activity android:name="com.attendance735.attendonb.ui.test.Cam_View" />
 
          <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
 
         <receiver
-            android:name="com.spidersholidays.attendonb.services.geofencing.GeofenceBroadcastReceiver"
+            android:name="com.attendance735.attendonb.services.geofencing.GeofenceBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
 
         <service
-            android:name="com.spidersholidays.attendonb.services.geofencing.GeoFencingService"
+            android:name="com.attendance735.attendonb.services.geofencing.GeoFencingService"
             android:label="MainActivity" />
         <service
-            android:name="com.spidersholidays.attendonb.services.geofencing.GeofenceTransitionsJobIntentService"
+            android:name="com.attendance735.attendonb.services.geofencing.GeofenceTransitionsJobIntentService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
