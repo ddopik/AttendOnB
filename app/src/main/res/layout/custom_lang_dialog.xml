@@ -36,6 +36,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
              android:layout_marginBottom="@dimen/widget_padding"
+            android:background="@color/light_blue"
+
             android:layout_weight="1"
             android:text="@string/english" />
 
@@ -45,6 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
              android:layout_marginBottom="@dimen/widget_padding"
+            android:background="@color/light_blue"
             android:layout_weight="1"
             android:text="@string/arabic" />
 

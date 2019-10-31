@@ -14,10 +14,13 @@
             android:id="@+id/nav_attend"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_attend_stats" />
+
+        <!--app:actionLayout="@mainLayout/view_slide_menu_vaction_item"-->
+
         <item
             android:id="@+id/nav_vacation"
-             app:actionLayout="@layout/view_slide_menu_vaction_item"
-            android:enabled="false"
+            android:icon="@drawable/ic_menu_vacation"
+            android:title="@string/menu_vacation"
            />
         <item
             android:id="@+id/nav_pay_roll"

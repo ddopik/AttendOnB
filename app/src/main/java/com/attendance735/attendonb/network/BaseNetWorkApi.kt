@@ -6,6 +6,7 @@ import com.attendance735.attendonb.ui.home.qrreader.model.AttendResponse
 import com.attendance735.attendonb.ui.login.viewmodel.model.LoginResponse
 import com.attendance735.attendonb.utilites.PrefUtil
 import com.rx2androidnetworking.Rx2AndroidNetworking
+import java.util.concurrent.TimeUnit
 
 class BaseNetWorkApi {
     companion object {
@@ -69,8 +70,11 @@ class BaseNetWorkApi {
                     .addPathParameter(LANGUAGE_PATH_PARAMETER,PrefUtil.getAppLanguage(AttendOnBApp.app!!) )
 
                     .setPriority(Priority.HIGH)
+
                     .responseOnlyFromNetwork
+
                     .build()
+
                     .getObjectObservable(AttendResponse::class.java)
 
 

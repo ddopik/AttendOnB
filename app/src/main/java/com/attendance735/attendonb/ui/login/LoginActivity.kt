@@ -173,7 +173,7 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate, EasyPermissions.
             CustomErrorUtils.viewSnackBarError(Constants.ErrorType.MOCK_LOCATION)
 
         } else {
-            btn_login.setBackgroundColor(ContextCompat.getColor(baseContext, R.color.text_input_color))
+//            btn_login.setBackgroundColor(ContextCompat.getColor(baseContext, R.color.text_input_color))
             btn_login.isEnabled = true
         }
         mapUtls?.removeLocationRequest()

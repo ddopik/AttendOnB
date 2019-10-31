@@ -7,6 +7,7 @@ import android.location.Location
 import android.location.LocationManager
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.attendance735.attendonb.app.AttendOnBApp
@@ -45,6 +46,7 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
 
 
     private var attendActionCurrentStats: SingleLiveEvent<AttendMessage> = SingleLiveEvent()
+    private var attendActionCurrentStats2: MutableLiveData<AttendMessage> = SingleLiveEvent()
 
     private var mapUtls: MapUtls? = null
 

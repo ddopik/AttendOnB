@@ -39,6 +39,8 @@ class AttendOnBApp : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
 
+
+//        Utilities().printHashKey(app)
         /**
          * Required for Network Authority Access prior Api 19
          * */

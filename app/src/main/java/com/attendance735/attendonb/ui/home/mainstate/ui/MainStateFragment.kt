@@ -67,7 +67,6 @@ class MainStateFragment : BaseFragment() {
                 main_state_progress.visibility = View.GONE
             }
         })
-
         mainStateViewModel?.onAttendBtnChangeState()?.observe(this, Observer { stats ->
 
             stats_val.text = PrefUtil.getCurrentStatsMessage(context!!)

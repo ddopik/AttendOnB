@@ -25,6 +25,7 @@ public class BasicAuthInterceptor implements Interceptor {
 
     public BasicAuthInterceptor(Context context) {
         this.context = context;
+
 //        this.credentials = Credentials.basic(USER_NAME, LOGIN_PASSWORD);
     }
 

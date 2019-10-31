@@ -15,6 +15,7 @@ import com.attendance735.attendonb.utilites.PrefUtil
 import com.attendance735.attendonb.utilites.Utilities
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 class QrReaderViewModel : ViewModel() {
 
@@ -31,7 +32,6 @@ class QrReaderViewModel : ViewModel() {
             return INSTANCE
         }
     }
-
     private var isNetworkError: MutableLiveData<String> = MutableLiveData()
     private var isUnknownError: MutableLiveData<String> = MutableLiveData()
     private var isDataLoading: MutableLiveData<Boolean> = MutableLiveData()
@@ -62,6 +62,8 @@ class QrReaderViewModel : ViewModel() {
                 longitude = lng.toString())
                 .subscribeOn(Schedulers.io())
                 .distinct()
+                .debounce(5000, TimeUnit.MILLISECONDS)
+                .distinctUntilChanged()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ attendResponse: AttendResponse ->
                     takeIf { attendResponse.status!! }.apply {

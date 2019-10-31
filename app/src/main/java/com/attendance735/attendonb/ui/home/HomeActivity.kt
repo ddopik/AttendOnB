@@ -22,6 +22,7 @@ import com.google.android.material.navigation.NavigationView
 import com.attendance735.attendonb.ui.attend.view.AttendFragment
 import com.attendance735.attendonb.ui.home.mainstate.stateconfirmdialog.StateConfirmDialog
 import com.attendance735.attendonb.ui.login.LoginActivity
+import com.attendance735.attendonb.ui.vacation.VacationFragment
 import com.attendance735.attendonb.utilites.Constants
 import com.attendance735.attendonb.utilites.GlideApp
 import com.attendance735.attendonb.utilites.PrefUtil.Companion.ARABIC_LANG
@@ -110,25 +111,27 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
 
 
-//            if (supportFragmentManager.backStackEntryCount > 0) {
-//                val currentFragment = supportFragmentManager.getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name
-//                /**
-//                 * If fragment already selected don't replace it with same fragment again
-//                 * */
-//                if (currentFragment != AttendFragment.TAG) {
-//                    supportFragmentManager.popBackStack()
-//                    supportFragmentManager.beginTransaction()
-//                            .replace(R.id.home_swap_container, AttendFragment.getInstance(), AttendFragment::class.java.simpleName)
-//                            .addToBackStack(AttendFragment::class.java.simpleName)
-//                            .commit()
-//                }
-//            }
+
+
 
         }
+        //////////////////
+        else if (id == R.id.nav_vacation) {
+            if (supportFragmentManager.backStackEntryCount > 0) {
+                supportFragmentManager.popBackStack()
+            }
+            if (!fragmentTag.equals(VacationFragment::class.java.simpleName)) {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.home_swap_container, VacationFragment.getInstance(), VacationFragment::class.java.simpleName)
+                        .addToBackStack(VacationFragment::class.java.simpleName)
+                        .commit()
+            }
+        }
+         
         ////////////////////
         else if (id == R.id.language) {
             val customDialog = CustomDialog.getInstance(this, CustomDialog.DialogOption.LANGUAGE)
-            customDialog.customDialogContent = resources.getString(R.string.language);
+            customDialog.customDialogContent = resources.getString(R.string.choose_language);
             customDialog.onCustomDialogPositiveClick = object : CustomDialog.OnCustomDialogPositiveClick {
                 override fun onPositiveClicked() {
                     Utilities.changeAppLanguage(baseContext, ARABIC_LANG)
@@ -150,7 +153,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         ////////////////////
         else if (id == R.id.log_out) {
             val customDialog = CustomDialog.getInstance(this, CustomDialog.DialogOption.OPTION_2);
-            customDialog.customDialogContent = resources.getString(R.string.log_out);
+            customDialog.customDialogContent = resources.getString(R.string.log_out)
             customDialog.onCustomDialogPositiveClick = object : CustomDialog.OnCustomDialogPositiveClick {
                 override fun onPositiveClicked() {
                     stopService(geoFencingService)
@@ -188,7 +191,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val profileNavName = hView.findViewById<TextView>(R.id.nav_user_name)
         val profileNavMail = hView.findViewById<TextView>(R.id.nav_user_mail)
         var requestOptions = RequestOptions()
-        requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(16))
+        requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(21))
         GlideApp.with(this)
                 .load(IMAGE_BASE_URL + PrefUtil.getUserProfilePic(this))
                 .placeholder(R.drawable.app_icon)
