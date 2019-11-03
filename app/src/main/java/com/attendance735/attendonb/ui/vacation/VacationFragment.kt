@@ -1,21 +1,14 @@
 package com.attendance735.attendonb.ui.vacation
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
-import androidx.viewpager.widget.ViewPager
 import com.attendance735.attendonb.R
 import com.attendance735.attendonb.base.ViewPagerAdapter
 import com.attendance735.attendonb.base.ViewPagerFragment
 import com.attendance735.attendonb.ui.vacation.approved.ApprovedFragment
-import com.attendance735.attendonb.ui.vacation.pending.PedingFragment
+import com.attendance735.attendonb.ui.vacation.pending.PendingFragment
 import com.attendance735.attendonb.ui.vacation.rejected.RejectFragment
-import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.fragment_vacation.*
 
 class VacationFragment : ViewPagerFragment() {
 
@@ -38,7 +31,7 @@ class VacationFragment : ViewPagerFragment() {
         get() = R.layout.fragment_vacation
     override val fragments: List<Fragment>
         get() {
-            return mutableListOf(PedingFragment.getInstance(), ApprovedFragment.getInstance(), RejectFragment.getInstance())
+            return mutableListOf(PendingFragment.getInstance(), ApprovedFragment.getInstance(), RejectFragment.getInstance())
         }
     override val fragmentsTitles: ArrayList<String>
         get() {

@@ -111,4 +111,7 @@
     <string name="pending">Pending</string>
     <string name="approved">Approved</string>
     <string name="rejected">Rejected</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+    <string name="day">Day</string>
 </resources>

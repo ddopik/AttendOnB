@@ -68,6 +68,7 @@ class CustomErrorUtils {
             }
         }
 
+
         ///PreDefined Error Code From Server
         private fun viewError(context: Context, contextTAG: String, errorMessageResponse: ErrorMessageResponse) {
 
@@ -80,6 +81,27 @@ class CustomErrorUtils {
                             Log.e(TAG, "$contextTAG------> ${errorMessageResponse.data.msg}")
                         }
                     }
+
+
+        }
+
+        /**
+         * PreDefined Error Code From Server
+         * --> user this mehod to handle A False state of A valid Api Call
+         * ex---> the api hit was successfully 200 but call back was invalid
+         */
+
+        fun viewError(contextTAG: String, errorMessageResponse: ErrorMessageResponse) {
+
+            when (errorMessageResponse.code) {
+                ERROR_STATE_1 -> {
+                    Toast.makeText(AttendOnBApp.app?.getApp()?.baseContext!!, errorMessageResponse.data.msg, Toast.LENGTH_LONG).show()
+                }
+                else -> {
+//                            Toast.makeText(context, errorMessageResponse.data.msg, Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, "$contextTAG------> ${errorMessageResponse.data.msg}")
+                }
+            }
 
 
         }

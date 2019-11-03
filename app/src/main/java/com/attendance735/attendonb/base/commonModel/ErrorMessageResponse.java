@@ -15,6 +15,16 @@ import com.google.gson.annotations.SerializedName;
 
 public class ErrorMessageResponse {
 
+
+    public ErrorMessageResponse() {
+    }
+
+    public ErrorMessageResponse(Boolean status, BaseErrorData baseErrorData, String code) {
+        this.status = status;
+        this.data = baseErrorData;
+        this.code = code;
+    }
+
     @SerializedName("status")
     @Expose
     public Boolean status;

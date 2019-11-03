@@ -1,5 +1,6 @@
 package com.attendance735.attendonb.ui.login
 
+import CustomErrorUtils
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,12 +12,10 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.attendance735.attendonb.R
 import com.attendance735.attendonb.app.AttendOnBApp
 import com.attendance735.attendonb.base.BaseActivity
-import com.attendance735.attendonb.base.BaseErrorData
 import com.attendance735.attendonb.ui.home.HomeActivity
 import com.attendance735.attendonb.ui.login.viewmodel.LoginViewModel
 import com.attendance735.attendonb.utilites.Constants
@@ -54,7 +53,6 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate, EasyPermissions.
         requestLoginPermeation()
         initListeners()
 
-        BaseErrorData.demo3()
 
     }
 

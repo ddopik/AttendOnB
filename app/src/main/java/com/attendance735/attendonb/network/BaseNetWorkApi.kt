@@ -4,9 +4,9 @@ import com.androidnetworking.common.Priority
 import com.attendance735.attendonb.app.AttendOnBApp
 import com.attendance735.attendonb.ui.home.qrreader.model.AttendResponse
 import com.attendance735.attendonb.ui.login.viewmodel.model.LoginResponse
+import com.attendance735.attendonb.ui.vacation.pending.model.PendingResponse
 import com.attendance735.attendonb.utilites.PrefUtil
 import com.rx2androidnetworking.Rx2AndroidNetworking
-import java.util.concurrent.TimeUnit
 
 class BaseNetWorkApi {
     companion object {
@@ -34,13 +34,19 @@ class BaseNetWorkApi {
         val STATUS_500 = 500
         var STATUS_ERROR = "405"
         val ERROR_STATE_1 = "login-400"
+        private val LANGUAGE_PATH_PARAMETER = "lang"
+        private val USER_PATH_PARAMETER = "user_id"
         val IMAGE_BASE_URL = "https://hr-arabjet.com/uploads/thump/"
 
-        private  var BASE_URL :String ?="https://hr-arabjet.com/{lang}/Api"
+        //        private  var BASE_URL :String ?="https://hr-arabjet.com/{lang}/Api"
+        private var BASE_URL: String? = "https://nfc.spiderholidays.co/{lang}/Api"
         private   val LOGIN_URL = "$BASE_URL/login_check"
         private   val ATTEND_ACTION_URL = "$BASE_URL/attend_action"
         private   val ATTEND_CHECK_URL = "$BASE_URL/attend_check"
-        private val LANGUAGE_PATH_PARAMETER="lang"
+        private val PENDING_VACATION_IRL = "$BASE_URL/Vacations/pending/{$USER_PATH_PARAMETER}"
+        private val APPROVED_VACATION_IRL = "$BASE_URL/Vacations/approved/{$USER_PATH_PARAMETER}"
+        private val REJECTED_VACATION_IRL = "$BASE_URL/Vacations/rejected/{$USER_PATH_PARAMETER}"
+
 
         fun login(userName: String, password: String, currentLat: String, currentLng: String,deviceImei:String): io.reactivex.Observable<LoginResponse> {
             return Rx2AndroidNetworking.post(LOGIN_URL)
@@ -89,6 +95,17 @@ class BaseNetWorkApi {
                     .build()
                     .getObjectObservable(AttendResponse::class.java)
 
+        }
+
+
+        fun getPendingVacation(uid: String): io.reactivex.Observable<PendingResponse> {
+            return Rx2AndroidNetworking.get(PENDING_VACATION_IRL)
+                    .addPathParameter(USER_PATH_PARAMETER, uid.toString())
+                    .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
+                    .setPriority(Priority.HIGH)
+                    .responseOnlyFromNetwork
+                    .build()
+                    .getObjectObservable(PendingResponse::class.java)
         }
 
 
