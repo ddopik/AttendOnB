@@ -30,17 +30,9 @@ class VacationFragment : ViewPagerFragment() {
 
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-//        mainView =
-
-        return     super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     override fun getToolbar(): Toolbar? {
         return null
     }
-
 
     override val mainLayout: Int
         get() = R.layout.fragment_vacation

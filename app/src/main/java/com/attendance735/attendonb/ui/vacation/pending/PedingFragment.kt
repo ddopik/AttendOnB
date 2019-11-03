@@ -16,6 +16,8 @@ class PedingFragment:BaseFragment() {
         }
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        retainInstance = true
+
         return layoutInflater.inflate(R.layout.fragment_pending,container,false)
     }
 
