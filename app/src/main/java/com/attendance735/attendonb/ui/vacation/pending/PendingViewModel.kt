@@ -23,9 +23,9 @@ class PendingViewModel : ViewModel() {
     companion object {
         private var INSTANCE: PendingViewModel? = null
 
-        fun getInstance(activity: Fragment): PendingViewModel? {
+        fun getInstance(fragment: Fragment): PendingViewModel? {
             if (INSTANCE == null) {
-                INSTANCE = ViewModelProviders.of(activity).get(PendingViewModel::class.java)
+                INSTANCE = ViewModelProviders.of(fragment).get(PendingViewModel::class.java)
             }
             return INSTANCE
         }
@@ -42,21 +42,23 @@ class PendingViewModel : ViewModel() {
 
     @SuppressLint("CheckResult")
     fun getPendingVacations() {
-        Log.e(TAG, "getPendingVacations()")
         progressBarState.value = true
         BaseNetWorkApi.getPendingVacation(PrefUtil.getUserId(AttendOnBApp.app!!.baseContext).toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     if (it.status) {
-                        Log.e(TAG, it.data.msg)
-                        pendingVacationList.value = it.data.pendingVacations
-                        progressBarState.value = false
+                        Log.e(TAG, it.data?.msg!!)
+
+                        it.data?.pendingVacations?.let {
+                            Log.e(TAG, it.size.toString())
+                            pendingVacationList.value = it
+                        }
 
                     } else {
                         CustomErrorUtils.viewError(TAG, ErrorMessageResponse(false, BaseErrorData("Failed to get Pending vacation"), "0"))
-                        progressBarState.value = false
                     }
+                    progressBarState.value = false
 
                 }, { t: Throwable? ->
                     progressBarState.value = false

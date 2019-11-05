@@ -4,7 +4,9 @@ import com.androidnetworking.common.Priority
 import com.attendance735.attendonb.app.AttendOnBApp
 import com.attendance735.attendonb.ui.home.qrreader.model.AttendResponse
 import com.attendance735.attendonb.ui.login.viewmodel.model.LoginResponse
+import com.attendance735.attendonb.ui.vacation.approved.model.ApprovedResponse
 import com.attendance735.attendonb.ui.vacation.pending.model.PendingResponse
+import com.attendance735.attendonb.ui.vacation.rejected.model.RejectedResponse
 import com.attendance735.attendonb.utilites.PrefUtil
 import com.rx2androidnetworking.Rx2AndroidNetworking
 
@@ -44,8 +46,8 @@ class BaseNetWorkApi {
         private   val ATTEND_ACTION_URL = "$BASE_URL/attend_action"
         private   val ATTEND_CHECK_URL = "$BASE_URL/attend_check"
         private val PENDING_VACATION_IRL = "$BASE_URL/Vacations/pending/{$USER_PATH_PARAMETER}"
-        private val APPROVED_VACATION_IRL = "$BASE_URL/Vacations/approved/{$USER_PATH_PARAMETER}"
-        private val REJECTED_VACATION_IRL = "$BASE_URL/Vacations/rejected/{$USER_PATH_PARAMETER}"
+        private val APPROVED_VACATION_URL = "$BASE_URL/Vacations/approved/{$USER_PATH_PARAMETER}"
+        private val REJECTED_VACATION_URL = "$BASE_URL/Vacations/rejected/{$USER_PATH_PARAMETER}"
 
 
         fun login(userName: String, password: String, currentLat: String, currentLng: String,deviceImei:String): io.reactivex.Observable<LoginResponse> {
@@ -108,7 +110,26 @@ class BaseNetWorkApi {
                     .getObjectObservable(PendingResponse::class.java)
         }
 
+        fun getApprovedVacation(uid: String): io.reactivex.Observable<ApprovedResponse> {
+            return Rx2AndroidNetworking.get(APPROVED_VACATION_URL)
+                    .addPathParameter(USER_PATH_PARAMETER, uid.toString())
+                    .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
+                    .setPriority(Priority.HIGH)
+                    .responseOnlyFromNetwork
+                    .build()
+                    .getObjectObservable(ApprovedResponse::class.java)
+        }
 
+
+        fun getRejectedVacation(uid: String): io.reactivex.Observable<RejectedResponse> {
+            return Rx2AndroidNetworking.get(REJECTED_VACATION_URL)
+                    .addPathParameter(USER_PATH_PARAMETER, uid.toString())
+                    .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
+                    .setPriority(Priority.HIGH)
+                    .responseOnlyFromNetwork
+                    .build()
+                    .getObjectObservable(RejectedResponse::class.java)
+        }
 
     }
 }

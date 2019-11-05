@@ -11,11 +11,11 @@
     android:padding="@dimen/widget_padding">
 
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        android:scaleType="centerInside"
+        android:scaleType="fitCenter"
         app:srcCompat="@drawable/ic_pending" />
 
     <LinearLayout
@@ -61,16 +61,36 @@
             tools:text="5-11-2019" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/vacation_day_count"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginEnd="@dimen/widget_padding"
-        android:layout_marginRight="@dimen/widget_padding"
         android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="@dimen/title_sub_head"
-        tools:text="5 days" />
+        android:orientation="vertical"
+        android:paddingTop="@dimen/widget_padding">
+
+
+        <TextView
+            android:id="@+id/vacation_day_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:textSize="@dimen/title_sub_head"
+            tools:text="5 days" />
+
+        <Button
+            android:id="@+id/btn_vacation_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="bottom"
+            android:layout_marginEnd="@dimen/widget_padding"
+            android:layout_marginRight="@dimen/widget_padding"
+            android:text="@string/delete"
+            android:textColor="@color/colorRed"
+            android:textSize="@dimen/title_sub_head"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
 
 
 </LinearLayout>

@@ -114,4 +114,8 @@
     <string name="start_date">Start Date</string>
     <string name="end_date">End Date</string>
     <string name="day">Day</string>
+    <string name="no_approved_vacations">No Approved Vacation yet</string>
+    <string name="no_pending_vacations">No pending vacations</string>
+    <string name="no_rejected_vacations">No rejected vacation</string>
+    <string name="delete">Delete</string>
 </resources>
