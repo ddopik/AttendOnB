@@ -17,6 +17,7 @@
         android:layout_gravity="center"
         android:text="@string/no_pending_vacations"
         android:textAllCaps="false"
+        android:visibility="gone"
         android:textSize="@dimen/title_head" />
     <ProgressBar
         android:id="@+id/pr_pending_vacation"

@@ -118,4 +118,5 @@
     <string name="no_pending_vacations">No pending vacations</string>
     <string name="no_rejected_vacations">No rejected vacation</string>
     <string name="delete">Delete</string>
+    <string name="submit">Add vacation</string>
 </resources>

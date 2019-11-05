@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="2dp"
-    android:background="@color/grayC3CDD5"
+    android:background="@color/grayEDF0F3"
     android:gravity="start"
     android:orientation="horizontal"
     android:padding="@dimen/widget_padding">
@@ -61,10 +61,11 @@
             tools:text="5-11-2019" />
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:gravity="end"
         android:orientation="vertical"
         android:paddingTop="@dimen/widget_padding">
 
@@ -73,7 +74,8 @@
             android:id="@+id/vacation_day_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="top|end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
             android:textSize="@dimen/title_sub_head"
             tools:text="5 days" />
 
@@ -81,16 +83,13 @@
             android:id="@+id/btn_vacation_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_gravity="bottom"
-            android:layout_marginEnd="@dimen/widget_padding"
-            android:layout_marginRight="@dimen/widget_padding"
+             android:layout_marginTop="@dimen/widget_padding"
             android:text="@string/delete"
             android:textColor="@color/colorRed"
-            android:textSize="@dimen/title_sub_head"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
 </LinearLayout>

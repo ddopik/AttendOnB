@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +18,7 @@ import java.util.List;
  * Created by ddopik on 9/17/2017.
  */
 
-public class ViewPagerAdapter  extends FragmentPagerAdapter {
+public class ViewPagerAdapter  extends FragmentStatePagerAdapter {
 
     private final List mFragmentListT = new ArrayList();
     private final List<String> mFragmentTitleList = new ArrayList();

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.attendance735.attendonb.R
@@ -12,12 +13,18 @@ import com.attendance735.attendonb.base.commonModel.Vacation
 
 
 class VacationAdapter(val pendingVacationList: MutableList<Vacation>, val vacationType: VacationType) : RecyclerView.Adapter<VacationAdapter.VacationViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VacationViewHolder {
 
+    var onPendingVacationClick: OnPendingVacationClick? = null
+
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VacationViewHolder {
         val layoutInflater = LayoutInflater.from(AttendOnBApp.app?.applicationContext)
         return VacationViewHolder(layoutInflater.inflate(R.layout.view_holder_vacation, parent, false))
+    }
 
+    constructor(pendingVacationLis2t: MutableList<Vacation>, vacationType: VacationType, action: OnPendingVacationClick) : this(pendingVacationLis2t, vacationType) {
 
+        this.onPendingVacationClick = action
     }
 
     override fun getItemCount(): Int {
@@ -27,11 +34,21 @@ class VacationAdapter(val pendingVacationList: MutableList<Vacation>, val vacati
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: VacationViewHolder, position: Int) {
 
-//        when (vacationType)
-//        {
-//            VacationType.PENDING ->
-//        }
-//
+        when (vacationType) {
+            VacationType.PENDING -> {
+                holder.vacationDaysLeft.visibility = View.VISIBLE
+                holder.delteVacationBtn.setOnClickListener {
+                    onPendingVacationClick?.onVacationDeleteClicked(pendingVacationList[position].id)
+                }
+
+            }
+            else -> {
+                holder.vacationDaysLeft.visibility = View.GONE
+
+            }
+        }
+
+
         holder.vacationReason.text = pendingVacationList[position].reason
         holder.vacationStartDate.text = pendingVacationList[position].startDate
         holder.vacationEndDate.text = pendingVacationList[position].endDate
@@ -45,7 +62,12 @@ class VacationAdapter(val pendingVacationList: MutableList<Vacation>, val vacati
         var vacationStartDate: TextView = view.findViewById(R.id.vacation_start_date)
         var vacationEndDate: TextView = view.findViewById(R.id.vacation_end_date)
         var vacationDaysLeft: TextView = view.findViewById(R.id.vacation_day_count)
+        var delteVacationBtn: Button = view.findViewById(R.id.btn_vacation_delete)
+    }
 
+
+    interface OnPendingVacationClick {
+        fun onVacationDeleteClicked(vacationId: String)
     }
 
     enum class VacationType {

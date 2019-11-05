@@ -17,6 +17,8 @@
         android:layout_gravity="center"
         android:text="@string/no_rejected_vacations"
         android:textAllCaps="false"
+        android:visibility="gone"
+
         android:textSize="@dimen/title_head" />
 
     <ProgressBar

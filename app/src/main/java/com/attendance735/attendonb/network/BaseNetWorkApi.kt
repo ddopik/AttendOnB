@@ -5,10 +5,12 @@ import com.attendance735.attendonb.app.AttendOnBApp
 import com.attendance735.attendonb.ui.home.qrreader.model.AttendResponse
 import com.attendance735.attendonb.ui.login.viewmodel.model.LoginResponse
 import com.attendance735.attendonb.ui.vacation.approved.model.ApprovedResponse
+import com.attendance735.attendonb.ui.vacation.pending.model.DeletePendingVacationResponse
 import com.attendance735.attendonb.ui.vacation.pending.model.PendingResponse
 import com.attendance735.attendonb.ui.vacation.rejected.model.RejectedResponse
 import com.attendance735.attendonb.utilites.PrefUtil
 import com.rx2androidnetworking.Rx2AndroidNetworking
+import io.reactivex.Observable
 
 class BaseNetWorkApi {
     companion object {
@@ -38,6 +40,7 @@ class BaseNetWorkApi {
         val ERROR_STATE_1 = "login-400"
         private val LANGUAGE_PATH_PARAMETER = "lang"
         private val USER_PATH_PARAMETER = "user_id"
+        private val VACATION_ID_PATH_PARAMETER ="vacation"
         val IMAGE_BASE_URL = "https://hr-arabjet.com/uploads/thump/"
 
         //        private  var BASE_URL :String ?="https://hr-arabjet.com/{lang}/Api"
@@ -48,9 +51,10 @@ class BaseNetWorkApi {
         private val PENDING_VACATION_IRL = "$BASE_URL/Vacations/pending/{$USER_PATH_PARAMETER}"
         private val APPROVED_VACATION_URL = "$BASE_URL/Vacations/approved/{$USER_PATH_PARAMETER}"
         private val REJECTED_VACATION_URL = "$BASE_URL/Vacations/rejected/{$USER_PATH_PARAMETER}"
+        private val DELETE_PENDING_VACATION_URL = "$BASE_URL/Vacations/delete/{$VACATION_ID_PATH_PARAMETER}"
 
 
-        fun login(userName: String, password: String, currentLat: String, currentLng: String,deviceImei:String): io.reactivex.Observable<LoginResponse> {
+        fun login(userName: String, password: String, currentLat: String, currentLng: String,deviceImei:String): Observable<LoginResponse> {
             return Rx2AndroidNetworking.post(LOGIN_URL)
                     .addBodyParameter("username", userName)
                     .addBodyParameter("pass", password)
@@ -64,7 +68,7 @@ class BaseNetWorkApi {
         }
 
 
-        fun sendAttendRequest(uid :String,platform:String,device:String,deviceDetails:String,deviceImei:String,latitude:String,longitude:String) :io.reactivex.Observable<AttendResponse>{
+        fun sendAttendRequest(uid :String,platform:String,device:String,deviceDetails:String,deviceImei:String,latitude:String,longitude:String) :Observable<AttendResponse>{
 
             return Rx2AndroidNetworking.post(ATTEND_ACTION_URL)
                     .addBodyParameter("uid",uid)
@@ -88,7 +92,7 @@ class BaseNetWorkApi {
 
         }
 
-        fun sendAttendCheckRequest(uid :String) :io.reactivex.Observable<AttendResponse>{
+        fun sendAttendCheckRequest(uid :String) :Observable<AttendResponse>{
             return Rx2AndroidNetworking.post(ATTEND_CHECK_URL)
                     .addBodyParameter("uid",uid)
                     .addPathParameter(LANGUAGE_PATH_PARAMETER,PrefUtil.getAppLanguage(AttendOnBApp.app!!) )
@@ -100,7 +104,7 @@ class BaseNetWorkApi {
         }
 
 
-        fun getPendingVacation(uid: String): io.reactivex.Observable<PendingResponse> {
+        fun getPendingVacation(uid: String): Observable<PendingResponse> {
             return Rx2AndroidNetworking.get(PENDING_VACATION_IRL)
                     .addPathParameter(USER_PATH_PARAMETER, uid.toString())
                     .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
@@ -110,7 +114,7 @@ class BaseNetWorkApi {
                     .getObjectObservable(PendingResponse::class.java)
         }
 
-        fun getApprovedVacation(uid: String): io.reactivex.Observable<ApprovedResponse> {
+        fun getApprovedVacation(uid: String): Observable<ApprovedResponse> {
             return Rx2AndroidNetworking.get(APPROVED_VACATION_URL)
                     .addPathParameter(USER_PATH_PARAMETER, uid.toString())
                     .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
@@ -121,7 +125,7 @@ class BaseNetWorkApi {
         }
 
 
-        fun getRejectedVacation(uid: String): io.reactivex.Observable<RejectedResponse> {
+        fun getRejectedVacation(uid: String): Observable<RejectedResponse> {
             return Rx2AndroidNetworking.get(REJECTED_VACATION_URL)
                     .addPathParameter(USER_PATH_PARAMETER, uid.toString())
                     .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
@@ -129,6 +133,18 @@ class BaseNetWorkApi {
                     .responseOnlyFromNetwork
                     .build()
                     .getObjectObservable(RejectedResponse::class.java)
+        }
+
+
+        fun deletePendingVacation(uid:String,vacationId:String): Observable<DeletePendingVacationResponse>{
+            return Rx2AndroidNetworking.get(DELETE_PENDING_VACATION_URL)
+                    .addPathParameter(VACATION_ID_PATH_PARAMETER,vacationId)
+                    .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
+                    .setPriority(Priority.HIGH)
+                    .responseOnlyFromNetwork
+                    .build()
+                    .getObjectObservable(DeletePendingVacationResponse::class.java)
+
         }
 
     }

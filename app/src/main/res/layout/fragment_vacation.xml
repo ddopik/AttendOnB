@@ -24,6 +24,14 @@
             app:layout_behavior = "@string/appbar_scrolling_view_behavior"/>
 
     </RelativeLayout>
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        app:srcCompat="@drawable/ic_add_vacation"
+         app:backgroundTint="@color/colorPrimary"
+        android:contentDescription="@string/submit"
+        android:layout_margin="16dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

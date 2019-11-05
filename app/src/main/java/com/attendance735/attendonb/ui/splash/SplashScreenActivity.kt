@@ -4,12 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.View
 import com.attendance735.attendonb.R
 import com.attendance735.attendonb.base.BaseActivity
 import com.attendance735.attendonb.ui.home.HomeActivity
 import com.attendance735.attendonb.ui.login.LoginActivity
 import com.attendance735.attendonb.utilites.PrefUtil
-import android.view.View
 
 
 /**
@@ -23,10 +23,9 @@ class SplashScreenActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
 
-
-            val decorView = window.decorView
-            val uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN
-            decorView.systemUiVisibility = uiOptions
+        val decorView = window.decorView
+        val uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN
+        decorView.systemUiVisibility = uiOptions
 
         setContentView(R.layout.activity_splash_screen)
         Handler().postDelayed({
@@ -38,7 +37,7 @@ class SplashScreenActivity : BaseActivity() {
                 startActivity(Intent(this@SplashScreenActivity, LoginActivity::class.java))
             }
             finish()
-        }, 3000)
+        }, 750)
     }
 
     override fun initObservers() {

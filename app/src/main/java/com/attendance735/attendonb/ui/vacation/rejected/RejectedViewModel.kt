@@ -53,9 +53,11 @@ class RejectedViewModel : ViewModel() {
                     if (it.status) {
                         Log.e(TAG, it.data?.msg)
                         it.data?.rejectedVacations?.let {
-                            rejectedVacationList.value = it
+                            rejectedVacationList.postValue(it)
                         }
-
+                        if (it.data?.rejectedVacations == null) {
+                            rejectedVacationList.postValue(it.data?.rejectedVacations)
+                        }
                     } else {
                         CustomErrorUtils.viewError(TAG, ErrorMessageResponse(false, BaseErrorData("Failed to get Rejected vacation"), "0"))
                         progressBarState.value = false

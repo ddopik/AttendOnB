@@ -1,5 +1,6 @@
 package com.attendance735.attendonb.ui.vacation.approved
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,35 +26,6 @@ class ApprovedFragment : BaseFragment() {
     private val approvedList: MutableList<Vacation> = mutableListOf<Vacation>()
 
 
-    val onApprovelProgressChange: Unit by lazy {
-        approvedViewModel.onApprovedProgressChange().observe(this, Observer {
-            if (it) {
-                pb_approved.visibility = View.VISIBLE
-            } else {
-                pb_approved.visibility = View.GONE
-            }
-        }
-        )
-    }
-
-    val onApprovalDataChanged: Unit by lazy {
-        approvedViewModel.onApprovrdVacationChange().observe(this, Observer {
-            approvedList.clear()
-            approvedList.addAll(it)
-            approvedAdapter.notifyDataSetChanged()
-
-
-            if (approvedList.size > 0) {
-                no_approved_vacation_stats_msg.visibility = View.GONE
-            } else {
-                no_approved_vacation_stats_msg.visibility = View.VISIBLE
-
-            }
-        })
-
-
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return layoutInflater.inflate(R.layout.fragment_approved, container, false)
     }
@@ -63,9 +35,11 @@ class ApprovedFragment : BaseFragment() {
 
         intiView()
         initObservers()
+        approvedViewModel.getApprovedVacations()
 
 
     }
+
 
     override fun intiView() {
         approvedViewModel = ApprovedViewModel.getInstance(this)
@@ -75,9 +49,30 @@ class ApprovedFragment : BaseFragment() {
     }
 
     override fun initObservers() {
-        approvedViewModel.getApprovedVacations()
-        onApprovelProgressChange
-        onApprovalDataChanged
+
+        approvedViewModel.onApprovedProgressChange().observe(this, Observer {
+            if (it) {
+                pb_approved.visibility = View.VISIBLE
+            } else {
+                pb_approved.visibility = View.GONE
+            }
+        })
+
+        approvedViewModel.onApprovrdVacationChange().observe(this, Observer {
+            approvedList.clear()
+            it?.let {
+                approvedList.addAll(it)
+            }
+            approvedAdapter.notifyDataSetChanged()
+
+            if (approvedList.size > 0) {
+                no_approved_vacation_stats_msg.visibility = View.GONE
+            } else {
+                no_approved_vacation_stats_msg.visibility = View.VISIBLE
+
+            }
+        })
+
 
     }
 

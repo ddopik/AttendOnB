@@ -26,31 +26,6 @@ class RejectFragment : BaseFragment() {
     var rejectedVacationList: MutableList<Vacation> = mutableListOf()
 
 
-    val onRejectedProgressChanged: Unit by lazy {
-        rejectedViewModel.onRejectedProgressChange().observe(this, Observer {
-            if (it) {
-                pr_rejected_vacation.visibility = View.VISIBLE
-            } else {
-                pr_rejected_vacation.visibility = View.GONE
-            }
-        })
-    }
-
-    val onRejectedDataChanged: Unit by lazy {
-        rejectedViewModel.onRejectedVacationChange().observe(this, Observer {
-            rejectedVacationList.clear()
-            rejectedVacationList.addAll(it)
-            rejectedAdapter.notifyDataSetChanged()
-            if (rejectedVacationList.size > 0) {
-                no_rejected_vacation_stats_msg.visibility = View.GONE
-            } else {
-                no_rejected_vacation_stats_msg.visibility = View.VISIBLE
-
-            }
-        })
-
-    }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         retainInstance = true
@@ -75,8 +50,30 @@ class RejectFragment : BaseFragment() {
 
     override fun initObservers() {
         rejectedViewModel = RejectedViewModel.getInstance(this)!!
-        onRejectedProgressChanged
-        onRejectedDataChanged
+
+
+        rejectedViewModel.onRejectedProgressChange().observe(this, Observer {
+            if (it) {
+                pr_rejected_vacation.visibility = View.VISIBLE
+            } else {
+                pr_rejected_vacation.visibility = View.GONE
+            }
+        })
+
+
+        rejectedViewModel.onRejectedVacationChange().observe(this, Observer {
+            rejectedVacationList.clear()
+            it?.let {
+                rejectedVacationList.addAll(it)
+            }
+            rejectedAdapter.notifyDataSetChanged()
+            if (rejectedVacationList.size > 0) {
+                no_rejected_vacation_stats_msg.visibility = View.GONE
+            } else {
+                no_rejected_vacation_stats_msg.visibility = View.VISIBLE
+
+            }
+        })
     }
 
 }
