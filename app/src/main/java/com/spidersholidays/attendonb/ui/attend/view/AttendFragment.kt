@@ -3,6 +3,7 @@ package com.spidersholidays.attendonb.ui.attend.view
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -21,8 +22,10 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_attend.*
 import com.spidersholidays.attendonb.utilites.rxeventbus.RxEventBus
 import androidx.lifecycle.Observer
+import com.spidersholidays.attendonb.app.AttendOnBApp
 import com.spidersholidays.attendonb.ui.home.HomeActivity
 import com.spidersholidays.attendonb.utilites.Constants
+import com.spidersholidays.attendonb.utilites.Utilities
 
 class AttendFragment :BaseFragment() {
 
@@ -112,9 +115,13 @@ class AttendFragment :BaseFragment() {
 
     private fun intiListeners() {
         qr_attend_btn.setOnClickListener {
+
+
             val applyButtonStats = ApplyButtonState()
-            val off = Settings.Secure.getInt(context?.contentResolver, Settings.Secure.LOCATION_MODE)
-            if (off == 0) {
+
+
+
+            if (!utilities.Utilities.isLocationEnabled(context)) {
 //                applyButtonStats.isEnable = false
 //                setBtnAttendBtnState(applyButtonStats)
                 CustomErrorUtils.viewSnackBarError(Constants.ErrorType.GPS_PROVIDER)
@@ -129,7 +136,7 @@ class AttendFragment :BaseFragment() {
             mainStateViewModel?.checkAttendStatus(PrefUtil.getUserId(context!!)!!)
 
         }, { throwable ->
-            Log.e(TAG, throwable.message)
+            Log.e(TAG, "Error --->" +throwable.message)
         })
         disposables.add(disposable)
 

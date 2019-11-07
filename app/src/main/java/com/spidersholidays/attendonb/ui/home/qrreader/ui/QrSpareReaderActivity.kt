@@ -16,6 +16,15 @@ import com.spidersholidays.attendonb.ui.home.HomeActivity
 import com.spidersholidays.attendonb.ui.home.qrreader.viewmodel.QrReaderViewModel
 import com.spidersholidays.attendonb.utilites.Constants
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
+import android.widget.RelativeLayout
+import android.widget.ProgressBar
+import defaultIntializarion.AppConfig.app
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+import android.view.View
+
 
 class QrSpareReaderActivity : BaseActivity(), ZXingScannerView.ResultHandler {
     private val TAG = QrSpareReaderActivity::class.java.simpleName
@@ -34,8 +43,7 @@ class QrSpareReaderActivity : BaseActivity(), ZXingScannerView.ResultHandler {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.e("onCreate", "onCreate")
-        qrReaderViewModel = ViewModelProviders.of(this).get(QrReaderViewModel::class.java)
+         qrReaderViewModel = ViewModelProviders.of(this).get(QrReaderViewModel::class.java)
         mScannerView = ZXingScannerView(this)
         setContentView(mScannerView)
 
@@ -77,6 +85,7 @@ class QrSpareReaderActivity : BaseActivity(), ZXingScannerView.ResultHandler {
 
         val var1= p0?.text
         if(p0?.text == Constants.QR_SCANNER_CONSTANT){
+            mScannerView?.stopCamera()
             qrReaderViewModel.sendAttendRequest(currentLat!!, currentLng!!)
         }else {
             val alertDialog = CustomDialog.getInstance(this, CustomDialog.DialogOption.OPTION_1)
@@ -93,14 +102,14 @@ class QrSpareReaderActivity : BaseActivity(), ZXingScannerView.ResultHandler {
     }
     public override fun onResume() {
         super.onResume()
-
-
         if (mScannerView == null) {
             mScannerView = ZXingScannerView(this)
             setContentView(mScannerView)
         }
         mScannerView?.setResultHandler(this)
         mScannerView?.startCamera()
+
+
 
     }
 
