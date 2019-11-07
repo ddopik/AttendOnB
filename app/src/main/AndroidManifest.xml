@@ -33,11 +33,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize"
             android:configChanges="orientation|keyboardHidden|screenSize" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.attendance735.attendonb.ui.home.qrreader.ui.QrSpareReaderActivity"
@@ -58,6 +54,13 @@
             android:name="com.attendance735.attendonb.ui.result.ResultActivity"
             android:screenOrientation="portrait" />
         <activity android:name="com.attendance735.attendonb.ui.test.Cam_View" />
+         <activity android:name=".ui.vacation.newvacation.NewVacationActivity" >
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+         </activity>
 
          <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"

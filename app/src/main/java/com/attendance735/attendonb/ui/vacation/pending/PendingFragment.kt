@@ -67,6 +67,8 @@ class PendingFragment : BaseFragment() {
                 pr_pending_vacation.visibility = View.GONE
             }
         })
+
+
         pendingViewModel.onPendingVacationChange().observe(viewLifecycleOwner, Observer {
             Log.e(TAG, "onPendingVacationChange ----> called()")
             pendingVacationList.clear()
@@ -80,6 +82,8 @@ class PendingFragment : BaseFragment() {
                 no_pending_vacation_stats_msg.visibility = View.VISIBLE
             }
         })
+
+
         pendingViewModel.onPendingVacationDeleted().observe(viewLifecycleOwner, Observer {
 
             val vacationDeleteStats = it.getBoolean(PendingViewModel.VACATION_STATS)

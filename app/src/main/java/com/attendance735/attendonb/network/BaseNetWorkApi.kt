@@ -5,6 +5,7 @@ import com.attendance735.attendonb.app.AttendOnBApp
 import com.attendance735.attendonb.ui.home.qrreader.model.AttendResponse
 import com.attendance735.attendonb.ui.login.viewmodel.model.LoginResponse
 import com.attendance735.attendonb.ui.vacation.approved.model.ApprovedResponse
+import com.attendance735.attendonb.ui.vacation.newvacation.model.NewVacationDataResponse
 import com.attendance735.attendonb.ui.vacation.pending.model.DeletePendingVacationResponse
 import com.attendance735.attendonb.ui.vacation.pending.model.PendingResponse
 import com.attendance735.attendonb.ui.vacation.rejected.model.RejectedResponse
@@ -16,7 +17,7 @@ class BaseNetWorkApi {
     companion object {
 
 
-//        init {
+        //        init {
 //            BASE_URL = if (PrefUtil.getAppLanguage(AttendOnBApp.app!!) == PrefUtil.ARABIC_LANG ){
 //                Log.e(BaseNetWorkApi::class.java.simpleName,"BASE_URL ---> AR")
 //                "https://nfc.spiderholidays.co/ar/Api"
@@ -40,46 +41,47 @@ class BaseNetWorkApi {
         val ERROR_STATE_1 = "login-400"
         private val LANGUAGE_PATH_PARAMETER = "lang"
         private val USER_PATH_PARAMETER = "user_id"
-        private val VACATION_ID_PATH_PARAMETER ="vacation"
+        private val VACATION_ID_PATH_PARAMETER = "vacation"
         val IMAGE_BASE_URL = "https://hr-arabjet.com/uploads/thump/"
 
         //        private  var BASE_URL :String ?="https://hr-arabjet.com/{lang}/Api"
         private var BASE_URL: String? = "https://nfc.spiderholidays.co/{lang}/Api"
-        private   val LOGIN_URL = "$BASE_URL/login_check"
-        private   val ATTEND_ACTION_URL = "$BASE_URL/attend_action"
-        private   val ATTEND_CHECK_URL = "$BASE_URL/attend_check"
+        private val LOGIN_URL = "$BASE_URL/login_check"
+        private val ATTEND_ACTION_URL = "$BASE_URL/attend_action"
+        private val ATTEND_CHECK_URL = "$BASE_URL/attend_check"
         private val PENDING_VACATION_IRL = "$BASE_URL/Vacations/pending/{$USER_PATH_PARAMETER}"
         private val APPROVED_VACATION_URL = "$BASE_URL/Vacations/approved/{$USER_PATH_PARAMETER}"
         private val REJECTED_VACATION_URL = "$BASE_URL/Vacations/rejected/{$USER_PATH_PARAMETER}"
         private val DELETE_PENDING_VACATION_URL = "$BASE_URL/Vacations/delete/{$VACATION_ID_PATH_PARAMETER}"
+        private val NEW_VACATION_DATA_URL = "$BASE_URL/Vacations/create"
 
 
-        fun login(userName: String, password: String, currentLat: String, currentLng: String,deviceImei:String): Observable<LoginResponse> {
+        fun login(userName: String, password: String, currentLat: String, currentLng: String, deviceImei: String): Observable<LoginResponse> {
             return Rx2AndroidNetworking.post(LOGIN_URL)
                     .addBodyParameter("username", userName)
                     .addBodyParameter("pass", password)
                     .addBodyParameter("latitude", currentLat)
                     .addBodyParameter("longitude", currentLng)
                     .addBodyParameter("imei", deviceImei)
-                    .addPathParameter(LANGUAGE_PATH_PARAMETER,PrefUtil.getAppLanguage(AttendOnBApp.app!!) )
+                    .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
                     .setPriority(Priority.HIGH)
                     .build()
                     .getObjectObservable(LoginResponse::class.java)
         }
 
 
-        fun sendAttendRequest(uid :String,platform:String,device:String,deviceDetails:String,deviceImei:String,latitude:String,longitude:String) :Observable<AttendResponse>{
+        fun sendAttendRequest(uid: String, platform: String, device: String, deviceDetails: String, deviceImei: String, latitude: String, longitude: String): Observable<AttendResponse> {
 
             return Rx2AndroidNetworking.post(ATTEND_ACTION_URL)
-                    .addBodyParameter("uid",uid)
-                    .addBodyParameter("platform",platform)
-                    .addBodyParameter("device",device)
-                    .addBodyParameter("device_details",deviceDetails)
-                    .addBodyParameter("imei",deviceImei)
-                    .addBodyParameter("latitude",latitude)
-                    .addBodyParameter("longitude",longitude)
-                    .addBodyParameter("mobile_flag","1")
-                    .addPathParameter(LANGUAGE_PATH_PARAMETER,PrefUtil.getAppLanguage(AttendOnBApp.app!!) )
+                    .addBodyParameter("uid", uid)
+                    .addBodyParameter("platform", platform)
+                    .addBodyParameter("device", device)
+                    .addBodyParameter("device_details", deviceDetails)
+                    .addBodyParameter("imei", deviceImei)
+                    .addBodyParameter("latitude", latitude)
+                    .addBodyParameter("longitude", longitude)
+                    .addBodyParameter("mobile_flag", "1")
+                    .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
 
                     .setPriority(Priority.HIGH)
 
@@ -92,10 +94,10 @@ class BaseNetWorkApi {
 
         }
 
-        fun sendAttendCheckRequest(uid :String) :Observable<AttendResponse>{
+        fun sendAttendCheckRequest(uid: String): Observable<AttendResponse> {
             return Rx2AndroidNetworking.post(ATTEND_CHECK_URL)
-                    .addBodyParameter("uid",uid)
-                    .addPathParameter(LANGUAGE_PATH_PARAMETER,PrefUtil.getAppLanguage(AttendOnBApp.app!!) )
+                    .addBodyParameter("uid", uid)
+                    .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
                     .setPriority(Priority.HIGH)
                     .responseOnlyFromNetwork
                     .build()
@@ -136,15 +138,25 @@ class BaseNetWorkApi {
         }
 
 
-        fun deletePendingVacation(uid:String,vacationId:String): Observable<DeletePendingVacationResponse>{
+        fun deletePendingVacation(uid: String, vacationId: String): Observable<DeletePendingVacationResponse> {
             return Rx2AndroidNetworking.get(DELETE_PENDING_VACATION_URL)
-                    .addPathParameter(VACATION_ID_PATH_PARAMETER,vacationId)
+                    .addPathParameter(VACATION_ID_PATH_PARAMETER, vacationId)
                     .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
                     .setPriority(Priority.HIGH)
                     .responseOnlyFromNetwork
                     .build()
                     .getObjectObservable(DeletePendingVacationResponse::class.java)
 
+        }
+
+
+        fun getNewVacationData(): Observable<NewVacationDataResponse> {
+            return Rx2AndroidNetworking.get(NEW_VACATION_DATA_URL)
+                    .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
+                    .setPriority(Priority.HIGH)
+                    .responseOnlyFromNetwork
+                    .build()
+                    .getObjectObservable(NewVacationDataResponse::class.java)
         }
 
     }
