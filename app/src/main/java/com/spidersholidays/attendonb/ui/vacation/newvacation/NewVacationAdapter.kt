@@ -1,7 +1,6 @@
 package com.spidersholidays.attendonb.ui.vacation.newvacation
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,18 +14,18 @@ import com.spidersholidays.attendonb.base.commonModel.User
 class NewVacationAdapter(val userList: MutableList<User>, layout: Int) : ArrayAdapter<User>(AttendOnBApp.app?.baseContext!!, 0, userList) {
 
 
-    var layoutInflater: LayoutInflater? = null
     val TAG = NewVacationAdapter::javaClass.name
+    var onUserSpinnerItemClickListener: OnUserSpinnerItemClickListener? = null
 
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
         var itemViewHolder: UserSpinnerViewHolder? = null
-        var itemView :View ?= convertView
+        var itemView: View? = convertView
         if (itemView == null) {
 
             val mInflater = AttendOnBApp.app?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            itemView =  mInflater.inflate(R.layout.view_holder_user_spinner, parent, false)!!
+            itemView = mInflater.inflate(R.layout.view_holder_user_spinner, parent, false)!!
         }
 
         if (itemView.tag == null) {
@@ -37,6 +36,11 @@ class NewVacationAdapter(val userList: MutableList<User>, layout: Int) : ArrayAd
         }
 
         itemViewHolder?.userName?.text = userList[position].name
+        onUserSpinnerItemClickListener?.let {
+            itemViewHolder?.userName?.setOnClickListener {
+                onUserSpinnerItemClickListener?.onUserItemClicked(userList[position])
+            }
+        }
         return itemView
     }
 
@@ -54,6 +58,10 @@ class NewVacationAdapter(val userList: MutableList<User>, layout: Int) : ArrayAd
 
         var userName: TextView? = null
 
+    }
+
+    interface OnUserSpinnerItemClickListener {
+        fun onUserItemClicked(user: User)
     }
 
 

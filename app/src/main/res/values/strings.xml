@@ -119,4 +119,7 @@
     <string name="no_rejected_vacations">No rejected vacation</string>
     <string name="delete">Delete</string>
     <string name="submit">Add vacation</string>
+    <string name="vacation_reason">Vacation Reason</string>
+    <string name="send">Send</string>
+    <string name="please_choose_manger">Please choose  manger</string>
 </resources>
