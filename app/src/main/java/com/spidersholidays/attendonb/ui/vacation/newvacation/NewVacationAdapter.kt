@@ -1,5 +1,6 @@
 package com.spidersholidays.attendonb.ui.vacation.newvacation
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,7 @@ import com.spidersholidays.attendonb.app.AttendOnBApp
 import com.spidersholidays.attendonb.base.commonModel.User
 
 
-class NewVacationAdapter(val userList: MutableList<User>,layout:Int) : ArrayAdapter<User>(AttendOnBApp.app?.baseContext!!,0,userList) {
+class NewVacationAdapter(val userList: MutableList<User>, layout: Int) : ArrayAdapter<User>(AttendOnBApp.app?.baseContext!!, 0, userList) {
 
 
     var layoutInflater: LayoutInflater? = null
@@ -19,54 +20,41 @@ class NewVacationAdapter(val userList: MutableList<User>,layout:Int) : ArrayAdap
 
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        if (convertView == null) {
-            Log.e(TAG,"getView() ---> new View inflated")
 
-            layoutInflater = LayoutInflater.from(AttendOnBApp.app?.applicationContext)
-            return layoutInflater?.inflate(R.layout.view_holder_user_spinner, parent, false)!!
-        }
-        val userName = convertView.findViewById<TextView>(R.id.manger_id)
-        userName.text = userList[position].name
-        return convertView
-    }
+        var itemViewHolder: UserSpinnerViewHolder? = null
+        var itemView :View ?= convertView
+        if (itemView == null) {
 
-    //
-//    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-//         if (convertView == null) {
-//            Log.e(TAG,"getView() ---> new View inflated")
-//
-//             layoutInflater = LayoutInflater.from(AttendOnBApp.app?.applicationContext)
-//            return layoutInflater?.inflate(R.layout.view_holder_user_spinner, parent, false)!!
-//        }
-//        val userName = convertView.findViewById<TextView>(R.id.manger_id)
-//        userName.text = userList[position].name
-//         return convertView
-//    }
-
-    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
-         if (convertView == null) {
-            Log.e(TAG,"getDropDownView() ---> new View inflated")
-            layoutInflater = LayoutInflater.from(AttendOnBApp.app?.applicationContext)
-            return layoutInflater?.inflate(R.layout.view_holder_user_spinner, parent, false) as View
+            val mInflater = AttendOnBApp.app?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            itemView =  mInflater.inflate(R.layout.view_holder_user_spinner, parent, false)!!
         }
 
-        val userName = convertView.findViewById<TextView>(R.id.manger_id)
-        userName.text = userList[position].name
+        if (itemView.tag == null) {
+            itemViewHolder = UserSpinnerViewHolder()
+            itemViewHolder.userName = itemView.findViewById<TextView>(R.id.manger_id)
+            itemView.tag = itemViewHolder
 
-        return convertView
+        }
 
+        itemViewHolder?.userName?.text = userList[position].name
+        return itemView
     }
 
 
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+        return getView(position, convertView, parent)
+    }
+
+    override fun getCount(): Int {
+        return userList.size
+    }
 
 
+    class UserSpinnerViewHolder {
 
+        var userName: TextView? = null
 
-
-
-
-
-
+    }
 
 
 }

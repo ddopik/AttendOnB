@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:scaleType="centerInside"
+        android:layout_margin="@dimen/widget_padding"
         app:srcCompat="@drawable/app_icon" />
 
 </FrameLayout>

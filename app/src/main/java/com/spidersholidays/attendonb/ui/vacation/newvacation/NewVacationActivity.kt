@@ -35,9 +35,11 @@ class NewVacationActivity : BaseActivity() {
                 if(it.size>0)
                 {
                     mangerList.clear()
-                    mangerList.addAll(it)
+                     mangerList.addAll(it)
+//                    val userSpinnerAdapter = CustomAdapter(baseContext,arr)
                     val userSpinnerAdapter = NewVacationAdapter(it, R.layout.view_holder_user_spinner)
-                     spinner_user_manger.adapter = userSpinnerAdapter
+
+                    spinner_user_manger.adapter = userSpinnerAdapter
                  }
             }
 
