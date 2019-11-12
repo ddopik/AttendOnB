@@ -10,8 +10,9 @@ class Constants {
         const val REQUEST_CODE_PHONE_STATE = 1226
         const val REQUEST_CODE_LOGIN_PERMATION = 1227
         const val CHECK_STATS_TIME_OUT: Long = 2000
+        val QUERY_SEARCH_TIME_OUT = 600
 
-//        const val QR_SCANNER_CONSTANT = "https://hr-arabjet.com/en/"
+        //        const val QR_SCANNER_CONSTANT = "https://hr-arabjet.com/en/"
         const val QR_SCANNER_CONSTANT="https://nfc.spiderholidays.co/en/"
 
         const val ENTER = "1"

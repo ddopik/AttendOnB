@@ -11,10 +11,10 @@ import com.spidersholidays.attendonb.app.AttendOnBApp
 import com.spidersholidays.attendonb.base.commonModel.User
 
 
-class NewVacationAdapter(val userList: MutableList<User>, layout: Int) : ArrayAdapter<User>(AttendOnBApp.app?.baseContext!!, 0, userList) {
+class NewVacationSpinnerAdapter(val userList: MutableList<User>, layout: Int) : ArrayAdapter<User>(AttendOnBApp.app?.baseContext!!, 0, userList) {
 
 
-    val TAG = NewVacationAdapter::javaClass.name
+    val TAG = NewVacationSpinnerAdapter::javaClass.name
     var onUserSpinnerItemClickListener: OnUserSpinnerItemClickListener? = null
 
 

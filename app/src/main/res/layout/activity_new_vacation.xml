@@ -2,69 +2,174 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout"
+    android:id="@+id/relativeLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray400"
-    android:gravity="center"
-    android:orientation="vertical">
-
-    <Spinner
-        android:id="@+id/spinner_user_manger"
-        android:layout_width="0dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="108dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:spinnerMode="dropdown"
-        android:prompt="@string/menu_vacation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:padding="@dimen/widget_padding">
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
-        android:layout_width="match_parent"
+        android:id="@+id/reason_input"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
         android:layout_marginTop="8dp"
-
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginBottom="8dp"
         android:hint="@string/vacation_reason"
-        app:layout_constraintBottom_toTopOf="@+id/toggleButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_user_manger">
-
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/input_start_date"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/vacation_reason"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/vacation_reason" />
 
+
+        <Spinner
+            android:id="@+id/spinner_user_manger"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:prompt="@string/menu_vacation"
+            android:spinnerMode="dropdown"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/toggleButton"
-        android:layout_width="match_parent"
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_start_date"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="45dp"
+        android:layout_marginTop="45dp"
+        android:hint="@string/start_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reason_input">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/start_date_val"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:cursorVisible="false"
+            android:focusable="false" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_end_date"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginBottom="8dp"
+        android:hint="@string/end_date"
+        app:layout_constraintBottom_toTopOf="@+id/input_choose_manger"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_start_date">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/end_date_val"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:cursorVisible="false"
+            android:focusable="false" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_choose_manger"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginBottom="8dp"
+        android:hint="@string/choose_manger"
+        app:layout_constraintBottom_toTopOf="@+id/input_vacation_type"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_end_date">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/choose_manger_val"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:cursorVisible="false"
+            android:drawableStart="@drawable/ic_manger"
+            android:drawableLeft="@drawable/ic_manger"
+            android:drawablePadding="@dimen/widget_padding"
+            android:focusable="false" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_vacation_type"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="45dp"
+        android:hint="@string/choose_vacation_type"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_choose_manger">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:cursorVisible="false"
+            android:drawableStart="@drawable/ic_manger"
+            android:drawableLeft="@drawable/ic_manger"
+            android:drawablePadding="@dimen/widget_padding"
+            android:focusable="false" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <Button
+        android:id="@+id/send_vacation_request"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@color/colorPrimary"
         android:text="@string/send"
+        android:textAllCaps="false"
         android:textColor="@color/white"
+        android:textSize="@dimen/title_sub_head"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/input_vacation_type"
+        app:layout_constraintVertical_bias="0.966" />
+
+    <ProgressBar
+        android:id="@+id/new_vacation_form_progress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

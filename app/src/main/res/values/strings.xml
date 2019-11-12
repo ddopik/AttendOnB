@@ -121,5 +121,10 @@
     <string name="submit">Add vacation</string>
     <string name="vacation_reason">Vacation Reason</string>
     <string name="send">Send</string>
-    <string name="please_choose_manger">Please choose  manger</string>
+    <string name="choose_manger">Choose  manger</string>
+    <string name="select_start_date">Select Start Date</string>
+    <string name="select_end_date">Select End date</string>
+    <string name="cancel">Cancel</string>
+    <string name="choose_vacation_type">Choose vacation type</string>
+    <string name="search">Search</string>
 </resources>
