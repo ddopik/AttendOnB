@@ -34,11 +34,15 @@ class ApprovedFragment : BaseFragment() {
 
         intiView()
         initObservers()
-        approvedViewModel.getApprovedVacations()
 
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        approvedViewModel.getApprovedVacations()
+
+    }
 
     override fun intiView() {
         approvedViewModel = ApprovedViewModel.getInstance(this)

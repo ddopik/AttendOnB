@@ -5,6 +5,7 @@ package com.spidersholidays.attendonb.base;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +18,7 @@ import java.util.List;
  * Created by ddopik on 9/17/2017.
  */
 
-public class ViewPagerAdapter  extends FragmentStatePagerAdapter {
+public class ViewPagerAdapter  extends FragmentPagerAdapter {
 
     private final List mFragmentListT = new ArrayList();
     private final List<String> mFragmentTitleList = new ArrayList();
@@ -43,6 +44,8 @@ public class ViewPagerAdapter  extends FragmentStatePagerAdapter {
         mFragmentListT.add(fragment);
         mFragmentTitleList.add(title);
     }
+
+
 
     @Override
     public CharSequence getPageTitle(int position) {

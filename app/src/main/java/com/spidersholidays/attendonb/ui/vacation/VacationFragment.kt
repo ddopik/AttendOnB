@@ -55,6 +55,7 @@ class VacationFragment : ViewPagerFragment() {
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(intent)
         }
+
     }
 
     override val mainView: Int
@@ -66,5 +67,5 @@ class VacationFragment : ViewPagerFragment() {
     override val viewUpButton: Boolean?
         get() = false
     override val viewPagerAdapter: ViewPagerAdapter
-        get() = ViewPagerAdapter(activity?.supportFragmentManager!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
+        get() = ViewPagerAdapter(childFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
 }

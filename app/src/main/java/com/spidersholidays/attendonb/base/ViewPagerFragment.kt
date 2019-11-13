@@ -5,6 +5,8 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
 
 import com.google.android.material.tabs.TabLayout
@@ -52,10 +54,9 @@ abstract class ViewPagerFragment : Fragment() {
 
         viewTabLayout.setupWithViewPager( mainPagerView.findViewById<ViewPager>(viewPager))
         viewPagerLayout.adapter = setViewPagerAdapterFragment(viewPagerAdapter, fragments, fragmentsTitles)
-
-        return mainPagerView
+         return mainPagerView
     }
-    private fun <T> setViewPagerAdapterFragment(adapter: ViewPagerAdapter, fragments: List<T>, fragmentTitles: ArrayList<String>): ViewPagerAdapter {
+    private fun <T> setViewPagerAdapterFragment(adapter: ViewPagerAdapter, fragments: List<T>, fragmentTitles: ArrayList<String>): FragmentPagerAdapter {
         var i = 0
         for (fragment in fragments) {
             adapter.addFragment(fragment, fragmentTitles[i])
