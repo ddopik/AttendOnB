@@ -13,6 +13,8 @@ class Constants {
         val QUERY_SEARCH_TIME_OUT = 600
         val MangerListActivity_REQUESE_CODE = 12
         val VACATION_TYPE_LIST_ACTIVITY_REQUESE_CODE = 13
+        val CREATE_VACATION_PRIOR_DAY_BREAK =3
+
 
         //        const val QR_SCANNER_CONSTANT = "https://hr-arabjet.com/en/"
         const val QR_SCANNER_CONSTANT="https://nfc.spiderholidays.co/en/"

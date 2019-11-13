@@ -1,35 +1,23 @@
 package com.spidersholidays.attendonb.network
 
 import com.androidnetworking.common.Priority
+import com.rx2androidnetworking.Rx2AndroidNetworking
 import com.spidersholidays.attendonb.app.AttendOnBApp
 import com.spidersholidays.attendonb.ui.home.qrreader.model.AttendResponse
 import com.spidersholidays.attendonb.ui.login.viewmodel.model.LoginResponse
 import com.spidersholidays.attendonb.ui.vacation.approved.model.ApprovedResponse
+import com.spidersholidays.attendonb.ui.vacation.newvacation.model.CreateNewVacationResponse
 import com.spidersholidays.attendonb.ui.vacation.newvacation.model.NewVacationDataResponse
 import com.spidersholidays.attendonb.ui.vacation.pending.model.DeletePendingVacationResponse
 import com.spidersholidays.attendonb.ui.vacation.pending.model.PendingResponse
 import com.spidersholidays.attendonb.ui.vacation.rejected.model.RejectedResponse
 import com.spidersholidays.attendonb.utilites.PrefUtil
-import com.rx2androidnetworking.Rx2AndroidNetworking
 import io.reactivex.Observable
 
 class BaseNetWorkApi {
     companion object {
 
 
-        //        init {
-//            BASE_URL = if (PrefUtil.getAppLanguage(AttendOnBApp.app!!) == PrefUtil.ARABIC_LANG ){
-//                Log.e(BaseNetWorkApi::class.java.simpleName,"BASE_URL ---> AR")
-//                "https://nfc.spiderholidays.co/ar/Api"
-//            } else{
-//                Log.e(BaseNetWorkApi::class.java.simpleName,"BASE_URL ---> EN")
-//
-//                "https://nfc.spiderholidays.co/en/Api"
-//            }
-//
-//
-//
-//}
         //Network Status
         var STATUS_OK = "200"
         var DEFAULT_USER_TYPE = "0"
@@ -39,6 +27,12 @@ class BaseNetWorkApi {
         val STATUS_500 = 500
         var STATUS_ERROR = "405"
         val ERROR_STATE_1 = "login-400"
+
+
+        ///Body Parameter
+        val UID = "uid"
+        ////
+
         private val LANGUAGE_PATH_PARAMETER = "lang"
         private val USER_PATH_PARAMETER = "user_id"
         private val VACATION_ID_PATH_PARAMETER = "vacation"
@@ -54,6 +48,7 @@ class BaseNetWorkApi {
         private val REJECTED_VACATION_URL = "$BASE_URL/Vacations/rejected/{$USER_PATH_PARAMETER}"
         private val DELETE_PENDING_VACATION_URL = "$BASE_URL/Vacations/delete/{$VACATION_ID_PATH_PARAMETER}"
         private val NEW_VACATION_DATA_URL = "$BASE_URL/Vacations/create"
+        private val CREATE_VACATION_URL = "$BASE_URL/Vacations/create_action"
 
 
         fun login(userName: String, password: String, currentLat: String, currentLng: String, deviceImei: String): Observable<LoginResponse> {
@@ -157,6 +152,23 @@ class BaseNetWorkApi {
                     .responseOnlyFromNetwork
                     .build()
                     .getObjectObservable(NewVacationDataResponse::class.java)
+        }
+
+
+        fun sendNewVacationRequest(uid: String, reason: String, startDate: String, endDate: String, requestTo: String, vacationTypeId: String): Observable<CreateNewVacationResponse> {
+            return Rx2AndroidNetworking.post(CREATE_VACATION_URL)
+                    .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
+                    .addBodyParameter(UID, uid)
+                    .addBodyParameter("reason", reason)
+                    .addBodyParameter("start_date", startDate)
+                    .addBodyParameter("end_date", endDate)
+                    .addBodyParameter("request_to", requestTo)
+                    .addBodyParameter("vacations_type_id", vacationTypeId)
+                    .setPriority(Priority.HIGH)
+                    .responseOnlyFromNetwork
+                    .build()
+                    .getObjectObservable(CreateNewVacationResponse::class.java)
+
         }
 
     }

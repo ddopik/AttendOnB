@@ -22,7 +22,7 @@ class VacationAdapter(val pendingVacationList: MutableList<Vacation>, val vacati
         return VacationViewHolder(layoutInflater.inflate(R.layout.view_holder_vacation, parent, false))
     }
 
-    constructor(pendingVacationLis2t: MutableList<Vacation>, vacationType: VacationType, action: OnPendingVacationClick) : this(pendingVacationLis2t, vacationType) {
+    constructor(pendingVacationList: MutableList<Vacation>, vacationType: VacationType, action: OnPendingVacationClick) : this(pendingVacationList, vacationType) {
 
         this.onPendingVacationClick = action
     }

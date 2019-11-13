@@ -29,9 +29,6 @@
             android:hint="@string/vacation_reason" />
 
 
-
-
-
     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -101,13 +98,13 @@
             android:id="@+id/choose_manger_val"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="false"
             android:cursorVisible="false"
-            android:hint="@string/choose_manger"
             android:drawableStart="@drawable/ic_manger"
             android:drawableLeft="@drawable/ic_manger"
             android:drawablePadding="@dimen/widget_padding"
             android:focusable="false"
-            android:clickable="false"/>
+            android:hint="@string/choose_manger" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -116,10 +113,10 @@
         android:id="@+id/input_vacation_type"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:hintEnabled="false"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="45dp"
+        app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_choose_manger">
@@ -128,13 +125,13 @@
             android:id="@+id/choose_vacation_type_val"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/choose_vacation_type"
+            android:clickable="false"
             android:cursorVisible="false"
             android:drawableStart="@drawable/ic_manger"
             android:drawableLeft="@drawable/ic_manger"
-            android:clickable="false"
             android:drawablePadding="@dimen/widget_padding"
-            android:focusable="false" />
+            android:focusable="false"
+            android:hint="@string/choose_vacation_type" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -155,18 +152,21 @@
         app:layout_constraintTop_toBottomOf="@+id/input_vacation_type"
         app:layout_constraintVertical_bias="0.966" />
 
-    <ProgressBar
+    <FrameLayout
         android:id="@+id/new_vacation_form_progress"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible"
+
+        >
+
+        <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

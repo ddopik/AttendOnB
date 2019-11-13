@@ -11,6 +11,7 @@ import com.spidersholidays.attendonb.R
 import com.spidersholidays.attendonb.base.BaseActivity
 import com.spidersholidays.attendonb.base.commonModel.User
 import com.spidersholidays.attendonb.base.commonModel.VacationsType
+import com.spidersholidays.attendonb.utilites.Constants.Companion.CREATE_VACATION_PRIOR_DAY_BREAK
 import com.spidersholidays.attendonb.utilites.Constants.Companion.MangerListActivity_REQUESE_CODE
 import com.spidersholidays.attendonb.utilites.Constants.Companion.VACATION_TYPE_LIST_ACTIVITY_REQUESE_CODE
 import kotlinx.android.synthetic.main.activity_new_vacation.*
@@ -67,6 +68,15 @@ class NewVacationActivity : BaseActivity() {
             }
         })
 
+        newVacationViewModel?.onNewVacationCreated()?.observe(this, Observer {
+            if (it) {
+                showToast(resources.getString(R.string.vacation_create_succ))
+             } else {
+                showToast(resources.getString(R.string.vacation_create_failed))
+
+
+            }
+        })
 
 ///////////////////////////////
 
@@ -80,10 +90,10 @@ class NewVacationActivity : BaseActivity() {
         /**
          * user can't select a vacation only before 2 days for desired date
          * */
-        myStartDateCalendar.add(Calendar.DAY_OF_MONTH, 3)
-        myEndDateCalendar.add(Calendar.DAY_OF_MONTH, 3)
+        myStartDateCalendar.add(Calendar.DAY_OF_MONTH, CREATE_VACATION_PRIOR_DAY_BREAK)
+        myEndDateCalendar.add(Calendar.DAY_OF_MONTH, CREATE_VACATION_PRIOR_DAY_BREAK)
 
-        val myFormat = "MM/dd/yyyy" //In which you need put here
+        val myFormat = "dd/MM/yyyy" //In which you need put here
 
 
         val startDateListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
@@ -96,7 +106,7 @@ class NewVacationActivity : BaseActivity() {
              * Resitting time if user wan't to reselect
              * */
             myStartDateCalendar = Calendar.getInstance()
-            myStartDateCalendar.add(Calendar.DAY_OF_MONTH, 3)
+            myStartDateCalendar.add(Calendar.DAY_OF_MONTH, CREATE_VACATION_PRIOR_DAY_BREAK)
         }
 
 
@@ -112,7 +122,7 @@ class NewVacationActivity : BaseActivity() {
              * Resitting time if user wan't to reselect
              * */
             myEndDateCalendar = Calendar.getInstance()
-            myEndDateCalendar.add(Calendar.DAY_OF_MONTH, 3)
+            myEndDateCalendar.add(Calendar.DAY_OF_MONTH, CREATE_VACATION_PRIOR_DAY_BREAK)
 
         }
 
@@ -131,7 +141,7 @@ class NewVacationActivity : BaseActivity() {
 
         choose_manger_val.setOnClickListener {
 
-            if (mangerList.size >0) {
+            if (mangerList.size > 0) {
                 val intent = Intent(NewVacationActivity@ this, MangerListActivity::class.java)
                 intent.putExtra(MangerListActivity.userList, mangerList as ArrayList<User>)
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -142,7 +152,7 @@ class NewVacationActivity : BaseActivity() {
 
         choose_vacation_type_val.setOnClickListener {
 
-            if(vacationTypeList.size >0) {
+            if (vacationTypeList.size > 0) {
                 val intent = Intent(NewVacationActivity@ this, VacationListActivity::class.java)
                 intent.putExtra(VacationListActivity.VACATION_LIST, vacationTypeList as ArrayList<VacationsType>)
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -153,19 +163,26 @@ class NewVacationActivity : BaseActivity() {
 
 
         send_vacation_request.setOnClickListener {
-            validateForm()
+            if (validateForm()){
+                newVacationViewModel?.sendVacationRequest(reason= vacation_reason_val.text.toString(),startDate = start_date_val.text.toString(),endDate = end_date_val.text.toString(),requestTo = (choose_manger_val.tag as User).id!!,vacationType = (choose_vacation_type_val.tag as VacationsType).id!!)
+            }
         }
 
     }
 
 
     @SuppressLint("SimpleDateFormat")
-    private fun validateForm() {
+    private fun validateForm():Boolean {
+
+        var validateionState = true
 
         if (vacation_reason_val.text.isNullOrBlank()) {
             reason_input.error = resources.getString(R.string.field_required)
+            validateionState=false
         } else {
             reason_input.isErrorEnabled = false
+            validateionState=true
+
         }
 
 
@@ -178,38 +195,58 @@ class NewVacationActivity : BaseActivity() {
 
             if (strDate.time > endDate.time) {
                 input_end_date.error = resources.getString(R.string.end_data_note)
+                validateionState=false
+
             }
             input_start_date.isErrorEnabled = false
             input_end_date.isErrorEnabled = false
+            validateionState=true
+
         } else {
 
             if (start_date_val.text.isNullOrBlank()) {
                 input_start_date.error = resources.getString(R.string.field_required)
+                validateionState=false
+
             } else {
                 input_start_date.isErrorEnabled = false
+                validateionState=true
+
             }
 
             if (end_date_val.text.isNullOrBlank()) {
                 input_end_date.error = resources.getString(R.string.field_required)
+                validateionState=false
+
             } else {
                 input_end_date.isErrorEnabled = false
+                validateionState=true
+
             }
         }
         ///////////////
 
         if (choose_manger_val.tag == null) {
             input_choose_manger.error = resources.getString(R.string.please_choose_manger)
+            validateionState=false
+
         } else {
             input_choose_manger.isErrorEnabled = false
+            validateionState=true
+
         }
 
         if (choose_vacation_type_val.tag == null) {
             input_vacation_type.error = resources.getString(R.string.please_choose_vacation_type)
+            validateionState=false
+
         } else {
             input_vacation_type.isErrorEnabled = false
+            validateionState=true
+
         }
 
-
+return validateionState
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

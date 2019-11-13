@@ -76,6 +76,7 @@ class PendingFragment : BaseFragment() {
                 pendingVacationList.addAll(it)
             }
              pendingVacationAdapter.notifyDataSetChanged()
+
             if (pendingVacationList.size > 0) {
                 no_pending_vacation_stats_msg.visibility = View.GONE
             } else {

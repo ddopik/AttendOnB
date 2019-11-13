@@ -156,9 +156,9 @@ class PrefUtil {
 
         }
 
-        fun getUserId(mContext: Context): String? {
-//            return "3"
-            return getSharedPref(mContext).getString(USER_ID, "")
+        fun getUserId(mContext: Context): String {
+            return "3"
+//            return getSharedPref(mContext).getString(USER_ID, "")!!
 
         }
 
