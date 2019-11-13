@@ -67,6 +67,7 @@
 
 
          </activity>
+         <activity android:name=".ui.vacation.newvacation.VacationListActivity" />
 
          <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"

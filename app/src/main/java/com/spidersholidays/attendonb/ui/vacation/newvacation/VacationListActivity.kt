@@ -7,50 +7,49 @@ import bases.BaseActivity
 import com.jakewharton.rxbinding3.widget.TextViewTextChangeEvent
 import com.jakewharton.rxbinding3.widget.textChangeEvents
 import com.spidersholidays.attendonb.R
-import com.spidersholidays.attendonb.base.commonModel.User
-import com.spidersholidays.attendonb.utilites.Constants
+ import com.spidersholidays.attendonb.base.commonModel.VacationsType
+ import com.spidersholidays.attendonb.utilites.Constants
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_manger_list.*
+ import kotlinx.android.synthetic.main.activity_vacation_type_list.*
 import java.util.concurrent.TimeUnit
 
-class MangerListActivity : BaseActivity() {
+class VacationListActivity : BaseActivity()  {
 
-
-    val TAG = MangerListActivity::javaClass.name
-    private var autoCompleteMangersAdapter: AutoCompleteMangersAdapter? = null
+    val TAG = VacationListActivity::javaClass.name
+    private var autoCompleteVacationsTypeAdapter: AutoCompleteVacationsTypeAdapter? = null
     private val disposable = CompositeDisposable()
-    private var selectedManger: User? = null
-
+    private var selectedVacation: VacationsType? = null
+    private  var vacationList:MutableList<VacationsType> = mutableListOf()
     companion object {
-        val userList = "user_list"
-        val SELECTED_MANGER = "selected_user"
+        val VACATION_LIST = "vacation_list"
+        val SELECTED_VACATION = "selected_vacation"
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_manger_list)
+        setContentView(R.layout.activity_vacation_type_list)
 
 
-        val userTempList = intent.getStringArrayListExtra(userList) as MutableList<User>
-        autoCompleteMangersAdapter = AutoCompleteMangersAdapter(userTempList)
+        vacationList.addAll( intent.getStringArrayListExtra(VACATION_LIST) as MutableList<VacationsType>)
+        autoCompleteVacationsTypeAdapter = AutoCompleteVacationsTypeAdapter(vacationList)
 
-        autoCompleteMangersAdapter?.onMangerSelected = object : AutoCompleteMangersAdapter.OnMangerSelected {
-            override fun onMangerClickListener(user: User?) {
-                selectedManger = user
-                manger_search_view.setText(user?.name, TextView.BufferType.EDITABLE)
+        autoCompleteVacationsTypeAdapter?.onVacationSelected = object : AutoCompleteVacationsTypeAdapter.OnVacationSelected {
+            override fun onVacationClickListener(vacationsType :VacationsType?) {
+                selectedVacation = vacationsType
+                vacation_type_search_view.setText(vacationsType?.name, TextView.BufferType.EDITABLE)
             }
         }
 
-        rv_manger_list.adapter = autoCompleteMangersAdapter
+        rv_vacation_type_list.adapter = autoCompleteVacationsTypeAdapter
 
 
         disposable.add(
 
-                manger_search_view.textChangeEvents()
+                vacation_type_search_view.textChangeEvents()
                         .skipInitialValue()
                         .debounce(Constants.QUERY_SEARCH_TIME_OUT.toLong(), TimeUnit.MILLISECONDS)
                         .distinctUntilChanged()
@@ -64,7 +63,7 @@ class MangerListActivity : BaseActivity() {
         return object : DisposableObserver<TextViewTextChangeEvent>() {
             override fun onNext(textViewTextChangeEvent: TextViewTextChangeEvent) {
 
-                autoCompleteMangersAdapter?.filter?.filter(manger_search_view.text)
+                autoCompleteVacationsTypeAdapter?.filter?.filter(vacation_type_search_view.text)
 
             }
 
@@ -80,7 +79,7 @@ class MangerListActivity : BaseActivity() {
 
     override fun onBackPressed() {
         val intent = Intent()
-        intent.putExtra(SELECTED_MANGER, selectedManger)
+        intent.putExtra(SELECTED_VACATION, selectedVacation)
         setResult(RESULT_OK, intent)
         super.onBackPressed()
     }

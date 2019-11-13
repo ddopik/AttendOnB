@@ -58,7 +58,7 @@ class VacationAdapter(val pendingVacationList: MutableList<Vacation>, val vacati
 
 
     class VacationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val vacationReason: TextView = view.findViewById(R.id.vacation_reason)
+        val vacationReason: TextView = view.findViewById(R.id.vacation_reason_val)
         var vacationStartDate: TextView = view.findViewById(R.id.vacation_start_date)
         var vacationEndDate: TextView = view.findViewById(R.id.vacation_end_date)
         var vacationDaysLeft: TextView = view.findViewById(R.id.vacation_day_count)
