@@ -38,8 +38,8 @@ class BaseNetWorkApi {
         private val VACATION_ID_PATH_PARAMETER = "vacation"
         val IMAGE_BASE_URL = "https://hr-arabjet.com/uploads/thump/"
 
-        //        private  var BASE_URL :String ?="https://hr-arabjet.com/{lang}/Api"
-        private var BASE_URL: String? = "https://nfc.spiderholidays.co/{lang}/Api"
+                private  var BASE_URL :String ?="https://hr-arabjet.com/{lang}/Api"
+//        private var BASE_URL: String? = "https://nfc.spiderholidays.co/{lang}/Api"
         private val LOGIN_URL = "$BASE_URL/login_check"
         private val ATTEND_ACTION_URL = "$BASE_URL/attend_action"
         private val ATTEND_CHECK_URL = "$BASE_URL/attend_check"

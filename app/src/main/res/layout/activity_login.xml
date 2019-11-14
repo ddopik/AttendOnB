@@ -17,14 +17,16 @@
             android:orientation="vertical"
             android:paddingLeft="24dp"
             android:paddingTop="56dp"
-            android:paddingRight="24dp">
+            android:paddingRight="24dp"
+            android:layout_gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="350dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="24dp"
-                app:srcCompat="@drawable/app_icon" />
+                app:srcCompat="@drawable/app_icon"
+                android:visibility="gone"/>
 
             <!-- Email Label -->
             <com.google.android.material.textfield.TextInputLayout

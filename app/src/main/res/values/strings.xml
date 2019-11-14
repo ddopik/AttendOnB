@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Spiders Attend</string>
+    <string name="app_name">Attendance735</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -92,8 +92,8 @@
     <string name="welcome">Welcome</string>
     <string name="by_by">Bye Bye</string>
     <string name="menu_attend_stats">Attend (in / out)</string>
-    <string name="menu_vacation">Vacation (Coming Soon)</string>
-    <string name="menu_pay_roll">Payroll (Coming Soon)</string>
+    <string name="menu_vacation">Vacation</string>
+    <string name="menu_pay_roll">Payroll</string>
     <string name="qr">Qr</string>
     <string name="local_netWork">Local NetWork\n(coming soon)</string>
     <string name="nfc">NFC\n(coming soon)</string>

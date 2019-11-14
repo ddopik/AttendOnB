@@ -40,10 +40,14 @@ class PendingFragment : BaseFragment() {
 
         intiView()
         initObservers()
-        pendingViewModel.getPendingVacations ()
     }
 
+    override fun onResume() {
+        super.onResume()
+        pendingViewModel.getPendingVacations ()
 
+
+    }
     override fun intiView() {
 
         val deleteAction = object : OnPendingVacationClick {

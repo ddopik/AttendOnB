@@ -10,9 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.spidersholidays.attendonb.R
 import com.spidersholidays.attendonb.app.AttendOnBApp
 import com.spidersholidays.attendonb.base.commonModel.Vacation
+import com.spidersholidays.attendonb.utilites.Constants.Companion.PENDING_VACATION_ALLOWED
 
 
-class VacationAdapter(val pendingVacationList: MutableList<Vacation>, val vacationType: VacationType) : RecyclerView.Adapter<VacationAdapter.VacationViewHolder>() {
+class VacationAdapter(val VacationList: MutableList<Vacation>, val vacationType: VacationType) : RecyclerView.Adapter<VacationAdapter.VacationViewHolder>() {
 
     var onPendingVacationClick: OnPendingVacationClick? = null
 
@@ -28,7 +29,7 @@ class VacationAdapter(val pendingVacationList: MutableList<Vacation>, val vacati
     }
 
     override fun getItemCount(): Int {
-        return pendingVacationList.size
+        return VacationList.size
     }
 
     @SuppressLint("SetTextI18n")
@@ -38,7 +39,14 @@ class VacationAdapter(val pendingVacationList: MutableList<Vacation>, val vacati
             VacationType.PENDING -> {
                 holder.vacationDaysLeft.visibility = View.VISIBLE
                 holder.delteVacationBtn.setOnClickListener {
-                    onPendingVacationClick?.onVacationDeleteClicked(pendingVacationList[position].id)
+                    onPendingVacationClick?.onVacationDeleteClicked(VacationList[position].id)
+                    if (VacationList[position].vacationsTypeId == PENDING_VACATION_ALLOWED){
+                        holder.delteVacationBtn.visibility =View.VISIBLE
+                    }else{
+                        holder.delteVacationBtn.visibility =View.GONE
+
+                    }
+
                 }
 
             }
@@ -49,10 +57,10 @@ class VacationAdapter(val pendingVacationList: MutableList<Vacation>, val vacati
         }
 
 
-        holder.vacationReason.text = pendingVacationList[position].reason
-        holder.vacationStartDate.text = pendingVacationList[position].startDate
-        holder.vacationEndDate.text = pendingVacationList[position].endDate
-        holder.vacationDaysLeft.text = pendingVacationList[position].totalDays + " " + AttendOnBApp.app?.baseContext?.resources?.getString(R.string.day)
+        holder.vacationReason.text = VacationList[position].reason
+        holder.vacationStartDate.text = VacationList[position].startDate
+        holder.vacationEndDate.text = VacationList[position].endDate
+        holder.vacationDaysLeft.text = VacationList[position].totalDays + " " + AttendOnBApp.app?.baseContext?.resources?.getString(R.string.day)
 
     }
 
