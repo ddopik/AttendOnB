@@ -73,8 +73,8 @@ class QrSpareReaderActivity : BaseActivity(), ZXingScannerView.ResultHandler {
             intent.putExtra(HomeActivity.VIEW_CONFIRM_DIALOG, true)
             startActivity(intent)
             finish()
-
         })
+
         qrReaderViewModel.isUnKnownError().observe(this, Observer {
             Log.e(TAG, it)
         })
@@ -83,8 +83,7 @@ class QrSpareReaderActivity : BaseActivity(), ZXingScannerView.ResultHandler {
 
     override fun handleResult(p0: Result?) {
 
-        val var1= p0?.text
-        if(p0?.text == Constants.QR_SCANNER_CONSTANT){
+         if(p0?.text == Constants.QR_SCANNER_CONSTANT){
             mScannerView?.stopCamera()
             qrReaderViewModel.sendAttendRequest(currentLat!!, currentLng!!)
         }else {

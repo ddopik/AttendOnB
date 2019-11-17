@@ -15,6 +15,7 @@ import com.spidersholidays.attendonb.utilites.Constants
 import com.spidersholidays.attendonb.utilites.rxeventbus.RxAppStatsEvent
 import com.spidersholidays.attendonb.utilites.rxeventbus.RxEventBus
 import com.google.gson.Gson
+import com.spidersholidays.attendonb.network.BaseNetWorkApi.Companion.ERROR_STATE_2
 
 
 /**
@@ -73,7 +74,7 @@ class CustomErrorUtils {
         private fun viewError(context: Context, contextTAG: String, errorMessageResponse: ErrorMessageResponse) {
 
                     when (errorMessageResponse.code) {
-                        ERROR_STATE_1 -> {
+                        ERROR_STATE_1,ERROR_STATE_2 -> {
                             Toast.makeText(context, errorMessageResponse.data.msg, Toast.LENGTH_LONG).show()
                         }
                         else -> {

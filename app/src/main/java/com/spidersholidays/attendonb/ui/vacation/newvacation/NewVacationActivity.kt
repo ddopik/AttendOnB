@@ -35,6 +35,7 @@ class NewVacationActivity : BaseActivity() {
         initObservers()
 
         initListeners()
+
     }
 
     override fun initObservers() {
@@ -71,7 +72,7 @@ class NewVacationActivity : BaseActivity() {
         newVacationViewModel?.onNewVacationCreated()?.observe(this, Observer {
             if (it) {
                 showToast(resources.getString(R.string.vacation_create_succ))
-             } else {
+            } else {
                 showToast(resources.getString(R.string.vacation_create_failed))
 
 
@@ -163,8 +164,8 @@ class NewVacationActivity : BaseActivity() {
 
 
         send_vacation_request.setOnClickListener {
-            if (validateForm()){
-                newVacationViewModel?.sendVacationRequest(reason= vacation_reason_val.text.toString(),startDate = start_date_val.text.toString(),endDate = end_date_val.text.toString(),requestTo = (choose_manger_val.tag as User).id!!,vacationType = (choose_vacation_type_val.tag as VacationsType).id!!)
+            if (validateForm()) {
+                newVacationViewModel?.sendVacationRequest(reason = vacation_reason_val.text.toString(), startDate = start_date_val.text.toString(), endDate = end_date_val.text.toString(), requestTo = (choose_manger_val.tag as User).id!!, vacationType = (choose_vacation_type_val.tag as VacationsType).id!!)
             }
         }
 
@@ -172,16 +173,14 @@ class NewVacationActivity : BaseActivity() {
 
 
     @SuppressLint("SimpleDateFormat")
-    private fun validateForm():Boolean {
+    private fun validateForm(): Boolean {
 
-        var validateionState = true
 
         if (vacation_reason_val.text.isNullOrBlank()) {
             reason_input.error = resources.getString(R.string.field_required)
-            validateionState=false
+            return false
         } else {
             reason_input.isErrorEnabled = false
-            validateionState=true
 
         }
 
@@ -194,33 +193,26 @@ class NewVacationActivity : BaseActivity() {
             val endDate = sdf.parse(end_date_val.text.toString())
 
             if (strDate.time > endDate.time) {
-                input_end_date.error = resources.getString(R.string.end_data_note)
-                validateionState=false
-
+                 input_end_date.error = resources.getString(R.string.end_data_note)
+                return false
             }
-            input_start_date.isErrorEnabled = false
-            input_end_date.isErrorEnabled = false
-            validateionState=true
-
+             input_end_date.isErrorEnabled = false
         } else {
 
             if (start_date_val.text.isNullOrBlank()) {
                 input_start_date.error = resources.getString(R.string.field_required)
-                validateionState=false
+                return false
 
             } else {
                 input_start_date.isErrorEnabled = false
-                validateionState=true
 
             }
 
             if (end_date_val.text.isNullOrBlank()) {
                 input_end_date.error = resources.getString(R.string.field_required)
-                validateionState=false
-
+                return false
             } else {
                 input_end_date.isErrorEnabled = false
-                validateionState=true
 
             }
         }
@@ -228,25 +220,23 @@ class NewVacationActivity : BaseActivity() {
 
         if (choose_manger_val.tag == null) {
             input_choose_manger.error = resources.getString(R.string.please_choose_manger)
-            validateionState=false
+            return false
 
         } else {
             input_choose_manger.isErrorEnabled = false
-            validateionState=true
 
         }
 
         if (choose_vacation_type_val.tag == null) {
             input_vacation_type.error = resources.getString(R.string.please_choose_vacation_type)
-            validateionState=false
+            return false
 
         } else {
             input_vacation_type.isErrorEnabled = false
-            validateionState=true
 
         }
 
-return validateionState
+        return true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

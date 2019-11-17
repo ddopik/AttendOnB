@@ -47,12 +47,14 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
 
     private var attendActionCurrentStats: SingleLiveEvent<AttendMessage> = SingleLiveEvent()
 
+    private var attendActionNetWork: SingleLiveEvent<Boolean> = SingleLiveEvent()
+
     private var mapUtls: MapUtls? = null
 
     fun onAttendBtnChangeState(): LiveData<ApplyButtonState> = attendBtnState
     fun onDataLoading(): LiveData<Boolean> = progressBarState
     fun onAttendAction(): LiveData<AttendMessage> = attendActionCurrentStats
-
+    fun onAttendNetworkAction(): LiveData<Boolean> = attendActionNetWork
 
     companion object {
         private var INSTANCE: MainStateViewModel? = null
@@ -65,6 +67,54 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
         }
     }
 
+    /**
+     * First check Validation
+     */
+
+    fun attendRequest(context: Context) {
+        progressBarState.postValue(true)
+        mapUtls = MapUtls(this)
+        mapUtls?.startLocationUpdates(context, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
+    }
+
+    override fun onLocationUpdate(location: Location) {
+
+        progressBarState.postValue(false)
+        val centralLocation = Location("centrla")
+        centralLocation.latitude = PrefUtil.getCurrentCentralLat(AttendOnBApp.app!!)!!
+        centralLocation.longitude = PrefUtil.getCurrentCentralLng(AttendOnBApp.app!!)!!
+        Log.e(TAG, "onLocationUpdate() ---> CentralLocation is " + PrefUtil.getCurrentCentralRadius(AttendOnBApp.app!!))
+        Log.e(TAG, "onLocationUpdate() ---> CurrentLocation to Central Location is " + location.distanceTo(centralLocation))
+
+        mapUtls?.removeLocationRequest()
+
+        /**
+         * as isFromMockProvider is not supported for lower Api
+         * we enforce user to uninstall mocking app in order to attend
+         */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            when {
+
+                location.isFromMockProvider -> {
+                    CustomErrorUtils.viewSnackBarError(Constants.ErrorType.MOCK_LOCATION)
+                    Log.e(TAG, "----->isFromMockProvider")
+                    return
+                }
+            }
+        } else if (Utilities.areThereMockPermissionApps(AttendOnBApp.app?.baseContext!!)) {
+            CustomErrorUtils.viewSnackBarError(Constants.ErrorType.MOCK_LOCATION)
+            Log.e(TAG, "-----> Found Mock Location Apps must remove them in order to continue")
+            return
+        }
+
+
+        validatesUserRadius(currentLocation = location, centralLocation = centralLocation)
+    }
+
+
+    /**
+     * this method used to update current view state and visibility
+     * */
     @SuppressLint("CheckResult")
     fun checkAttendStatus(uid: String) {
         progressBarState.postValue(true)
@@ -78,21 +128,16 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
                     attendResponse?.attendData?.attendStatus?.let {
                         PrefUtil.setCurrentUserStatsID(AttendOnBApp.app?.baseContext!!, attendResponse.attendData?.attendStatus?.status!!)
                         PrefUtil.setCurrentStatsMessage(AttendOnBApp.app?.baseContext!!, attendResponse.attendData?.attendStatus?.msg!!)
-                        val applyButtonStats = ApplyButtonState()
                         when (attendResponse.attendData?.attendStatus?.status) {
-                            ENTER -> {
-                                applyButtonStats.isEnable = true
-                                attendBtnState.postValue(applyButtonStats)
-                            }
-                            OUT -> {
-                                applyButtonStats.isEnable = true
-                                attendBtnState.postValue(applyButtonStats)
-
+                            ENTER, OUT -> {
+                                /**
+                                 * Bad practice vm should no nothing about view --->ApplyButtonState()
+                                 * */
+                                attendBtnState.postValue(ApplyButtonState(btnEnabled = true, btnVisible = true, btnType = Constants.AttendType.MAIN_CONTAINER))
                             }
                             ENDED -> {
-                                applyButtonStats.isEnable = false
-                                applyButtonStats.isViable = false
-                                attendBtnState.postValue(applyButtonStats)
+                                attendBtnState.postValue(ApplyButtonState(btnEnabled = false, btnVisible = false, btnType = Constants.AttendType.MAIN_CONTAINER))
+
                             }
                         }
                     }
@@ -107,104 +152,28 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
     }
 
 
-    fun attendRequest(context: Context) {
-        progressBarState.postValue(true)
-        mapUtls = MapUtls(this)
-        val applyButtonStats = ApplyButtonState()
-        applyButtonStats.isEnable = false
-        attendBtnState.postValue(applyButtonStats)
-        mapUtls?.startLocationUpdates(context, MapUtls.MapConst.UPDATE_INTERVAL_INSTANT)
-    }
-
-
-    override fun onLocationUpdate(location: Location) {
-
-        progressBarState.postValue(false)
-        val applyButtonStats = ApplyButtonState()
-        val centralLocation = Location("centrla")
-        centralLocation.latitude = PrefUtil.getCurrentCentralLat(AttendOnBApp.app!!)!!
-        centralLocation.longitude = PrefUtil.getCurrentCentralLng(AttendOnBApp.app!!)!!
-        Log.e(TAG, "onLocationUpdate() ---> CentralLocation is " + PrefUtil.getCurrentCentralRadius(AttendOnBApp.app!!))
-        Log.e(TAG, "onLocationUpdate() ---> CurrentLocation to Central Location is " + location.distanceTo(centralLocation))
-
-
-        /**
-         * as isFromMockProvider is not supported for lower Api
-         * we enforce user to uninstall mocking app in order to attend
-         */
-
-
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            when {
-
-                location.isFromMockProvider -> {
-                    CustomErrorUtils.viewSnackBarError(Constants.ErrorType.MOCK_LOCATION)
-                    applyButtonStats.isEnable = true
-                    attendBtnState.postValue(applyButtonStats)
-                    mapUtls?.removeLocationRequest()
-                    Log.e(TAG, "----->isFromMockProvider")
-                    return
-                }
-
-//                location.distanceTo(centralLocation) > PrefUtil.getCurrentCentralRadius(AttendOnBApp.app!!)!! -> {
-//                    CustomErrorUtils.viewSnackBarError(Constants.ErrorType.OUT_OF_AREA)
-//                    applyButtonStats.isEnable = true
-//                    attendBtnState.postValue(applyButtonStats)
-//                    mapUtls?.removeLocationRequest()
-//                    Log.e(TAG, "----->Not InsideRadius")
-//                }
-//
-//                CustomErrorUtils.haveNetworkConnection(AttendOnBApp.app?.baseContext!!) -> {
-//                    sendAttendAction(PrefUtil.getUserId(AttendOnBApp.app!!)!!, location)
-//                }
-//                else -> {
-//                    CustomErrorUtils.viewSnackBarError(Constants.ErrorType.ONLINE_DISCONNECTED)
-//                    mapUtls?.removeLocationRequest()
-//                }
-            }
-        } else if (Utilities.areThereMockPermissionApps(AttendOnBApp.app?.baseContext!!)) {
-            CustomErrorUtils.viewSnackBarError(Constants.ErrorType.MOCK_LOCATION)
-            applyButtonStats.isEnable = true
-            attendBtnState.postValue(applyButtonStats)
-            mapUtls?.removeLocationRequest()
-            Log.e(TAG, "-----> Found Mock Location Apps must remove them in order to continue")
-            return
-        }
-
-
-
-        validatesUserRadius(currentLocation= location,centralLocation=centralLocation,applyButtonState = applyButtonStats)
-
-    }
-
-
-    private fun validatesUserRadius(currentLocation:Location, centralLocation: Location, applyButtonState:ApplyButtonState){
-        if (currentLocation.distanceTo(centralLocation) > PrefUtil.getCurrentCentralRadius(AttendOnBApp.app!!)!! ) {
+    private fun validatesUserRadius(currentLocation: Location, centralLocation: Location) {
+        if (currentLocation.distanceTo(centralLocation) > PrefUtil.getCurrentCentralRadius(AttendOnBApp.app!!)!!) {
             CustomErrorUtils.viewSnackBarError(Constants.ErrorType.OUT_OF_AREA)
-            applyButtonState.isEnable = true
-            attendBtnState.postValue(applyButtonState)
-            mapUtls?.removeLocationRequest()
             Log.e(TAG, "----->Not InsideRadius")
+            attendBtnState.postValue(ApplyButtonState(btnEnabled = true, btnVisible = true, btnType = Constants.AttendType.MAIN_CONTAINER))
+            return
         }
 
         /**
          *  Final check to verify network connection before send attend request
          */
-        if (CustomErrorUtils.haveNetworkConnection(AttendOnBApp.app?.baseContext!!))  {
+        if (CustomErrorUtils.haveNetworkConnection(AttendOnBApp.app?.baseContext!!)) {
             sendAttendAction(PrefUtil.getUserId(AttendOnBApp.app!!), currentLocation)
-        } else  {
+        } else {
             CustomErrorUtils.viewSnackBarError(Constants.ErrorType.ONLINE_DISCONNECTED)
-            mapUtls?.removeLocationRequest()
         }
     }
 
 
     @SuppressLint("CheckResult")
-    fun sendAttendAction(uid: String, currentLocation: Location) {
+    private fun sendAttendAction(uid: String, currentLocation: Location) {
         progressBarState.postValue(true)
-
         BaseNetWorkApi.sendAttendCheckRequest(uid)
                 .subscribeOn(Schedulers.io())
                 .debounce(CHECK_STATS_TIME_OUT, TimeUnit.MILLISECONDS)
@@ -214,17 +183,15 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
                     attendResponse?.attendData?.attendStatus?.let {
                         PrefUtil.setCurrentUserStatsID(AttendOnBApp.app?.baseContext!!, attendResponse.attendData?.attendStatus?.status!!)
                         PrefUtil.setCurrentStatsMessage(AttendOnBApp.app?.baseContext!!, attendResponse.attendData?.attendStatus?.msg!!)
-                        val attendMessage = AttendMessage()
+
                         when (attendResponse.attendData?.attendStatus?.status) {
                             ENTER -> {
-                                attendMessage.currentLocation = currentLocation;
-                                attendMessage.attendFlag = AttendMessage.AttendFlags.ENTER
-                                attendActionCurrentStats.postValue(attendMessage)
+
+                                attendActionCurrentStats.postValue(AttendMessage(currentLocation, AttendMessage.AttendFlags.ENTER))
                             }
                             OUT -> {
-                                attendMessage.currentLocation = currentLocation;
-                                attendMessage.attendFlag = AttendMessage.AttendFlags.OUT
-                                attendActionCurrentStats.postValue(attendMessage)
+
+                                attendActionCurrentStats.postValue(AttendMessage(currentLocation, AttendMessage.AttendFlags.OUT))
                             }
                             ENDED -> {
 //                                attendMessage.attendFlag= AttendMessage.AttendFlags.ENDED
@@ -232,11 +199,9 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
                             else -> Log.e(TAG, "sendAttendCheckRequest ----> ${attendResponse.attendData?.attendStatus.toString()}")
                         }
                     }
-                    mapUtls?.removeLocationRequest()
                     progressBarState.postValue(false)
 
                 }, { t: Throwable? ->
-                    mapUtls?.removeLocationRequest()
                     progressBarState.postValue(false)
                     CustomErrorUtils.setError(TAG, t)
 
@@ -244,25 +209,63 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
     }
 
 
-//    fun isCloseLocation(currentLocation: Location) {
-//
-//        val centralLocation = Location(LocationManager.GPS_PROVIDER)
-//
-//        centralLocation.latitude = PrefUtil.getCurrentCentralLat(AttendOnBApp.app?.baseContext!!)!!
-//        centralLocation.longitude = PrefUtil.getCurrentCentralLng(AttendOnBApp.app?.baseContext!!)!!
-//
-//
-//        val distanceInKiloMeters = currentLocation.distanceTo(centralLocation) // as distance is in meter
-//
-//
-//
-//
-//        if (distanceInKiloMeters <= 1) {
-//
-////            Log.e(TAG,"isCloseLocation 1--->$distanceInKiloMeters")
-//        } else {
-//
-////            Log.e(TAG,"isCloseLocation 2--->$distanceInKiloMeters")
-//        }
-//    }
+    @SuppressLint("CheckResult")
+    fun sendAttendNetworkRequest(location: Location) {
+
+        progressBarState.postValue(true)
+        Log.e(TAG, "DEVICE--" + android.os.Build.DEVICE)
+        Log.e(TAG, "MODEL--" + android.os.Build.MODEL)
+        Log.e(TAG, "PRODUCT--" + android.os.Build.PRODUCT)
+        BaseNetWorkApi.sendAttendNetworkRequest(
+                uid = PrefUtil.getUserId(AttendOnBApp.app?.baseContext!!)!!
+                , platform = "Android"
+                , deviceImei = Utilities.getDeviceIMEI(AttendOnBApp.app?.baseContext!!)
+                , device = Build.MODEL.toString(),
+                deviceDetails = Build.PRODUCT.toString(),
+                latitude = location.latitude.toString(),
+                longitude = location.longitude.toString())
+                .subscribeOn(Schedulers.io())
+                .distinct()
+                .debounce(5000, TimeUnit.MILLISECONDS)
+                .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ attendResponse: AttendResponse ->
+                    if (attendResponse.status!!) {
+
+                        Log.e(TAG, "--->${attendResponse.attendData?.attendStatus?.msg}")
+                        PrefUtil.setCurrentUserStatsID(AttendOnBApp.app?.baseContext!!, attendResponse.attendData?.attendStatus?.status!!)
+                        PrefUtil.setCurrentStatsMessage(AttendOnBApp.app?.baseContext!!, attendResponse.attendData?.attendStatus?.msg!!)
+                        attendResponse.attendData?.attendStatus?.msg?.let {
+                            PrefUtil.setCurrentStatsMessage(AttendOnBApp.app?.baseContext!!, it)
+                        }
+
+
+                        when (attendResponse.attendData?.attendStatus?.status) {
+                            ENTER, OUT -> {
+                                attendActionNetWork.postValue(true)
+                                attendBtnState.postValue(ApplyButtonState(btnEnabled = true, btnVisible = true, btnType = Constants.AttendType.NETWORK))
+                            }
+                            ENDED -> {
+                                attendActionNetWork.postValue(true)
+                                attendBtnState.postValue(ApplyButtonState(btnEnabled = false, btnVisible = false, btnType = Constants.AttendType.MAIN_CONTAINER))
+
+                            }
+                            else -> Log.e(TAG, "sendAttendCheckRequest ----> ${attendResponse.attendData?.attendStatus.toString()}")
+                        }
+
+                    }
+
+                    progressBarState.postValue(false)
+
+                }, { t: Throwable? ->
+                    progressBarState.postValue(false)
+                    attendActionNetWork.postValue(false)
+                    attendBtnState.postValue(ApplyButtonState(btnEnabled = true, btnVisible = true, btnType = Constants.AttendType.NETWORK))
+                    CustomErrorUtils.setError(TAG, t)
+
+                }
+                )
+    }
+
+
 }

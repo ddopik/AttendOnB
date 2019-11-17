@@ -1,40 +1,40 @@
 package com.spidersholidays.attendonb.ui.attend.view
 
+import CustomErrorUtils
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.location.Location
-import android.os.Build
+import android.net.Network
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.spidersholidays.attendonb.R
 import com.spidersholidays.attendonb.base.BaseFragment
+import com.spidersholidays.attendonb.ui.home.HomeActivity
 import com.spidersholidays.attendonb.ui.home.mainstate.model.ApplyButtonState
+import com.spidersholidays.attendonb.ui.home.mainstate.stateconfirmdialog.StateConfirmDialog
 import com.spidersholidays.attendonb.ui.home.mainstate.viewmodel.MainStateViewModel
 import com.spidersholidays.attendonb.ui.home.model.AttendMessage
 import com.spidersholidays.attendonb.ui.home.qrreader.ui.QrSpareReaderActivity
+import com.spidersholidays.attendonb.utilites.Constants
 import com.spidersholidays.attendonb.utilites.PrefUtil
+import com.spidersholidays.attendonb.utilites.rxeventbus.RxEventBus
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_attend.*
-import com.spidersholidays.attendonb.utilites.rxeventbus.RxEventBus
-import androidx.lifecycle.Observer
-import com.spidersholidays.attendonb.app.AttendOnBApp
-import com.spidersholidays.attendonb.ui.home.HomeActivity
-import com.spidersholidays.attendonb.utilites.Constants
-import com.spidersholidays.attendonb.utilites.Utilities
 
-class AttendFragment :BaseFragment() {
+class AttendFragment : BaseFragment() {
 
-    private val TAG=AttendFragment::class.java.simpleName
+    private val TAG = AttendFragment::class.java.simpleName
     private var mainStateViewModel: MainStateViewModel? = null
     private val disposables = CompositeDisposable()
+    private var attendType: Constants.AttendType? = null
 
     companion object {
-        val TAG= AttendFragment::class.java.simpleName
+        val TAG = AttendFragment::class.java.simpleName
         public fun getInstance(): AttendFragment {
             val attendFragment = AttendFragment()
             return attendFragment
@@ -43,9 +43,10 @@ class AttendFragment :BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val mainView= inflater.inflate(R.layout.fragment_attend,container,false)
+        val mainView = inflater.inflate(R.layout.fragment_attend, container, false)
         return mainView;
-     }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainStateViewModel = MainStateViewModel.getInstance(activity as HomeActivity)
@@ -59,11 +60,48 @@ class AttendFragment :BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        mainStateViewModel?.checkAttendStatus(PrefUtil.getUserId(context!!)!!)
+        mainStateViewModel?.checkAttendStatus(PrefUtil.getUserId(context!!))
     }
 
     override fun intiView() {
-        attend_message_type.text=resources.getString(R.string.please_select_attend_type)+ context?.let { PrefUtil.getCurrentStatsMessage(it) }
+        /**
+         * Initial request to update view stats
+         * */
+        val disposable = RxEventBus.getInstance().refreshStatsSubject.subscribe({ reFreshStats ->
+            mainStateViewModel?.checkAttendStatus(PrefUtil.getUserId(context!!))
+
+        }, { throwable ->
+            Log.e(TAG, "Error --->" + throwable.message)
+        })
+        disposables.add(disposable)
+
+        attend_message_type.text = resources.getString(R.string.please_select_attend_type) + context?.let { PrefUtil.getCurrentStatsMessage(it) }
+    }
+
+    private fun intiListeners() {
+
+        network_attend_btn.setOnClickListener {
+            if (!utilities.Utilities.isLocationEnabled(context)) {
+                CustomErrorUtils.viewSnackBarError(Constants.ErrorType.GPS_PROVIDER)
+            } else {
+
+                attendType = Constants.AttendType.NETWORK
+                setBtnAttendBtnState(ApplyButtonState(btnEnabled = false, btnVisible = true, btnType = Constants.AttendType.NETWORK))
+                mainStateViewModel?.attendRequest(context!!)
+            }
+
+        }
+
+
+        qr_attend_btn.setOnClickListener {
+            if (!utilities.Utilities.isLocationEnabled(context)) {
+                CustomErrorUtils.viewSnackBarError(Constants.ErrorType.GPS_PROVIDER)
+            } else {
+                attendType = Constants.AttendType.QR
+                setBtnAttendBtnState(ApplyButtonState(btnEnabled = false, btnVisible = true, btnType = Constants.AttendType.QR))
+                mainStateViewModel?.attendRequest(context!!)
+            }
+        }
 
 
     }
@@ -72,17 +110,8 @@ class AttendFragment :BaseFragment() {
     override fun initObservers() {
 
         mainStateViewModel?.onAttendBtnChangeState()?.observe(this, Observer { stats ->
-
-
-            if ( context?.let { PrefUtil.getCurrentUserStatsID(it) } == Constants.ENDED ){
-            attend_btn_container.visibility=View.GONE
-        }else
-            {
-                attend_btn_container.visibility=View.VISIBLE
-
-            }
-            setAttendTitle()
             setBtnAttendBtnState(stats)
+            setAttendTitle()
         })
 
         mainStateViewModel?.onDataLoading()?.observe(this, Observer {
@@ -94,72 +123,91 @@ class AttendFragment :BaseFragment() {
         })
 
 
+        /**
+         * this observer checks wither can attend or not
+         * if  "yes"  ----> processes will continue to desired method
+         *     "No"   ----> an rejection reason should be displayed
+         */
         mainStateViewModel?.onAttendAction()?.observe(this, Observer {
             when (it.attendFlag) {
-                AttendMessage.AttendFlags.ENTER -> {
+                AttendMessage.AttendFlags.ENTER, AttendMessage.AttendFlags.OUT -> {
+                    when (attendType) {
+                        Constants.AttendType.QR -> {
 
-                    navigateToScanScreen(it.currentLocation!!)
+                            navigateToScanScreen(it.currentLocation)
+                            setBtnAttendBtnState(ApplyButtonState(btnEnabled = true, btnVisible = true, btnType = Constants.AttendType.QR))
 
-                }
-                AttendMessage.AttendFlags.OUT -> {
-                    navigateToScanScreen(it.currentLocation!!)
-
+                        }
+                        Constants.AttendType.NETWORK -> {
+                            Log.e(TAG, "Network attend reqested")
+                            mainStateViewModel?.sendAttendNetworkRequest(it.currentLocation)
+                        }
+                    }
                 }
                 AttendMessage.AttendFlags.ENDED -> {
                 }
+            }
+            attendType = null
+        })
 
 
+
+        mainStateViewModel?.onAttendNetworkAction()?.observe(viewLifecycleOwner, Observer {
+
+            if (it) {
+                if (PrefUtil.getCurrentUserStatsID(context!!) == Constants.OUT) {
+                    StateConfirmDialog.getInstance(PrefUtil.getUserName(context!!)!!, Constants.OUT).show(childFragmentManager.beginTransaction(), StateConfirmDialog::javaClass.name)
+                } else if (PrefUtil.getCurrentUserStatsID(context!!) == Constants.ENDED) {
+                    StateConfirmDialog.getInstance(PrefUtil.getUserName(context!!)!!, Constants.ENDED).show(childFragmentManager.beginTransaction(), StateConfirmDialog::javaClass.name)
+                }
             }
         })
-    }
-
-    private fun intiListeners() {
-        qr_attend_btn.setOnClickListener {
-
-
-            val applyButtonStats = ApplyButtonState()
-
-
-
-            if (!utilities.Utilities.isLocationEnabled(context)) {
-//                applyButtonStats.isEnable = false
-//                setBtnAttendBtnState(applyButtonStats)
-                CustomErrorUtils.viewSnackBarError(Constants.ErrorType.GPS_PROVIDER)
-            } else {
-                mainStateViewModel?.attendRequest(context!!)
-            }
-
-
-        }
-
-        val disposable = RxEventBus.getInstance().refreshStatsSubject.subscribe({ reFreshStats ->
-            mainStateViewModel?.checkAttendStatus(PrefUtil.getUserId(context!!)!!)
-
-        }, { throwable ->
-            Log.e(TAG, "Error --->" +throwable.message)
-        })
-        disposables.add(disposable)
 
     }
 
 
     private fun setBtnAttendBtnState(applyButtonState: ApplyButtonState) {
 
-         qr_attend_btn.visibility = View.VISIBLE
-        if (applyButtonState.isEnable!!) {
-            qr_attend_btn.setBackgroundColor(ContextCompat.getColor(context!!, R.color.text_input_color))
-            qr_attend_btn.isEnabled = true
-        } else if (applyButtonState.isViable !=null && !applyButtonState.isViable!!) {
-//            qr_attend_btn.visibility = View.INVISIBLE
-        } else {
-            qr_attend_btn.setBackgroundColor(ContextCompat.getColor(context!!, R.color.gray400))
-            qr_attend_btn.isEnabled = false
-        }
-    }
-    private fun navigateToScanScreen(location: Location){
 
-        qr_attend_btn.visibility = View.GONE
-        setBtnAttendBtnState(ApplyButtonState(btnEnabled = true, btnVisable = true))
+        when (applyButtonState.btnType) {
+
+            Constants.AttendType.QR ,Constants.AttendType.NETWORK-> {
+                if (applyButtonState.btnEnabled) {
+                    qr_attend_btn.setBackgroundColor(ContextCompat.getColor(context!!, R.color.text_input_color))
+                    qr_attend_btn.isEnabled = true
+
+                    network_attend_btn.setBackgroundColor(ContextCompat.getColor(context!!, R.color.text_input_color))
+                    network_attend_btn.isEnabled = true
+                } else {
+                    qr_attend_btn.setBackgroundColor(ContextCompat.getColor(context!!, R.color.gray400))
+                    qr_attend_btn.isEnabled = false
+                    network_attend_btn.setBackgroundColor(ContextCompat.getColor(context!!, R.color.gray400))
+                    network_attend_btn.isEnabled = false
+                }
+            }
+
+
+            Constants.AttendType.MAIN_CONTAINER -> {
+                if (applyButtonState.btnVisible) {
+                    attend_btn_container.visibility = View.VISIBLE
+                    qr_attend_btn.setBackgroundColor(ContextCompat.getColor(context!!, R.color.text_input_color))
+                    network_attend_btn.setBackgroundColor(ContextCompat.getColor(context!!, R.color.text_input_color))
+                    qr_attend_btn.isEnabled = true
+                    network_attend_btn.isEnabled = true
+
+
+                } else {
+                    attend_btn_container.visibility = View.GONE
+                }
+
+            }
+
+
+        }
+
+    }
+
+    private fun navigateToScanScreen(location: Location) {
         val intent = Intent(activity, QrSpareReaderActivity::class.java)
         intent.putExtra(QrSpareReaderActivity.CURRENT_LAT, location.latitude)
         intent.putExtra(QrSpareReaderActivity.CURRENT_LNG, location.longitude)
@@ -169,25 +217,24 @@ class AttendFragment :BaseFragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setAttendTitle(){
-        val currentAttendState= context?.let { PrefUtil.getCurrentUserStatsID(it) }
-        attend_message_type_label.visibility =View.VISIBLE
+    private fun setAttendTitle() {
+        val currentAttendState = context?.let { PrefUtil.getCurrentUserStatsID(it) }
+        attend_message_type_label.visibility = View.VISIBLE
 
-        when (currentAttendState){
-            Constants.ENTER ->{
-                attend_message_type.text= " "+ resources.getString(R.string.attend)
-
-            }
-            Constants.OUT ->{
-            attend_message_type.text =" "+resources.getString(R.string.out)
+        when (currentAttendState) {
+            Constants.ENTER -> {
+                attend_message_type.text = " " + resources.getString(R.string.attend)
 
             }
-            Constants.ENDED ->{
-                attend_message_type_label.visibility =View.INVISIBLE
-                attend_message_type.text=resources.getString(R.string.attend_taken)
+            Constants.OUT -> {
+                attend_message_type.text = " " + resources.getString(R.string.out)
+
+            }
+            Constants.ENDED -> {
+                attend_message_type_label.visibility = View.INVISIBLE
+                attend_message_type.text = resources.getString(R.string.attend_taken)
             }
         }
-
 
 
     }

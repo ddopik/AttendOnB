@@ -16,15 +16,15 @@ class Constants {
         val CREATE_VACATION_PRIOR_DAY_BREAK =3
 
 
-                const val QR_SCANNER_CONSTANT = "https://hr-arabjet.com/en/"
-//        const val QR_SCANNER_CONSTANT="https://nfc.spiderholidays.co/en/"
+//                const val QR_SCANNER_CONSTANT = "https://hr-arabjet.com/en/"
+        const val QR_SCANNER_CONSTANT="https://nfc.spiderholidays.co/en/"
 
         const val ENTER = "1"
         const val OUT = "2"
         const val ENDED = "3"
 
 
-        const val PENDING_VACATION_ALLOWED ="1"
+        const val PENDING_VACATION_ALLOWED ="0"
 
 
     }
@@ -36,6 +36,8 @@ class Constants {
     enum class ErrorTypeStateAction {
         OPEN_SETTING
     }
-
+    public enum class AttendType{
+        MAIN_CONTAINER,QR,NETWORK
+    }
 
 }

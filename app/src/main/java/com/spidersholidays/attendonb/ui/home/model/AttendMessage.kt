@@ -8,12 +8,12 @@ import android.location.Location
  * brandeda.net company,
  * cairo, Egypt.
  */
-class AttendMessage {
+  class AttendMessage(var currentLocation:Location,var attendFlag :AttendFlags) {
 
-    var currentLocation:Location ?=null
-    var attendFlag :AttendFlags ?=null
+
 
     enum class AttendFlags {
         ENTER, OUT, ENDED
     }
+
 }

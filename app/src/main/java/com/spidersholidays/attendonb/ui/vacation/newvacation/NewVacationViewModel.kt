@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.spidersholidays.attendonb.app.AttendOnBApp
+import com.spidersholidays.attendonb.base.SingleLiveEvent
 import com.spidersholidays.attendonb.network.BaseNetWorkApi
 import com.spidersholidays.attendonb.ui.vacation.newvacation.model.CreateNewVacationResponse
 import com.spidersholidays.attendonb.ui.vacation.newvacation.model.NewVacationData
@@ -19,7 +20,7 @@ class NewVacationViewModel : ViewModel() {
 
     private val vacationFormData: MutableLiveData<NewVacationData> = MutableLiveData()
     private val newVacationProgressState: MutableLiveData<Boolean> = MutableLiveData()
-    private val vacationCreateState: MutableLiveData<Boolean> = MutableLiveData()
+    private val vacationCreateState: MutableLiveData<Boolean> = SingleLiveEvent()
 
 
     fun onVacationFormDataChange(): LiveData<NewVacationData> = vacationFormData

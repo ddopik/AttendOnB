@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Attendance735</string>
+    <string name="app_name">Spiders Attend</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -95,7 +95,7 @@
     <string name="menu_vacation">Vacation</string>
     <string name="menu_pay_roll">Payroll</string>
     <string name="qr">Qr</string>
-    <string name="local_netWork">Local NetWork\n(coming soon)</string>
+    <string name="local_netWork">Local NetWork\n</string>
     <string name="nfc">NFC\n(coming soon)</string>
     <string name="please_select_attend_type">please select method to </string>
     <string name="attend">Attend</string>
@@ -133,4 +133,5 @@
     <string name="end_data_note">End date should be After Start date</string>
     <string name="vacation_create_succ">Vacation created successfully</string>
     <string name="vacation_create_failed">Failed to create Vacation</string>
+    <string name="created_date">Created date</string>
 </resources>

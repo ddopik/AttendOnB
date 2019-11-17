@@ -69,8 +69,8 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         /**
          * we are temporary not using it
          * */
-        geoFencingService = Intent(this, GeoFencingService::class.java)
-        startService(geoFencingService)
+//        geoFencingService = Intent(this, GeoFencingService::class.java)
+//        startService(geoFencingService)
     }
 
 
@@ -225,7 +225,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         /**
          * we are temporary not using it
          * */
-        stopService(geoFencingService)
+//        stopService(geoFencingService)
     }
 
 

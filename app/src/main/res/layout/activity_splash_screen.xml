@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_blue"
-    tools:context=".ui.splash.SplashScreenActivity">
+     tools:context=".ui.splash.SplashScreenActivity">
 
     <ImageView
         android:layout_width="match_parent"
@@ -14,6 +13,6 @@
         android:scaleType="centerInside"
         android:layout_margin="@dimen/widget_padding"
         app:srcCompat="@drawable/app_icon"
-        android:visibility="gone"/>
+       />
 
 </FrameLayout>

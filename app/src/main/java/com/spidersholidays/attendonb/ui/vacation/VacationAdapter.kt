@@ -37,23 +37,18 @@ class VacationAdapter(val VacationList: MutableList<Vacation>, val vacationType:
 
         when (vacationType) {
             VacationType.PENDING -> {
-                holder.vacationDaysLeft.visibility = View.VISIBLE
+                 if (VacationList[position].requestStatus == PENDING_VACATION_ALLOWED){
+                    holder.delteVacationBtn.visibility =View.VISIBLE
+                }else{
+                    holder.delteVacationBtn.visibility =View.GONE
+
+                }
                 holder.delteVacationBtn.setOnClickListener {
                     onPendingVacationClick?.onVacationDeleteClicked(VacationList[position].id)
-                    if (VacationList[position].vacationsTypeId == PENDING_VACATION_ALLOWED){
-                        holder.delteVacationBtn.visibility =View.VISIBLE
-                    }else{
-                        holder.delteVacationBtn.visibility =View.GONE
-
-                    }
-
                 }
 
             }
-            else -> {
-                holder.vacationDaysLeft.visibility = View.GONE
 
-            }
         }
 
 
@@ -61,6 +56,7 @@ class VacationAdapter(val VacationList: MutableList<Vacation>, val vacationType:
         holder.vacationStartDate.text = VacationList[position].startDate
         holder.vacationEndDate.text = VacationList[position].endDate
         holder.vacationDaysLeft.text = VacationList[position].totalDays + " " + AttendOnBApp.app?.baseContext?.resources?.getString(R.string.day)
+        holder.vacationcreatedDate.text = VacationList[position].requestDate
 
     }
 
@@ -70,6 +66,7 @@ class VacationAdapter(val VacationList: MutableList<Vacation>, val vacationType:
         var vacationStartDate: TextView = view.findViewById(R.id.vacation_start_date)
         var vacationEndDate: TextView = view.findViewById(R.id.vacation_end_date)
         var vacationDaysLeft: TextView = view.findViewById(R.id.vacation_day_count)
+        var vacationcreatedDate: TextView = view.findViewById(R.id.created_date_val)
         var delteVacationBtn: Button = view.findViewById(R.id.btn_vacation_delete)
     }
 
