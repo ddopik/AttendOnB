@@ -24,10 +24,10 @@
            />
         <item
             android:id="@+id/nav_pay_roll"
-            app:actionLayout="@layout/view_slide_menu_payroll_item"
-            android:enabled="false"/>
+            android:icon="@drawable/ic_menu_payroll"
+            android:title="@string/menu_pay_roll"
 
-
+            />
         <item
             android:id="@+id/language"
             android:icon="@drawable/ic_language"

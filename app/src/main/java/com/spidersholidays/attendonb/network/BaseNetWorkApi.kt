@@ -5,6 +5,7 @@ import com.rx2androidnetworking.Rx2AndroidNetworking
 import com.spidersholidays.attendonb.app.AttendOnBApp
 import com.spidersholidays.attendonb.ui.home.qrreader.model.AttendResponse
 import com.spidersholidays.attendonb.ui.login.viewmodel.model.LoginResponse
+import com.spidersholidays.attendonb.ui.payroll.model.PayRollResponse
 import com.spidersholidays.attendonb.ui.vacation.approved.model.ApprovedResponse
 import com.spidersholidays.attendonb.ui.vacation.newvacation.model.CreateNewVacationResponse
 import com.spidersholidays.attendonb.ui.vacation.newvacation.model.NewVacationDataResponse
@@ -51,6 +52,7 @@ class BaseNetWorkApi {
         private val DELETE_PENDING_VACATION_URL = "$BASE_URL/Vacations/delete/{$VACATION_ID_PATH_PARAMETER}"
         private val NEW_VACATION_DATA_URL = "$BASE_URL/Vacations/create"
         private val CREATE_VACATION_URL = "$BASE_URL/Vacations/create_action"
+        private val PAY_ROLL_DATA_URL = "$BASE_URL/payroll/{$USER_PATH_PARAMETER}"
 
 
         fun login(userName: String, password: String, currentLat: String, currentLng: String, deviceImei: String): Observable<LoginResponse> {
@@ -78,6 +80,7 @@ class BaseNetWorkApi {
                     .addBodyParameter("latitude", latitude)
                     .addBodyParameter("longitude", longitude)
                     .addBodyParameter("mobile_flag", "1")
+                    .addBodyParameter("attend_method", "QR")
                     .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
 
                     .setPriority(Priority.HIGH)
@@ -113,6 +116,7 @@ class BaseNetWorkApi {
                     .addBodyParameter("latitude", latitude)
                     .addBodyParameter("longitude", longitude)
                     .addBodyParameter("mobile_flag", "1")
+                    .addBodyParameter("attend_method", "NW")
                     .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
 
                     .setPriority(Priority.HIGH)
@@ -193,6 +197,19 @@ class BaseNetWorkApi {
                     .responseOnlyFromNetwork
                     .build()
                     .getObjectObservable(CreateNewVacationResponse::class.java)
+
+        }
+
+
+
+        fun getPayRollData(userId:String) :Observable<PayRollResponse>{
+            return Rx2AndroidNetworking.get(PAY_ROLL_DATA_URL)
+                    .addPathParameter(USER_PATH_PARAMETER,userId)
+                    .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
+                     .setPriority(Priority.HIGH)
+                    .responseOnlyFromNetwork
+                    .build()
+                    .getObjectObservable(PayRollResponse::class.java)
 
         }
 

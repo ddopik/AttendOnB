@@ -73,6 +73,7 @@
          </activity>
          <activity android:name=".ui.vacation.newvacation.VacationListActivity"
              android:screenOrientation="portrait"/>
+         <activity android:name=".ui.payroll.ui.PayRollDetailsActivity" />
 
          <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"

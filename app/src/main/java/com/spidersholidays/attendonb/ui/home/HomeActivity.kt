@@ -22,6 +22,7 @@ import com.google.android.material.navigation.NavigationView
 import com.spidersholidays.attendonb.ui.attend.view.AttendFragment
 import com.spidersholidays.attendonb.ui.home.mainstate.stateconfirmdialog.StateConfirmDialog
 import com.spidersholidays.attendonb.ui.login.LoginActivity
+import com.spidersholidays.attendonb.ui.payroll.ui.PayRollFragment
 import com.spidersholidays.attendonb.ui.vacation.VacationFragment
 import com.spidersholidays.attendonb.utilites.Constants
 import com.spidersholidays.attendonb.utilites.GlideApp
@@ -100,10 +101,10 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
         ////////////////////
         else if (id == R.id.nav_attend) {
-            if (supportFragmentManager.backStackEntryCount > 0) {
-                supportFragmentManager.popBackStack()
-            }
-            if (!fragmentTag.equals(AttendFragment::class.java.simpleName)) {
+//            if (supportFragmentManager.backStackEntryCount > 0) {
+//                supportFragmentManager.popBackStack()
+//            }
+            if (supportFragmentManager.findFragmentByTag(AttendFragment::class.java.simpleName) == null) {
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.home_swap_container, AttendFragment.getInstance(), AttendFragment::class.java.simpleName)
                         .addToBackStack(AttendFragment::class.java.simpleName)
@@ -117,13 +118,24 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
         //////////////////
         else if (id == R.id.nav_vacation) {
-            if (supportFragmentManager.backStackEntryCount > 0) {
-                supportFragmentManager.popBackStack()
-            }
-            if (!fragmentTag.equals(VacationFragment::class.java.simpleName)) {
+//            if (supportFragmentManager.backStackEntryCount > 0) {
+//                supportFragmentManager.popBackStack()
+//            }
+            if (supportFragmentManager.findFragmentByTag(VacationFragment::class.java.simpleName) ==null) {
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.home_swap_container, VacationFragment.getInstance(), VacationFragment::class.java.simpleName)
                         .addToBackStack(VacationFragment::class.java.simpleName)
+                        .commit()
+            }
+        }
+        else if (id == R.id.nav_pay_roll) {
+//            if (supportFragmentManager.backStackEntryCount > 0) {
+//                supportFragmentManager.popBackStack()
+//            }
+            if (supportFragmentManager.findFragmentByTag(PayRollFragment::class.java.simpleName) ==null) {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.home_swap_container, PayRollFragment.getInstance(), PayRollFragment::class.java.simpleName)
+                        .addToBackStack(PayRollFragment::class.java.simpleName)
                         .commit()
             }
         }
