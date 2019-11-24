@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 
-
 /**
  * Created by ddopik on 09,May,2019
  * ddopik.01@gmail.com

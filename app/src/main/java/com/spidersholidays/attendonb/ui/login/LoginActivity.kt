@@ -157,16 +157,16 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate, EasyPermissions.
     }
 
 
-//    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    //    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     override fun onLocationUpdate(location: Location) {
         // New location has now been determined
 //        val latLng = LatLng(location.latitude, location.longitude)
         curentLat = location.latitude
         curentLng = location.longitude
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-        isFromMockProvider = location.isFromMockProvider
-    }
-    if (isFromMockProvider!!) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            isFromMockProvider = location.isFromMockProvider
+        }
+        if (isFromMockProvider!!) {
             btn_login.isEnabled = false
             CustomErrorUtils.viewSnackBarError(Constants.ErrorType.MOCK_LOCATION)
 

@@ -28,6 +28,13 @@
             android:title="@string/menu_pay_roll"
 
             />
+
+        <item
+            android:id="@+id/nav_vacation_manger_request"
+            android:icon="@drawable/ic_vacation_manger_request"
+            android:title="@string/vacation_manger_request"
+
+            />
         <item
             android:id="@+id/language"
             android:icon="@drawable/ic_language"

@@ -1,4 +1,4 @@
-package com.spidersholidays.attendonb.ui.vacation.newvacation
+package com.spidersholidays.attendonb.ui.vacation.newvacation.model
 
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +15,7 @@ import java.util.*
 class AutoCompleteMangersAdapter(val userList: MutableList<User>) : RecyclerView.Adapter<AutoCompleteMangersAdapter.MangerViewHolder>(), Filterable {
 
     lateinit var filteredUserList: MutableList<User>
-    var onMangerSelected:OnMangerSelected ?=null
+    var onMangerSelected: OnMangerSelected?=null
 
     init {
         filteredUserList = userList

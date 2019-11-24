@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ui_componanets.widgets.CustomRecyclerView
+        android:id="@+id/rv_management_rejected_vacation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:orientation="vertical" />
+
+
+    <TextView
+        android:id="@+id/no_management_rejected_vacation_stats_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/no_rejected_vacations"
+        android:textAllCaps="false"
+        android:visibility="gone"
+        android:textSize="@dimen/title_head" />
+
+    <ProgressBar
+        android:id="@+id/pb_management_rejected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+</FrameLayout>

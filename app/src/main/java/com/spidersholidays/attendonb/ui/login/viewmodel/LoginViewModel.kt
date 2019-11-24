@@ -32,7 +32,7 @@ class LoginViewModel : ViewModel() {
     }
 
 
-     private var isUnknownError: MutableLiveData<Boolean> = MutableLiveData()
+    private var isUnknownError: MutableLiveData<Boolean> = MutableLiveData()
     private var loginState: MutableLiveData<Boolean> = MutableLiveData()
     private var isDataLoading: MutableLiveData<Boolean> = MutableLiveData()
     private var source: MutableLiveData<String> = MutableLiveData()
@@ -41,50 +41,49 @@ class LoginViewModel : ViewModel() {
 
 
     fun onDataLoading(): LiveData<Boolean> = isDataLoading
-     fun onUnKnownError(): LiveData<Boolean> = isUnknownError
+    fun onUnKnownError(): LiveData<Boolean> = isUnknownError
     fun onLoginStateChanged(): LiveData<Boolean> = loginState
     fun sourceListener(): LiveData<String> = source
 
 
     @SuppressLint("CheckResult")
     fun loginUser(context: Context, userName: String, currentLat: Double, currentLng: Double, password: String, deviceImei: String) {
-         isDataLoading.postValue(true)
+        isDataLoading.postValue(true)
 //        if ( !Utilities.areThereMockPermissionApps(AttendOnBApp.app)) {
         fetchDataDisposable = BaseNetWorkApi.login(userName = userName, password = password, currentLat = currentLat.toString(), currentLng = currentLng.toString(), deviceImei = deviceImei)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ loginResponse ->
-                        Log.e(TAG, "---->isLoggedIn()")
-                        PrefUtil.setIsFirstTimeLogin(context, false)
-                        PrefUtil.setIsLoggedIn(context, true)
-                        PrefUtil.setUserToken(context, loginResponse.loginData?.userData?.token!!)
-                        PrefUtil.setUserID(context, loginResponse.loginData?.userData?.uid!!)
-                        PrefUtil.setUserName(context, loginResponse.loginData?.userData?.name!!)
-                        PrefUtil.setUserMail(context, loginResponse.loginData?.userData?.email!!)
-                        PrefUtil.setUserProfilePic(context, loginResponse.loginData?.userData?.img!!)
-                        PrefUtil.setUserGender(context, loginResponse.loginData?.userData?.gender!!)
-                        PrefUtil.setUserTrackId(context, loginResponse.loginData?.userData?.track!!)
-                        PrefUtil.setCurrentStatsMessage(context, loginResponse.loginData?.attendStatus?.msg!!)
-                        PrefUtil.setCurrentUserStatsID(context, loginResponse.loginData?.attendStatus?.status!!)
-                        PrefUtil.setCurrentCentralLat(context, loginResponse.loginData?.userData?.lat!!)
-                        PrefUtil.setCurrentCentralLng(context, loginResponse.loginData?.userData?.Lng!!)
-                        PrefUtil.setCurrentCentralRadius(context, loginResponse.loginData?.userData?.radius!!)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ loginResponse ->
+                    Log.e(TAG, "---->isLoggedIn()")
+                    PrefUtil.setIsFirstTimeLogin(context, false)
+                    PrefUtil.setIsLoggedIn(context, true)
+                    PrefUtil.setUserToken(context, loginResponse.loginData?.userData?.token!!)
+                    PrefUtil.setUserID(context, loginResponse.loginData?.userData?.uid!!)
+                    PrefUtil.setUserName(context, loginResponse.loginData?.userData?.name!!)
+                    PrefUtil.setUserMail(context, loginResponse.loginData?.userData?.email!!)
+                    PrefUtil.setUserProfilePic(context, loginResponse.loginData?.userData?.img!!)
+                    PrefUtil.setUserGender(context, loginResponse.loginData?.userData?.gender!!)
+                    PrefUtil.setUserTrackId(context, loginResponse.loginData?.userData?.track!!)
+                    PrefUtil.setCurrentStatsMessage(context, loginResponse.loginData?.attendStatus?.msg!!)
+                    PrefUtil.setCurrentUserStatsID(context, loginResponse.loginData?.attendStatus?.status!!)
+                    PrefUtil.setCurrentCentralLat(context, loginResponse.loginData?.userData?.lat!!)
+                    PrefUtil.setCurrentCentralLng(context, loginResponse.loginData?.userData?.Lng!!)
+                    PrefUtil.setCurrentCentralRadius(context, loginResponse.loginData?.userData?.radius!!)
 
+                    isDataLoading.postValue(false)
+                    loginState.postValue(true)
+                    source.postValue("from loginUser")
+
+                }, { t: Throwable? ->
+
+                    run {
                         isDataLoading.postValue(false)
-                        loginState.postValue(true)
-                         source.postValue("from loginUser")
-
-                    }, { t: Throwable? ->
-
-                        run {
-                             isDataLoading.postValue(false)
-                            loginState.postValue(false)
-                            CustomErrorUtils.setError(TAG, t)
-                        }
-
+                        loginState.postValue(false)
+                        CustomErrorUtils.setError(TAG, t)
                     }
-                    )
 
+                }
+                )
 
 
     }

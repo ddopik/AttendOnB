@@ -1,4 +1,4 @@
-package com.spidersholidays.attendonb.ui.vacation.newvacation
+package com.spidersholidays.attendonb.ui.vacation.newvacation.model
 
 import android.content.Context
 import android.view.LayoutInflater

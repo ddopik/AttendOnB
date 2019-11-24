@@ -1,4 +1,4 @@
-package com.spidersholidays.attendonb.ui.vacation.newvacation
+package com.spidersholidays.attendonb.ui.vacation.newvacation.viewmodel
 
 import CustomErrorUtils
 import android.annotation.SuppressLint
@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.spidersholidays.attendonb.app.AttendOnBApp
 import com.spidersholidays.attendonb.base.SingleLiveEvent
 import com.spidersholidays.attendonb.network.BaseNetWorkApi
+import com.spidersholidays.attendonb.ui.vacation.newvacation.NewVacationActivity
 import com.spidersholidays.attendonb.ui.vacation.newvacation.model.CreateNewVacationResponse
 import com.spidersholidays.attendonb.ui.vacation.newvacation.model.NewVacationData
 import com.spidersholidays.attendonb.utilites.PrefUtil

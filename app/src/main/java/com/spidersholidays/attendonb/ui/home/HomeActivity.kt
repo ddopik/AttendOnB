@@ -11,21 +11,21 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.navigation.NavigationView
 import com.spidersholidays.attendonb.R
 import com.spidersholidays.attendonb.base.BaseActivity
 import com.spidersholidays.attendonb.base.CustomDialog
 import com.spidersholidays.attendonb.network.BaseNetWorkApi.Companion.IMAGE_BASE_URL
-import com.spidersholidays.attendonb.services.geofencing.GeoFencingService
-import com.spidersholidays.attendonb.ui.home.mainstate.ui.MainStateFragment
-import com.spidersholidays.attendonb.utilites.PrefUtil
-import com.google.android.material.navigation.NavigationView
 import com.spidersholidays.attendonb.ui.attend.view.AttendFragment
 import com.spidersholidays.attendonb.ui.home.mainstate.stateconfirmdialog.StateConfirmDialog
+import com.spidersholidays.attendonb.ui.home.mainstate.ui.MainStateFragment
 import com.spidersholidays.attendonb.ui.login.LoginActivity
 import com.spidersholidays.attendonb.ui.payroll.ui.PayRollFragment
 import com.spidersholidays.attendonb.ui.vacation.VacationFragment
+import com.spidersholidays.attendonb.ui.vacationmangment.ui.ManagementVacationFragment
 import com.spidersholidays.attendonb.utilites.Constants
 import com.spidersholidays.attendonb.utilites.GlideApp
+import com.spidersholidays.attendonb.utilites.PrefUtil
 import com.spidersholidays.attendonb.utilites.PrefUtil.Companion.ARABIC_LANG
 import com.spidersholidays.attendonb.utilites.PrefUtil.Companion.ENGLISH_LANG
 import com.spidersholidays.attendonb.utilites.Utilities
@@ -54,12 +54,13 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         toggle.syncState()
         navigationView.setNavigationItemSelectedListener(this)
 
+        initView()
+        initListeners()
         supportFragmentManager.beginTransaction()
                 .replace(R.id.home_swap_container, MainStateFragment.newInstance(), MainStateFragment::class.java.simpleName)
                 .commit()
 
-        initView()
-        initListeners()
+
     }
 
     override fun initObservers() {
@@ -83,63 +84,62 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         ////////////////////
         if (id == R.id.nav_home) {
-            if (supportFragmentManager.backStackEntryCount > 0) {
-                val currentFragment = supportFragmentManager.getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name
-                /**
-                 * If fragment already selected don't replace it with same fragment again
-                 * */
-                if (currentFragment != MainStateFragment.TAG) {
-                    supportFragmentManager.popBackStack()
-                    supportFragmentManager.beginTransaction()
-                            .replace(R.id.home_swap_container, MainStateFragment.newInstance(), MainStateFragment::class.java.simpleName)
-                            .addToBackStack(MainStateFragment::class.java.simpleName)
-                            .commit()
-                }
-            }
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.home_swap_container, MainStateFragment.newInstance(), MainStateFragment::class.java.simpleName)
+//                    .addToBackStack(MainStateFragment::class.java.simpleName)
+                    .commit()
+//            if (supportFragmentManager.backStackEntryCount > 0) {
+//                val currentFragment = supportFragmentManager.getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name
+//                /**
+//                 * If fragment already selected don't replace it with same fragment again
+//                 * */
+//                if (currentFragment != MainStateFragment.TAG) {
+//                    supportFragmentManager.popBackStack()
+//                    supportFragmentManager.beginTransaction()
+//                            .replace(R.id.home_swap_container, MainStateFragment.newInstance(), MainStateFragment::class.java.simpleName)
+//                            .addToBackStack(MainStateFragment::class.java.simpleName)
+//                            .commit()
+//                }
+//            }
 
 
         }
         ////////////////////
         else if (id == R.id.nav_attend) {
-//            if (supportFragmentManager.backStackEntryCount > 0) {
-//                supportFragmentManager.popBackStack()
-//            }
             if (supportFragmentManager.findFragmentByTag(AttendFragment::class.java.simpleName) == null) {
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.home_swap_container, AttendFragment.getInstance(), AttendFragment::class.java.simpleName)
-                        .addToBackStack(AttendFragment::class.java.simpleName)
+//                        .addToBackStack(AttendFragment::class.java.simpleName)
                         .commit()
             }
-
-
-
-
-
         }
         //////////////////
+
         else if (id == R.id.nav_vacation) {
-//            if (supportFragmentManager.backStackEntryCount > 0) {
-//                supportFragmentManager.popBackStack()
-//            }
-            if (supportFragmentManager.findFragmentByTag(VacationFragment::class.java.simpleName) ==null) {
+            if (supportFragmentManager.findFragmentByTag(VacationFragment::class.java.simpleName) == null) {
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.home_swap_container, VacationFragment.getInstance(), VacationFragment::class.java.simpleName)
-                        .addToBackStack(VacationFragment::class.java.simpleName)
                         .commit()
             }
-        }
-        else if (id == R.id.nav_pay_roll) {
-//            if (supportFragmentManager.backStackEntryCount > 0) {
-//                supportFragmentManager.popBackStack()
-//            }
-            if (supportFragmentManager.findFragmentByTag(PayRollFragment::class.java.simpleName) ==null) {
+            ////////////////////
+
+        } else if (id == R.id.nav_pay_roll) {
+            if (supportFragmentManager.findFragmentByTag(PayRollFragment::class.java.simpleName) == null) {
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.home_swap_container, PayRollFragment.getInstance(), PayRollFragment::class.java.simpleName)
-                        .addToBackStack(PayRollFragment::class.java.simpleName)
+//                        .addToBackStack(PayRollFragment::class.java.simpleName)
                         .commit()
             }
         }
-         
+        //////////////////
+        else if (id == R.id.nav_vacation_manger_request) {
+            if (supportFragmentManager.findFragmentByTag(ManagementVacationFragment::class.java.simpleName) == null) {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.home_swap_container, ManagementVacationFragment.getInstance(), ManagementVacationFragment::class.java.simpleName)
+//                        .addToBackStack(VacationManagementFragment::class.java.simpleName)
+                        .commit()
+            }
+        }
         ////////////////////
         else if (id == R.id.language) {
             val customDialog = CustomDialog.getInstance(this, CustomDialog.DialogOption.LANGUAGE)
@@ -168,7 +168,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             customDialog.customDialogContent = resources.getString(R.string.log_out)
             customDialog.onCustomDialogPositiveClick = object : CustomDialog.OnCustomDialogPositiveClick {
                 override fun onPositiveClicked() {
-                    stopService(geoFencingService)
+//                    stopService(geoFencingService)
                     customDialog.dismiss()
                     PrefUtil.clearPrefUtil(baseContext)
                     finish()
@@ -250,25 +250,19 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             /**
              * Handling Back navigation
              * */
-
-
-            /**
-             * user have navigated to Main screen and first Activity in the stack
-             * */
-            if (supportFragmentManager.backStackEntryCount > 0) {
-                val fragmentTag = supportFragmentManager.getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name
-                if (fragmentTag.equals(MainStateFragment::class.java.simpleName)) {
-                    finish()
-                    return
-                }
-                /**
-                 * set Home screen as default choice
-                 * */
-                nav_view.getMenu().getItem(0).isChecked = true
-                supportFragmentManager.popBackStack()
-            } else {
+            val default = supportFragmentManager.fragments.last() is MainStateFragment
+            if (default) {
                 super.onBackPressed()
+            } else {
+
+                /**
+                 * user have navigated to Main screen and first Activity in the stack
+                 * */
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.home_swap_container, MainStateFragment.newInstance(), MainStateFragment::class.java.simpleName)
+                        .commit()
             }
+
 
         }
 

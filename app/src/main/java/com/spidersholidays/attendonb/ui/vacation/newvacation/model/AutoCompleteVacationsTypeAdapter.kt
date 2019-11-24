@@ -1,4 +1,4 @@
-package com.spidersholidays.attendonb.ui.vacation.newvacation
+package com.spidersholidays.attendonb.ui.vacation.newvacation.model
 
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +15,7 @@ import java.util.ArrayList
 class AutoCompleteVacationsTypeAdapter (val vacationTypeList: MutableList<VacationsType>) : RecyclerView.Adapter<AutoCompleteVacationsTypeAdapter.VacationTypeViewHolder>(), Filterable {
 
     lateinit var filteredVacationList: MutableList<VacationsType>
-    var onVacationSelected: OnVacationSelected ?= null
+    var onVacationSelected: OnVacationSelected?= null
 
     init {
         filteredVacationList = vacationTypeList

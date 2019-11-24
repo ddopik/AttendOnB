@@ -8,7 +8,7 @@ class PendingResponseData {
 
     @SerializedName("pending_vacations")
     @Expose
-    var pendingVacations: List<Vacation>? = null
+    var pendingVacations: MutableList<Vacation>? = null
     @SerializedName("msg")
     @Expose
     var msg: String? = null

@@ -8,7 +8,8 @@ import com.jakewharton.rxbinding3.widget.TextViewTextChangeEvent
 import com.jakewharton.rxbinding3.widget.textChangeEvents
 import com.spidersholidays.attendonb.R
  import com.spidersholidays.attendonb.base.commonModel.VacationsType
- import com.spidersholidays.attendonb.utilites.Constants
+import com.spidersholidays.attendonb.ui.vacation.newvacation.model.AutoCompleteVacationsTypeAdapter
+import com.spidersholidays.attendonb.utilites.Constants
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
@@ -41,6 +42,7 @@ class VacationListActivity : BaseActivity()  {
             override fun onVacationClickListener(vacationsType :VacationsType?) {
                 selectedVacation = vacationsType
                 vacation_type_search_view.setText(vacationsType?.name, TextView.BufferType.EDITABLE)
+                onBackPressed()
             }
         }
 
@@ -64,6 +66,8 @@ class VacationListActivity : BaseActivity()  {
             override fun onNext(textViewTextChangeEvent: TextViewTextChangeEvent) {
 
                 autoCompleteVacationsTypeAdapter?.filter?.filter(vacation_type_search_view.text)
+
+             lifecycle.currentState
 
             }
 

@@ -68,4 +68,6 @@ class VacationFragment : ViewPagerFragment() {
         get() = false
     override val viewPagerAdapter: ViewPagerAdapter
         get() = ViewPagerAdapter(childFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
+
+
 }

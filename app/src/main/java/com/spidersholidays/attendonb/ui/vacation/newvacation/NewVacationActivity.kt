@@ -11,6 +11,7 @@ import com.spidersholidays.attendonb.R
 import com.spidersholidays.attendonb.base.BaseActivity
 import com.spidersholidays.attendonb.base.commonModel.User
 import com.spidersholidays.attendonb.base.commonModel.VacationsType
+import com.spidersholidays.attendonb.ui.vacation.newvacation.viewmodel.NewVacationViewModel
 import com.spidersholidays.attendonb.utilites.Constants.Companion.CREATE_VACATION_PRIOR_DAY_BREAK
 import com.spidersholidays.attendonb.utilites.Constants.Companion.MangerListActivity_REQUESE_CODE
 import com.spidersholidays.attendonb.utilites.Constants.Companion.VACATION_TYPE_LIST_ACTIVITY_REQUESE_CODE
@@ -72,6 +73,7 @@ class NewVacationActivity : BaseActivity() {
         newVacationViewModel?.onNewVacationCreated()?.observe(this, Observer {
             if (it) {
                 showToast(resources.getString(R.string.vacation_create_succ))
+                finish()
             } else {
                 showToast(resources.getString(R.string.vacation_create_failed))
 
