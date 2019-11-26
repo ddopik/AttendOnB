@@ -68,9 +68,9 @@ class ManagementRejectedVacationFragment : BaseFragment() {
             }
 
             if (managementRejectedList.size > 0) {
-                no_management_rejected_vacation_stats_msg.visibility = View.GONE
+                no_management_pending_vacation_stats_msg.visibility = View.GONE
             } else {
-                no_management_rejected_vacation_stats_msg.visibility = View.VISIBLE
+                no_management_pending_vacation_stats_msg.visibility = View.VISIBLE
 
             }
 
@@ -82,9 +82,9 @@ class ManagementRejectedVacationFragment : BaseFragment() {
             managementRejectedList.addAll(it)
             managementVacationAdapter?.notifyDataSetChanged()
             if (it.size > 0) {
-                no_management_rejected_vacation_stats_msg.visibility = View.GONE
+                no_management_pending_vacation_stats_msg.visibility = View.GONE
             } else {
-                no_management_rejected_vacation_stats_msg.visibility = View.VISIBLE
+                no_management_pending_vacation_stats_msg.visibility = View.VISIBLE
 
             }
         })

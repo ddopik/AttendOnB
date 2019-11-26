@@ -3,6 +3,7 @@ package com.spidersholidays.attendonb.network
 import com.androidnetworking.common.Priority
 import com.rx2androidnetworking.Rx2AndroidNetworking
 import com.spidersholidays.attendonb.app.AttendOnBApp
+import com.spidersholidays.attendonb.ui.home.model.CheckUserManagementStatsResponse
 import com.spidersholidays.attendonb.ui.home.qrreader.model.AttendResponse
 import com.spidersholidays.attendonb.ui.login.viewmodel.model.LoginResponse
 import com.spidersholidays.attendonb.ui.payroll.model.PayRollResponse
@@ -13,7 +14,7 @@ import com.spidersholidays.attendonb.ui.vacation.pending.model.DeletePendingVaca
 import com.spidersholidays.attendonb.ui.vacation.pending.model.PendingResponse
 import com.spidersholidays.attendonb.ui.vacation.rejected.model.RejectedResponse
 import com.spidersholidays.attendonb.ui.vacationmangment.model.PendingManagementVactionResponse
-import com.spidersholidays.attendonb.ui.vacationmangment.model.VacationMangerApprovedResponse
+import com.spidersholidays.attendonb.ui.vacationmangment.model.VacationMangerRequestResponse
 import com.spidersholidays.attendonb.utilites.PrefUtil
 import io.reactivex.Observable
 
@@ -54,15 +55,17 @@ class BaseNetWorkApi {
         private val DELETE_PENDING_VACATION_URL = "$BASE_URL/Vacations/delete/{$VACATION_ID_PATH_PARAMETER}"
         private val NEW_VACATION_DATA_URL = "$BASE_URL/Vacations/create"
         private val CREATE_VACATION_URL = "$BASE_URL/Vacations/create_action"
+        private val CHECK_USER_MANAGEMENT_STATS_URL = "$BASE_URL/check_if_user_is_manager"
 
         /////
         private val PAY_ROLL_DATA_URL = "$BASE_URL/payroll/{$USER_PATH_PARAMETER}"
         private val PENDING_Management_VACATION_IRL = "$BASE_URL/Get_manager_pending_vacations/{$USER_PATH_PARAMETER}"
-        private val APPROVED_Manageament_VACATION_IRL = "$BASE_URL/Get_manager_approved_vacations/{$USER_PATH_PARAMETER}"
-        private val REJECTED_Manageament_VACATION_IRL = "$BASE_URL/Get_manager_rejected_vacations/{$USER_PATH_PARAMETER}"
-        //// todo convert those API's to POST
+        private val APPROVED_Management_VACATION_IRL = "$BASE_URL/Get_manager_approved_vacations/{$USER_PATH_PARAMETER}"
+        private val REJECTED_Management_VACATION_URL = "$BASE_URL/Get_manager_rejected_vacations/{$USER_PATH_PARAMETER}"
 
-        private val CREATE_NEW_VACATION_URL = "$BASE_URL/Get_manager_rejected_vacations"
+
+        private val APPROVE_Management_VACATION_IRL = "$BASE_URL/approve_vacation"
+        private val REJECTE_Management_VACATION_URL = "$BASE_URL/reject_vacation"
 
 /////
 
@@ -211,10 +214,18 @@ class BaseNetWorkApi {
 
         }
 
+        fun checkUserManagementStats(userId:String):Observable<CheckUserManagementStatsResponse>{
+            return Rx2AndroidNetworking.post(CHECK_USER_MANAGEMENT_STATS_URL)
+                    .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
+                    .addBodyParameter(UID,userId)
+                    .responseOnlyFromNetwork
+                    .build()
+                    .getObjectObservable(CheckUserManagementStatsResponse::class.java)
+        }
 
         fun getPayRollData(userId: String): Observable<PayRollResponse> {
-            return Rx2AndroidNetworking.get(PAY_ROLL_DATA_URL)
-                    .addPathParameter(USER_PATH_PARAMETER, userId)
+            return Rx2AndroidNetworking.post(PAY_ROLL_DATA_URL)
+                    .addBodyParameter(UID, userId)
                     .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
                     .setPriority(Priority.HIGH)
                     .responseOnlyFromNetwork
@@ -224,8 +235,8 @@ class BaseNetWorkApi {
         }
 
         fun getPendingManagementVacation(uid: String): Observable<PendingManagementVactionResponse> {
-            return Rx2AndroidNetworking.get(PENDING_Management_VACATION_IRL)
-                    .addPathParameter(USER_PATH_PARAMETER, uid)
+            return Rx2AndroidNetworking.post(PENDING_Management_VACATION_IRL)
+                    .addBodyParameter(UID, uid)
                     .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
                     .setPriority(Priority.HIGH)
                     .responseOnlyFromNetwork
@@ -234,8 +245,8 @@ class BaseNetWorkApi {
         }
 
         fun getApprovedManagementVacation(uid: String): Observable<PendingManagementVactionResponse> {
-            return Rx2AndroidNetworking.get(APPROVED_Manageament_VACATION_IRL)
-                    .addPathParameter(USER_PATH_PARAMETER, uid)
+            return Rx2AndroidNetworking.post(APPROVED_Management_VACATION_IRL)
+                    .addBodyParameter(UID, uid)
                     .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
                     .setPriority(Priority.HIGH)
                     .responseOnlyFromNetwork
@@ -245,8 +256,8 @@ class BaseNetWorkApi {
 
 
         fun getRejectedManagementVacation(uid: String): Observable<PendingManagementVactionResponse> {
-            return Rx2AndroidNetworking.get(REJECTED_Manageament_VACATION_IRL)
-                    .addPathParameter(USER_PATH_PARAMETER, uid)
+            return Rx2AndroidNetworking.post(REJECTED_Management_VACATION_URL)
+                    .addBodyParameter(UID, uid)
                     .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
                     .setPriority(Priority.HIGH)
                     .responseOnlyFromNetwork
@@ -255,13 +266,26 @@ class BaseNetWorkApi {
         }
 
 
-        fun sendApproveManagementVacation(userId: String, vacationID: String): Observable<VacationMangerApprovedResponse> {
-            return Rx2AndroidNetworking.post(CREATE_NEW_VACATION_URL)
+        fun sendApproveManagementVacation(userId: String, vacationID: String): Observable<VacationMangerRequestResponse> {
+            return Rx2AndroidNetworking.post(APPROVE_Management_VACATION_IRL)
                     .addBodyParameter(UID, userId)
                     .addBodyParameter("id", vacationID)
+                    .addPathParameter(LANGUAGE_PATH_PARAMETER,PrefUtil.getAppLanguage(AttendOnBApp.app!!))
                     .responseOnlyFromNetwork
                     .build()
-                    .getObjectObservable(VacationMangerApprovedResponse::class.java)
+                    .getObjectObservable(VacationMangerRequestResponse::class.java)
+
+        }
+
+        fun sendRejectManagementVacation(userId: String, vacationID: String,reason:String): Observable<VacationMangerRequestResponse> {
+            return Rx2AndroidNetworking.post(REJECTE_Management_VACATION_URL)
+                    .addBodyParameter(UID, userId)
+                    .addBodyParameter("id", vacationID)
+                    .addBodyParameter("reason",reason)
+                    .addPathParameter(LANGUAGE_PATH_PARAMETER,PrefUtil.getAppLanguage(AttendOnBApp.app!!))
+                    .responseOnlyFromNetwork
+                    .build()
+                    .getObjectObservable(VacationMangerRequestResponse::class.java)
 
         }
 

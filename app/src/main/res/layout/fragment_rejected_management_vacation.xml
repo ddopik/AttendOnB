@@ -8,11 +8,12 @@
         android:id="@+id/rv_management_rejected_vacation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:orientation="vertical" />
+        app:orientation="vertical"
+    />
 
 
     <TextView
-        android:id="@+id/no_management_rejected_vacation_stats_msg"
+        android:id="@+id/no_management_pending_vacation_stats_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

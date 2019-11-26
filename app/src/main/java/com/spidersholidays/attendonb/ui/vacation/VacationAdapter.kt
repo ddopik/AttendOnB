@@ -40,7 +40,10 @@ class VacationAdapter(val VacationList: MutableList<Vacation>, val vacationType:
             VacationType.PENDING -> {
                 if (VacationList[position].requestStatus == PENDING_VACATION_ALLOWED) {
                     holder.deleteVacationBtn.visibility = View.VISIBLE
+                    holder.vacationUnderRevisionIcon.visibility = View.GONE
+
                 } else {
+                    holder.vacationUnderRevisionIcon.visibility = View.VISIBLE
                     holder.deleteVacationBtn.visibility = View.GONE
 
                 }
@@ -73,6 +76,7 @@ class VacationAdapter(val VacationList: MutableList<Vacation>, val vacationType:
 
 
     class VacationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val vacationUnderRevisionIcon = view.findViewById<View>(R.id.ic_vacation_under_revision)
         val vacationIcon = view.findViewById<ImageView>(R.id.vacation_icon)
         val vacationReason: TextView = view.findViewById(R.id.vacation_reason_val)
         var vacationStartDate: TextView = view.findViewById(R.id.vacation_start_date)

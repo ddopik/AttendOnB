@@ -10,9 +10,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.spidersholidays.attendonb.app.AttendOnBApp
 import com.spidersholidays.attendonb.base.BaseErrorData
+import com.spidersholidays.attendonb.base.SingleLiveEvent
 import com.spidersholidays.attendonb.base.commonModel.ErrorMessageResponse
 import com.spidersholidays.attendonb.base.commonModel.Vacation
 import com.spidersholidays.attendonb.network.BaseNetWorkApi
+import com.spidersholidays.attendonb.ui.vacationmangment.model.VacationMangerRequestResponse
+import com.spidersholidays.attendonb.ui.vacationmangment.model.VacationStatsChange
+import com.spidersholidays.attendonb.utilites.Constants.Companion.PENDING_VACATION_UNDER_REVISION
 import com.spidersholidays.attendonb.utilites.PrefUtil
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -30,7 +34,7 @@ class ManageVacationViewModel : ViewModel() {
 
     private val vacationProgressChange = MutableLiveData<Boolean>()
     private val pendingListChange = MutableLiveData<MutableList<Vacation>>()
-    private val pendingItemChange = MutableLiveData<Vacation>()
+    private val pendingItemChange = SingleLiveEvent<VacationStatsChange>()
 
 
     private val approvedListChange = MutableLiveData<MutableList<Vacation>>()
@@ -38,7 +42,7 @@ class ManageVacationViewModel : ViewModel() {
 
 
     fun onPendingVacationListChanged(): LiveData<MutableList<Vacation>> = pendingListChange
-    fun onPendingItemChange(): LiveData<Vacation> = pendingItemChange
+    fun onPendingItemChange(): LiveData<VacationStatsChange> = pendingItemChange
 
     fun onVacationProgressChanged(): LiveData<Boolean> = vacationProgressChange
 
@@ -77,14 +81,42 @@ class ManageVacationViewModel : ViewModel() {
     }
 
 
-    fun rejectVacation(vacationId: String) {
+    @SuppressLint("CheckResult")
+    fun rejectVacation(vacationId: String, reason:String) {
+        BaseNetWorkApi.sendRejectManagementVacation(PrefUtil.getUserId(AttendOnBApp.app?.baseContext!!),vacationId,reason)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({ requestResponse :VacationMangerRequestResponse ->
+                    if (requestResponse.status){
+                        pendingItemChange.postValue(VacationStatsChange(vacationId,VacationStatsChange.VacationStatsType.REJECTED,null))
+                        vacationProgressChange.postValue(false)
 
+                    }
+
+                },{t: Throwable? ->
+                    CustomErrorUtils.setError(TAG, t)
+                    vacationProgressChange.postValue(false)
+                })
     }
 
+    @SuppressLint("CheckResult")
     fun approveVacation(vacationId: String) {
-
+        vacationProgressChange.postValue(true)
 
         BaseNetWorkApi.sendApproveManagementVacation(PrefUtil.getUserId(AttendOnBApp.app?.baseContext!!),vacationId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({ requestResponse :VacationMangerRequestResponse ->
+               if (requestResponse.status){
+                   pendingItemChange.postValue(VacationStatsChange(vacationId,VacationStatsChange.VacationStatsType.APPROVED,PENDING_VACATION_UNDER_REVISION))
+                   vacationProgressChange.postValue(false)
+
+               }
+
+                },{t: Throwable? ->
+                    CustomErrorUtils.setError(TAG, t)
+                    vacationProgressChange.postValue(false)
+                })
 
     }
 

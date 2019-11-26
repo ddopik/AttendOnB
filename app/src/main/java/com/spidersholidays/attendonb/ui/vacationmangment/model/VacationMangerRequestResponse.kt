@@ -3,10 +3,10 @@ package com.spidersholidays.attendonb.ui.vacationmangment.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class VacationMangerApprovedResponse {
+class VacationMangerRequestResponse {
     @SerializedName("status")
     @Expose
-    var status: Boolean? = null
+    var status: Boolean = false
 
     @SerializedName("data")
     @Expose

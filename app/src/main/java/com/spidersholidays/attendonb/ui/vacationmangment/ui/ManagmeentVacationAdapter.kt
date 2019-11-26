@@ -11,8 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.spidersholidays.attendonb.R
 import com.spidersholidays.attendonb.app.AttendOnBApp
 import com.spidersholidays.attendonb.base.commonModel.Vacation
+import com.spidersholidays.attendonb.utilites.Constants.Companion.PENDING_VACATION_UNDER_REVISION
 
-class ManagmeentVacationAdapter(val VacationList: MutableList<Vacation>, val vacationType: VacationType) : RecyclerView.Adapter<ManagmeentVacationAdapter.VacationViewHolder>() {
+class ManagmeentVacationAdapter(val vacationList: MutableList<Vacation>, val vacationType: VacationType) : RecyclerView.Adapter<ManagmeentVacationAdapter.VacationViewHolder>() {
 
     var onPendingVacationClick: PendingManagementsVacationClickListener? = null
 
@@ -28,7 +29,7 @@ class ManagmeentVacationAdapter(val VacationList: MutableList<Vacation>, val vac
     }
 
     override fun getItemCount(): Int {
-        return VacationList.size
+        return vacationList.size
     }
 
     @SuppressLint("SetTextI18n")
@@ -37,18 +38,24 @@ class ManagmeentVacationAdapter(val VacationList: MutableList<Vacation>, val vac
 
         when (vacationType) {
             VacationType.PENDING -> {
-                holder.vacationControlView.visibility = View.VISIBLE
-                holder.vacationControlView.visibility = View.VISIBLE
+                if (vacationList[position].requestStatus == PENDING_VACATION_UNDER_REVISION) {
+                    holder.vacationControlView.visibility = View.GONE
+                    holder.vacationUnderRevisiionIcon.visibility = View.VISIBLE
 
-                holder.vacationApproveBtn.setOnClickListener {
-                    onPendingVacationClick?.onVacationRejectClicked(VacationList[position].id)
+                }else{
+                    /**
+                     * vacation get approved by manger and waiting for hr second approval
+                     */
+                    holder.vacationControlView.visibility = View.VISIBLE
+                    holder.vacationUnderRevisiionIcon.visibility = View.GONE
+                    holder.vacationRejectBtn.setOnClickListener {
+                        onPendingVacationClick?.onVacationRejectClicked(vacationList[position].id)
+                    }
+
+                    holder.vacationApproveBtn.setOnClickListener {
+                        onPendingVacationClick?.onVacationApproveClicked(vacationList[position].id)
+                    }
                 }
-
-                holder.vacationRejectBtn.setOnClickListener {
-                    onPendingVacationClick?.onVacationApproveClicked(VacationList[position].id)
-                }
-
-
                 holder.vacationIcon.setImageResource(R.drawable.ic_pending)
 
             }
@@ -65,17 +72,18 @@ class ManagmeentVacationAdapter(val VacationList: MutableList<Vacation>, val vac
         }
 
 
-        holder.vacationReason.text = VacationList[position].reason
-        holder.vacationStartDate.text = VacationList[position].startDate
-        holder.vacationEndDate.text = VacationList[position].endDate
-        holder.vacationDaysLeft.text = VacationList[position].totalDays + " " + AttendOnBApp.app?.baseContext?.resources?.getString(R.string.day)
-        holder.vacationCreatedDate.text = VacationList[position].requestDate
+        holder.vacationReason.text = vacationList[position].reason
+        holder.vacationStartDate.text = vacationList[position].startDate
+        holder.vacationEndDate.text = vacationList[position].endDate
+        holder.vacationDaysLeft.text = vacationList[position].totalDays + " " + AttendOnBApp.app?.baseContext?.resources?.getString(R.string.day)
+        holder.vacationCreatedDate.text = vacationList[position].requestDate
 
     }
 
 
     class VacationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val vacationControlView = view.findViewById<View>(R.id.vacation_control_container)
+        val vacationUnderRevisiionIcon = view.findViewById<ImageView>(R.id.img_vacation_vacation_under_revision)
         val vacationIcon = view.findViewById<ImageView>(R.id.vacation_icon)
         val vacationReason: TextView = view.findViewById(R.id.vacation_reason_val)
         var vacationStartDate: TextView = view.findViewById(R.id.vacation_start_date)

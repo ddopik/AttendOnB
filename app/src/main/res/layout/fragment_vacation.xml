@@ -1,37 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/vacation_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabMode = "fixed"
-            app:tabGravity = "fill"/>
+            app:tabGravity="fill"
+            app:tabMode="fixed" />
+
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/vacation_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/vacation_tab_layout"
-            app:layout_behavior = "@string/appbar_scrolling_view_behavior"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </RelativeLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_add_new_vacation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        app:srcCompat="@drawable/ic_add_vacation"
-         app:backgroundTint="@color/colorPrimary"
+        android:layout_margin="16dp"
+        app:layout_behavior=".base.exception.CustomScrollAwareBehavior"
         android:contentDescription="@string/submit"
-        android:layout_margin="16dp" />
+        app:backgroundTint="@color/colorPrimary"
+        app:srcCompat="@drawable/ic_add_vacation" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

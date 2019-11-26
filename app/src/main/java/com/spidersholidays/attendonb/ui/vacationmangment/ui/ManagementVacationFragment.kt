@@ -26,7 +26,7 @@ class ManagementVacationFragment : ViewPagerFragment() {
         get() = R.layout.fragment_management_vacation
     override val fragments: List<Fragment>
         get() {
-            return mutableListOf(MangmentPendingVacationFragment.getInstance(), ManagementApprovedVacationFragment.getInstance(), ManagementRejectedVacationFragment.getInstance())
+            return mutableListOf(ManagmentPendingVacationFragment.getInstance(), ManagementApprovedVacationFragment.getInstance(), ManagementRejectedVacationFragment.getInstance())
         }
     override val fragmentsTitles: ArrayList<String>
         get() {

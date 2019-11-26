@@ -8,11 +8,13 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.navigation.NavigationView
 import com.spidersholidays.attendonb.R
+import com.spidersholidays.attendonb.app.AttendOnBApp
 import com.spidersholidays.attendonb.base.BaseActivity
 import com.spidersholidays.attendonb.base.CustomDialog
 import com.spidersholidays.attendonb.network.BaseNetWorkApi.Companion.IMAGE_BASE_URL
@@ -34,12 +36,15 @@ import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    val TAG = HomeActivity::javaClass.name
 
     companion object {
         val VIEW_CONFIRM_DIALOG = "view_confirm_dialog"
     }
 
+    private var homeViewModel: HomeViewModel? = null
     private var geoFencingService: Intent? = null
+    private var navigationView: NavigationView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -47,32 +52,18 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setSupportActionBar(toolbar)
 
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
-        val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        navigationView = findViewById<NavigationView>(R.id.nav_view)
         val toggle = ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
-        navigationView.setNavigationItemSelectedListener(this)
+        navigationView?.setNavigationItemSelectedListener(this)
 
         initView()
         initListeners()
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.home_swap_container, MainStateFragment.newInstance(), MainStateFragment::class.java.simpleName)
-                .commit()
+        initObservers()
 
 
-    }
-
-    override fun initObservers() {
-    }
-
-    override fun onResume() {
-        super.onResume()
-        /**
-         * we are temporary not using it
-         * */
-//        geoFencingService = Intent(this, GeoFencingService::class.java)
-//        startService(geoFencingService)
     }
 
 
@@ -86,21 +77,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         if (id == R.id.nav_home) {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.home_swap_container, MainStateFragment.newInstance(), MainStateFragment::class.java.simpleName)
-//                    .addToBackStack(MainStateFragment::class.java.simpleName)
                     .commit()
-//            if (supportFragmentManager.backStackEntryCount > 0) {
-//                val currentFragment = supportFragmentManager.getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name
-//                /**
-//                 * If fragment already selected don't replace it with same fragment again
-//                 * */
-//                if (currentFragment != MainStateFragment.TAG) {
-//                    supportFragmentManager.popBackStack()
-//                    supportFragmentManager.beginTransaction()
-//                            .replace(R.id.home_swap_container, MainStateFragment.newInstance(), MainStateFragment::class.java.simpleName)
-//                            .addToBackStack(MainStateFragment::class.java.simpleName)
-//                            .commit()
-//                }
-//            }
 
 
         }
@@ -136,14 +113,14 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             if (supportFragmentManager.findFragmentByTag(ManagementVacationFragment::class.java.simpleName) == null) {
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.home_swap_container, ManagementVacationFragment.getInstance(), ManagementVacationFragment::class.java.simpleName)
-//                        .addToBackStack(VacationManagementFragment::class.java.simpleName)
-                        .commit()
+                         .commit()
             }
         }
         ////////////////////
         else if (id == R.id.language) {
+            nav_view.menu.getItem(4).isChecked = false
             val customDialog = CustomDialog.getInstance(this, CustomDialog.DialogOption.LANGUAGE)
-            customDialog.customDialogContent = resources.getString(R.string.choose_language);
+            customDialog.customDialogContent = resources.getString(R.string.choose_language)
             customDialog.onCustomDialogPositiveClick = object : CustomDialog.OnCustomDialogPositiveClick {
                 override fun onPositiveClicked() {
                     Utilities.changeAppLanguage(baseContext, ARABIC_LANG)
@@ -160,11 +137,10 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 }
             }
             customDialog.show()
-            nav_view.getMenu().getItem(4).setCheckable(false)
         }
         ////////////////////
         else if (id == R.id.log_out) {
-            val customDialog = CustomDialog.getInstance(this, CustomDialog.DialogOption.OPTION_2);
+            val customDialog = CustomDialog.getInstance(this, CustomDialog.DialogOption.OPTION_2)
             customDialog.customDialogContent = resources.getString(R.string.log_out)
             customDialog.onCustomDialogPositiveClick = object : CustomDialog.OnCustomDialogPositiveClick {
                 override fun onPositiveClicked() {
@@ -186,7 +162,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 }
             }
             customDialog.show()
-            nav_view.getMenu().getItem(5).setCheckable(false)
+            nav_view.menu.getItem(5).isCheckable = false
         }
 
 
@@ -214,6 +190,14 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         profileNavName.text = PrefUtil.getUserName(this)
         profileNavMail.text = PrefUtil.getUserMail(this)
 
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.home_swap_container, MainStateFragment.newInstance(), MainStateFragment::class.java.simpleName)
+                .commit()
+
+        homeViewModel = HomeViewModel.getInstance(this)
+        homeViewModel?.checkUserManagementStats(PrefUtil.getUserId(AttendOnBApp.app?.baseContext!!))
+
+
     }
 
     fun initListeners() {
@@ -232,12 +216,10 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     }
 
-    override fun onStop() {
-        super.onStop()
-        /**
-         * we are temporary not using it
-         * */
-//        stopService(geoFencingService)
+    override fun initObservers() {
+        homeViewModel?.onUserManagementStatsChange()?.observe(this, Observer {
+            navigationView!!.menu.findItem(R.id.nav_vacation_manger_request)?.isVisible = it
+        })
     }
 
 
@@ -258,9 +240,13 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 /**
                  * user have navigated to Main screen and first Activity in the stack
                  * */
+
+                supportFragmentManager.findFragmentByTag(MainStateFragment::class.java.simpleName)
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.home_swap_container, MainStateFragment.newInstance(), MainStateFragment::class.java.simpleName)
                         .commit()
+                nav_view.menu.getItem(0).isChecked = true
+
             }
 
 

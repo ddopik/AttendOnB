@@ -104,7 +104,8 @@ class PrefUtil {
                     .putString(USER_GENDER, userGender)
                     .apply()
         }
-          fun setCurrentUserStatsID(context: Context, userStats: String) {
+
+        fun setCurrentUserStatsID(context: Context, userStats: String) {
             getSharedPref(context)
                     .edit()
                     .putString(CURRENT_USER_STATS_ID, userStats)
@@ -143,7 +144,7 @@ class PrefUtil {
         fun setIsInsideRadius(context: Context, isInsideRadius: Boolean) {
             getSharedPref(context)
                     .edit()
-                    .putBoolean(IS_INSIDE_RADIOUS,isInsideRadius)
+                    .putBoolean(IS_INSIDE_RADIOUS, isInsideRadius)
                     .apply()
         }
 
@@ -157,8 +158,8 @@ class PrefUtil {
         }
 
         fun getUserId(mContext: Context): String {
-            return "3"
-//            return getSharedPref(mContext).getString(USER_ID, "")!!
+            return getSharedPref(mContext).getString(USER_ID, "")!!
+//            return "51" --->Test user
 
         }
 
@@ -197,7 +198,7 @@ class PrefUtil {
 
         }
 
-        fun getCurrentCentralLat(mContext: Context): Double?{
+        fun getCurrentCentralLat(mContext: Context): Double? {
             return getSharedPref(mContext).getString(CURRENT_CENTRAL_LAT, "")?.toDouble()
 
         }
@@ -206,13 +207,14 @@ class PrefUtil {
             return getSharedPref(mContext).getString(CURRENT_CENTRAL_LNG, "")?.toDouble()
 
         }
+
         fun getCurrentCentralRadius(mContext: Context): Float? {
             return getSharedPref(mContext).getString(CURRENT_CENTRAL_RADIOUS, "")?.toFloat()
 
         }
 
         fun getAppLanguage(mContext: Context): String? {
-            val currenLang= getSharedPref(mContext).getString(APP_LANG, "en")
+            val currenLang = getSharedPref(mContext).getString(APP_LANG, "en")
             return getSharedPref(mContext).getString(APP_LANG, "en")
 
         }
@@ -233,7 +235,7 @@ class PrefUtil {
         }
 
 
-        fun clearPrefUtil(context: Context){
+        fun clearPrefUtil(context: Context) {
             val settings = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE)
             settings.edit().clear().apply()
         }

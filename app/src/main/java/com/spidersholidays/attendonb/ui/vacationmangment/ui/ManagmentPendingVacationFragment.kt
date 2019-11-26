@@ -9,16 +9,18 @@ import androidx.lifecycle.Observer
 import com.spidersholidays.attendonb.R
 import com.spidersholidays.attendonb.base.BaseFragment
 import com.spidersholidays.attendonb.base.commonModel.Vacation
+import com.spidersholidays.attendonb.ui.vacationmangment.model.VacationStatsChange
 import com.spidersholidays.attendonb.ui.vacationmangment.viewmodel.ManageVacationViewModel
- import kotlinx.android.synthetic.main.fragment_pending_management_vacation.*
+import com.spidersholidays.attendonb.utilites.Constants.Companion.PENDING_VACATION_UNDER_REVISION
+import kotlinx.android.synthetic.main.fragment_pending_management_vacation.*
 
-class MangmentPendingVacationFragment : BaseFragment() {
+class ManagmentPendingVacationFragment : BaseFragment() {
 
 
     companion object {
-        val TAG = MangmentPendingVacationFragment::javaClass.name
-        fun getInstance(): MangmentPendingVacationFragment {
-            return MangmentPendingVacationFragment()
+        val TAG = ManagmentPendingVacationFragment::javaClass.name
+        fun getInstance(): ManagmentPendingVacationFragment {
+            return ManagmentPendingVacationFragment()
         }
     }
 
@@ -41,6 +43,7 @@ class MangmentPendingVacationFragment : BaseFragment() {
         initObservers()
     }
 
+
     override fun onResume() {
         super.onResume()
         manageVacationViewModel.getPendingManagementVacation()
@@ -50,8 +53,9 @@ class MangmentPendingVacationFragment : BaseFragment() {
 
         val vacationClickAction = object : ManagmeentVacationAdapter.PendingManagementsVacationClickListener {
             override fun onVacationRejectClicked(vacationId: String) {
-                manageVacationViewModel.rejectVacation(vacationId)
-            }
+
+                RejectVacationReasonDialogFragment.getInstance(vacationId,manageVacationViewModel).show(childFragmentManager, RejectVacationReasonDialogFragment.TAG)
+             }
 
             override fun onVacationApproveClicked(vacationId: String) {
                 manageVacationViewModel.approveVacation(vacationId)
@@ -75,19 +79,41 @@ class MangmentPendingVacationFragment : BaseFragment() {
 
 
         manageVacationViewModel.onPendingVacationListChanged().observe(viewLifecycleOwner, Observer {
-             pendingVacationList.clear()
+            pendingVacationList.clear()
             it?.let {
                 pendingVacationList.addAll(it)
             }
             pendingManagementVacationAdapter.notifyDataSetChanged()
 
             if (pendingVacationList.size > 0) {
-                no_management_rejected_vacation_stats_msg.visibility = View.GONE
+                no_management_pending_vacation_stats_msg.visibility = View.GONE
             } else {
-                no_management_rejected_vacation_stats_msg.visibility = View.VISIBLE
+                no_management_pending_vacation_stats_msg.visibility = View.VISIBLE
             }
         })
 
+
+        manageVacationViewModel.onPendingItemChange().observe(viewLifecycleOwner, Observer { vacationStatsChange: VacationStatsChange ->
+            pendingVacationList.forEach {
+                if (vacationStatsChange.id == it.id) {
+
+                    when (vacationStatsChange.vacationStatsType) {
+                        VacationStatsChange.VacationStatsType.APPROVED -> {
+                            it.requestStatus = PENDING_VACATION_UNDER_REVISION
+                        }
+                        VacationStatsChange.VacationStatsType.REJECTED -> {
+                            pendingVacationList.remove(it)
+                            childFragmentManager.findFragmentByTag(RejectVacationReasonDialogFragment.TAG)?.let {
+                                if (it.isVisible){
+                                    (it as RejectVacationReasonDialogFragment).dismiss()
+                                }
+                            }
+                        }
+                    }
+                }
+                pendingManagementVacationAdapter.notifyDataSetChanged()
+            }
+        })
 
 
     }

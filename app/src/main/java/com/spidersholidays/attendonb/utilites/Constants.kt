@@ -25,9 +25,10 @@ class Constants {
 
 
         const val PENDING_VACATION_ALLOWED ="0"
+        const val PENDING_VACATION_UNDER_REVISION ="1"
 
 
-    }
+             }
 
     enum class ErrorType {
         ONLINE_DISCONNECTED, ONLINE_CONNECTED, GPS_PROVIDER, MOCK_LOCATION, OUT_OF_AREA

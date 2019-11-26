@@ -77,28 +77,45 @@
             android:textSize="@dimen/title_sub_head"
             tools:text="5 days" />
 
-        <LinearLayout
-            android:id="@+id/vacation_control_container"
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            tools:visibility="visible">
+            android:layout_height="wrap_content">
 
-            <ImageButton
-                android:id="@+id/btn_approve_pending_vacation"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/img_vacation_vacation_under_revision"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_approve_vacation"
-             />
+                android:layout_gravity="center"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_under_revision"
+                tools:visibility="gone" />
 
-            <ImageButton
-                android:id="@+id/btn_reject_vacation"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/vacation_control_container"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_reject_vacation" />
-        </LinearLayout>
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <ImageButton
+                    android:id="@+id/btn_approve_pending_vacation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_approve_vacation" />
+
+                <ImageButton
+                    android:id="@+id/btn_reject_vacation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_reject_vacation" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -109,8 +126,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:text="@string/created_date" />
+                android:text="@string/created_date"
+                android:textAlignment="center" />
 
 
             <TextView
