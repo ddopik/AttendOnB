@@ -53,7 +53,7 @@ class RejectedViewModel : ViewModel() {
                     if (it.status) {
                         Log.e(TAG, it.data?.msg)
                         it.data?.rejectedVacations?.let {
-                            rejectedVacationList.postValue(it)
+                            rejectedVacationList.postValue(it.reversed())
                         }
                         if (it.data?.rejectedVacations == null) {
                             rejectedVacationList.postValue(it.data?.rejectedVacations)

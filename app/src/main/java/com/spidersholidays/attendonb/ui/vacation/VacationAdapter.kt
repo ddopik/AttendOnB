@@ -69,8 +69,16 @@ class VacationAdapter(val VacationList: MutableList<Vacation>, val vacationType:
         holder.vacationReason.text = VacationList[position].reason
         holder.vacationStartDate.text = VacationList[position].startDate
         holder.vacationEndDate.text = VacationList[position].endDate
-        holder.vacationDaysLeft.text = VacationList[position].totalDays + " " + AttendOnBApp.app?.baseContext?.resources?.getString(R.string.day)
         holder.vacationCreatedDate.text = VacationList[position].requestDate
+
+
+        if (VacationList[position].totalDays == "1") {
+            holder.vacationDaysLeft.text = VacationList[position].totalDays + " " + AttendOnBApp.app?.baseContext?.resources?.getString(R.string.day)
+
+        } else {
+            holder.vacationDaysLeft.text = VacationList[position].totalDays + " " + AttendOnBApp.app?.baseContext?.resources?.getString(R.string.days)
+
+        }
 
     }
 

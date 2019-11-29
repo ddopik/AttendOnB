@@ -63,7 +63,7 @@ class ManageVacationViewModel : ViewModel() {
                         Log.e(TAG, it.data?.msg!!)
                         it.data?.vacationData?.let {
                             Log.e(TAG, it.size.toString())
-                            pendingListChange.postValue(it)
+                            pendingListChange.postValue(it.asReversed())
                         }
                         if (it?.data?.vacationData == null) {
                             pendingListChange.postValue(it?.data?.vacationData)
@@ -133,7 +133,7 @@ class ManageVacationViewModel : ViewModel() {
                         Log.e(TAG, it.data?.msg!!)
                         it.data?.vacationData?.let {
                             Log.e(TAG, it.size.toString())
-                            approvedListChange.postValue(it)
+                            approvedListChange.postValue(it.asReversed())
                         }
                         if (it?.data?.vacationData == null) {
                             approvedListChange.postValue(it?.data?.vacationData)
@@ -162,7 +162,7 @@ class ManageVacationViewModel : ViewModel() {
                         Log.e(TAG, it.data?.msg!!)
                         it.data?.vacationData?.let {
                             Log.e(TAG, it.size.toString())
-                            rejectedListChange.postValue(it)
+                            rejectedListChange.postValue(it.asReversed())
                         }
                         if (it?.data?.vacationData == null) {
                             rejectedListChange.postValue(it?.data?.vacationData)

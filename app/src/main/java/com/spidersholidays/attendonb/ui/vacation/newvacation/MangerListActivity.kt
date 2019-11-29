@@ -8,7 +8,7 @@ import com.jakewharton.rxbinding3.widget.TextViewTextChangeEvent
 import com.jakewharton.rxbinding3.widget.textChangeEvents
 import com.spidersholidays.attendonb.R
 import com.spidersholidays.attendonb.base.commonModel.User
-import com.spidersholidays.attendonb.ui.vacation.newvacation.model.AutoCompleteMangersAdapter
+import com.spidersholidays.attendonb.ui.vacation.newvacation.adapters.AutoCompleteMangersAdapter
 import com.spidersholidays.attendonb.utilites.Constants
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

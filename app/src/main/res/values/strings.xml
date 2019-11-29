@@ -114,6 +114,7 @@
     <string name="start_date">Start Date</string>
     <string name="end_date">End Date</string>
     <string name="day">Day</string>
+    <string name="days">Days</string>
     <string name="no_approved_vacations">No Approved Vacation yet</string>
     <string name="no_pending_vacations">No pending vacations</string>
     <string name="no_rejected_vacations">No rejected vacation</string>
@@ -153,4 +154,5 @@
     <string name="pay_roll_year">PayRoll year : </string>
     <string name="pay_roll_month">PayRoll month : </string>
     <string name="vacation_manger_request">Vacation reqests</string>
+    <string name="reject_reason">Reject reason</string>
 </resources>

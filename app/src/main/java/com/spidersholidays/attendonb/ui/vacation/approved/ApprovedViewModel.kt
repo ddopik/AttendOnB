@@ -52,9 +52,9 @@ class ApprovedViewModel : ViewModel() {
                     if (it.status) {
                         Log.e(TAG, it.data.msg)
                         it.data.approvedVacations?.let {
-                            ApprovedList.postValue( it)
+                            ApprovedList.postValue(it.reversed())
                         }
-                        if ( it.data.approvedVacations ==null ){
+                        if (it.data.approvedVacations == null) {
 //                            if(it.data.approvedVacations.size ==0 )
                             ApprovedList.postValue(it.data.approvedVacations)
                         }

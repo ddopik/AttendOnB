@@ -3,6 +3,16 @@ package com.spidersholidays.attendonb.utilites
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import okhttp3.CipherSuite
+import okhttp3.ConnectionSpec
+import okhttp3.OkHttpClient
+import okhttp3.TlsVersion
+import java.security.cert.X509Certificate
+import java.util.*
+import javax.net.ssl.SSLContext
+import javax.net.ssl.SSLSession
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
 /**
  * Created by ddopik on 09,May,2019
@@ -241,6 +251,7 @@ class PrefUtil {
         }
 
     }
+
 
 
 }

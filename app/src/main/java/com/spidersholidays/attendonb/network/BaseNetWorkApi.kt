@@ -1,6 +1,7 @@
 package com.spidersholidays.attendonb.network
 
 import com.androidnetworking.common.Priority
+import com.ddopik.linktask.ui.home.model.ArticlesResponse
 import com.rx2androidnetworking.Rx2AndroidNetworking
 import com.spidersholidays.attendonb.app.AttendOnBApp
 import com.spidersholidays.attendonb.ui.home.model.CheckUserManagementStatsResponse
@@ -17,6 +18,20 @@ import com.spidersholidays.attendonb.ui.vacationmangment.model.PendingManagement
 import com.spidersholidays.attendonb.ui.vacationmangment.model.VacationMangerRequestResponse
 import com.spidersholidays.attendonb.utilites.PrefUtil
 import io.reactivex.Observable
+import okhttp3.CipherSuite
+import okhttp3.CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA
+import okhttp3.ConnectionSpec
+import okhttp3.ConnectionSpec.*
+import okhttp3.OkHttpClient
+import okhttp3.TlsVersion
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import java.util.*
+import javax.net.ssl.SSLContext
+import javax.net.ssl.SSLSession
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
+import okhttp3.ConnectionSpec.Builder as Builder1
 
 class BaseNetWorkApi {
     companion object {
@@ -289,6 +304,86 @@ class BaseNetWorkApi {
 
         }
 
+
+
+        val ARTICLE_1_URL =
+                "https://newsapi.org/v1/articles?source=the-next-web&apiKey=533af958594143758318137469b41ba9"
+        val ARTICLE_2_URL =
+                "https://newsapi.org/v1/articles?source=associated-press&apiKey=533af958594143758318137469b41ba9"
+
+
+        fun getArticleList_1(): Observable<ArticlesResponse> {
+            return Rx2AndroidNetworking.get(ARTICLE_1_URL)
+                    .build()
+                    .getObjectObservable(ArticlesResponse::class.java)
+
+
+        }    fun getArticleList_2(): Observable<ArticlesResponse> {
+            return Rx2AndroidNetworking.get(ARTICLE_2_URL)
+                    .build()
+                    .getObjectObservable(ArticlesResponse::class.java)
+
+
+        }
+    }
+
+    /**
+     *
+     */
+    fun initNetWorkCirtefecate(): OkHttpClient
+    {
+        return try {
+            // Create a trust manager that does not validate certificate chains
+            // Create a trust manager that does not validate certificate chains
+            val trustAllCerts: Array<TrustManager> = arrayOf<TrustManager>(
+                    object : X509TrustManager {
+                        override fun checkClientTrusted(chain: Array<X509Certificate?>?, authType: String?) {}
+                        override fun checkServerTrusted(chain: Array<X509Certificate?>?, authType: String?) {}
+                        override fun getAcceptedIssuers(): Array<X509Certificate> {
+                            return arrayOf()
+                        }
+
+
+
+                    }
+            )
+
+
+            //Using TLS 1_2 & 1_1 for HTTP/2 Server requests
+            // Note : The following is suitable for my Server. Please change accordingly
+            //Using TLS 1_2 & 1_1 for HTTP/2 Server requests
+// Note : The following is suitable for my Server. Please change accordingly
+            val spec = Builder1(COMPATIBLE_TLS)
+                    .tlsVersions(TlsVersion.TLS_1_2, TlsVersion.TLS_1_1, TlsVersion.TLS_1_0)
+                    .cipherSuites(
+                            TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
+                            CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+                            CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+                            CipherSuite.TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,
+                            CipherSuite.TLS_DHE_RSA_WITH_AES_256_CBC_SHA,
+                            CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,
+                            CipherSuite.TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,
+                            CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+                            CipherSuite.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+                            CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,
+                            CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA)
+                    .build()
+
+
+            // Install the all-trusting trust manager
+            val sslContext = SSLContext.getInstance("SSL")
+            sslContext.init(null, trustAllCerts, SecureRandom())
+            // Create an ssl socket factory with our all-trusting manager
+            val sslSocketFactory = sslContext.getSocketFactory()
+
+            val builder = OkHttpClient.Builder()
+            builder.sslSocketFactory(sslSocketFactory)
+            builder.connectionSpecs(Collections.singletonList(spec))
+            builder.hostnameVerifier { hostname: String?, session: SSLSession? -> true }
+            builder.build()
+        } catch (e: Exception) {
+            throw  RuntimeException(e)
+        }
     }
 
 

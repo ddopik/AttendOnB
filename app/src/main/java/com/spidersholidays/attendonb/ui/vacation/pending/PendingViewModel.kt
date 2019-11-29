@@ -50,12 +50,12 @@ class PendingViewModel : ViewModel() {
         BaseNetWorkApi.getPendingVacation(PrefUtil.getUserId(AttendOnBApp.app!!.baseContext).toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
+                .subscribe({ it ->
                     if (it.status) {
                         Log.e(TAG, it.data?.msg!!)
                         it.data?.pendingVacations?.let {
                             Log.e(TAG, it.size.toString())
-                            pendingVacationList.postValue(it)
+                            pendingVacationList.postValue(it.reversed())
                         }
                         if (it?.data?.pendingVacations == null) {
                             pendingVacationList.postValue(it?.data?.pendingVacations)

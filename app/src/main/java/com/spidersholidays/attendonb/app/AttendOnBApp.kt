@@ -63,7 +63,7 @@ class AttendOnBApp : MultiDexApplication() {
         //        deleteCache(app);   ///for developing        ##################
         //        initializeDepInj(); ///intializing Dagger Dependancy
 
-        if (Build.VERSION.SDK_INT == 19) {
+        if (Build.VERSION.SDK_INT >= 19) {
             try {
                 ProviderInstaller.installIfNeeded(this)
             } catch (ignored: Exception) {

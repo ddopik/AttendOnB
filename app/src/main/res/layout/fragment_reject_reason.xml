@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/widget_padding"
-            android:hint="@string/send"
+            android:hint="@string/reject_reason"
             android:textSize="@dimen/title_head" />
 
 
