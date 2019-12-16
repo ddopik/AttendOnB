@@ -111,8 +111,8 @@
     <string name="pending">Pending</string>
     <string name="approved">Approved</string>
     <string name="rejected">Rejected</string>
-    <string name="start_date">Start Date</string>
-    <string name="end_date">End Date</string>
+    <string name="start_date">Start Date :\u0020</string>
+    <string name="end_date">End Date :\u0020</string>
     <string name="day">Day</string>
     <string name="days">Days</string>
     <string name="no_approved_vacations">No Approved Vacation yet</string>
@@ -155,4 +155,7 @@
     <string name="pay_roll_month">PayRoll month : </string>
     <string name="vacation_manger_request">Vacation reqests</string>
     <string name="reject_reason">Reject reason</string>
+    <string name="reason" translatable="false">reason :\u0020 </string>
+    <string name="name">Name :\u0020</string>
+    <string name="department">Department :\u0020</string>
 </resources>

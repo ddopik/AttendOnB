@@ -18,36 +18,96 @@
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/ic_pending" />
 
+
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
         android:gravity="start"
+        android:layout_gravity="center"
         android:orientation="vertical"
+        android:layout_marginStart="4dp"
         android:padding="4dp">
 
 
-        <TextView
-            android:id="@+id/vacation_reason_val"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/title_sub_head"
-            android:textStyle="bold"
-            tools:text="vacation reason" />
+            android:orientation="horizontal"
+            android:gravity="fill">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/name" />
 
-        <TextView
+            <TextView
+                android:id="@+id/employee_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="spidersEmployee" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/start_date" />
+            android:orientation="horizontal"
+            android:gravity="fill">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/department" />
 
-        <TextView
-            android:id="@+id/vacation_start_date"
+            <TextView
+                android:id="@+id/employee_department"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Human resources" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="2-11-2019" />
+            android:orientation="horizontal"
+            android:gravity="fill">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reason" />
+
+            <TextView
+                android:id="@+id/vacation_reason_val"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="vacation reason" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="fill">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start_date" />
+
+            <TextView
+                android:id="@+id/vacation_start_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="2-11-2019" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="fill">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,6 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="5-11-2019" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -104,13 +165,15 @@
                     android:id="@+id/btn_approve_pending_vacation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_approve_vacation" />
+                    android:src="@drawable/ic_approve_vacation"
+                    tools:ignore="VectorDrawableCompat" />
 
                 <ImageButton
                     android:id="@+id/btn_reject_vacation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_reject_vacation" />
+                    android:src="@drawable/ic_reject_vacation"
+                    tools:ignore="VectorDrawableCompat" />
 
             </LinearLayout>
 

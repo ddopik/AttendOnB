@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Build
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
 import com.androidnetworking.AndroidNetworking
 import com.spidersholidays.attendonb.network.BasicAuthInterceptor
@@ -17,6 +18,9 @@ import okhttp3.OkHttpClient
 import java.io.File
 import io.realm.Realm
 import com.google.android.gms.security.ProviderInstaller
+import com.spidersholidays.attendonb.network.BaseNetWorkApi
+import com.spidersholidays.attendonb.network.BaseNetWorkApi.Companion.enableTls12OnPreLollipop
+import com.spidersholidays.attendonb.network.BaseNetWorkApi.Companion.getNewHttpClient
 import com.spidersholidays.attendonb.utilites.PrefUtil
 import com.spidersholidays.attendonb.utilites.Utilities
 import io.realm.RealmConfiguration
@@ -31,7 +35,6 @@ class AttendOnBApp : MultiDexApplication() {
     private var networkChangeBroadcastReceiver: NetworkChangeBroadcastReceiver? = null
 
     companion object {
-
         var app: AttendOnBApp? = null
 
     }
@@ -39,24 +42,10 @@ class AttendOnBApp : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
 
-
-//        Utilities().printHashKey(app)
-        /**
-         * Required for Network Authority Access prior Api 19
-         * */
-        ProviderInstaller.installIfNeeded(getApplicationContext());
-        try {
-            val sslContext = SSLContext.getInstance("TLSv1.2")
-            sslContext.init(null, null, null)
-            sslContext.createSSLEngine();
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 
         app = this
-        AttendOnBApp.app = app as AttendOnBApp
-
-//        initFastAndroidNetworking(null,baseContext)
+        AndroidNetworking.initialize(this, getNewHttpClient())
         //        initRealm(); //--> [1]order is must
         //        setRealmDefaultConfiguration(); //--> [2]order is must
         //        intializeSteatho();
@@ -65,6 +54,18 @@ class AttendOnBApp : MultiDexApplication() {
 
         if (Build.VERSION.SDK_INT >= 19) {
             try {
+                /**
+                 * Required for Network Authority Access prior Api 19
+                 * */
+                ProviderInstaller.installIfNeeded(getApplicationContext());
+                try {
+                    val sslContext = SSLContext.getInstance("TLSv1.2")
+                    sslContext.init(null, null, null)
+                    sslContext.createSSLEngine();
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
+                }
+
                 ProviderInstaller.installIfNeeded(this)
             } catch (ignored: Exception) {
             }
@@ -185,6 +186,7 @@ class AttendOnBApp : MultiDexApplication() {
                     .addNetworkInterceptor(basicAuthInterceptor)
                     .build()
             AndroidNetworking.initialize(context, okHttpClient)
+
         } else {
             /**
              * default initialization

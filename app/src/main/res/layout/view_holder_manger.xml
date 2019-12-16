@@ -15,6 +15,7 @@
         android:textStyle="italic"
         android:gravity="center"
         tools:text="user name"
+        android:textColor="@color/black"
         android:clickable="true"
         android:focusable="true"
         android:background="?android:attr/selectableItemBackground"

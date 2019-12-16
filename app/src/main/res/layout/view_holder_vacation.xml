@@ -33,12 +33,15 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/title_sub_head"
             android:textStyle="bold"
+            android:textColor="@color/black"
             tools:text="vacation reason" />
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
+
             android:text="@string/start_date" />
 
 
@@ -46,18 +49,23 @@
             android:id="@+id/vacation_start_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
+
             tools:text="2-11-2019" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:textColor="@color/black"
+
             android:text="@string/end_date" />
 
         <TextView
             android:id="@+id/vacation_end_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             tools:text="5-11-2019" />
     </LinearLayout>
 
@@ -66,6 +74,7 @@
         android:layout_height="wrap_content"
         android:gravity="end"
         android:orientation="vertical"
+        android:textColor="@color/black"
         android:paddingTop="@dimen/widget_padding">
 
 
@@ -75,6 +84,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="@dimen/title_sub_head"
+            android:textColor="@color/black"
             tools:text="5 days" />
 
         <FrameLayout
@@ -115,6 +125,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:text="@string/created_date" />
 
 
@@ -124,6 +135,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
                 android:textAlignment="center"
+                android:textColor="@color/black"
+
                 tools:text="2-11-2019" />
 
 

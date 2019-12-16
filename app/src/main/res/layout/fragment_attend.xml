@@ -72,6 +72,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/title_sub_head"
 
+
                 />
 
 

@@ -441,15 +441,12 @@ public class Utilities {
 
         for (ApplicationInfo applicationInfo : packages) {
             try {
-                PackageInfo packageInfo = pm.getPackageInfo(applicationInfo.packageName,
-                        PackageManager.GET_PERMISSIONS);
-
+                PackageInfo packageInfo = pm.getPackageInfo(applicationInfo.packageName, PackageManager.GET_PERMISSIONS);
                 // Get Permissions
                 String[] requestedPermissions = packageInfo.requestedPermissions;
-
                 if (requestedPermissions != null) {
-                    for (int i = 0; i < requestedPermissions.length; i++) {
-                        if (requestedPermissions[i]
+                    for (String requestedPermission : requestedPermissions) {
+                        if (requestedPermission
                                 .equals("android.permission.ACCESS_MOCK_LOCATION")
                                 && !applicationInfo.packageName.equals(context.getPackageName())) {
                             count++;
@@ -457,13 +454,14 @@ public class Utilities {
                     }
                 }
             } catch (PackageManager.NameNotFoundException e) {
-                Log.e("Got exception ", e.getMessage());
+                Log.e(TAG, "areThereMockPermissionApps() ---->"+e.getMessage());
+                return false;
             }
         }
 
-        if (count > 0)
-            return true;
-        return false;
+        return count > 0;
+
+
     }
 
 

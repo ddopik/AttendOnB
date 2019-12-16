@@ -74,7 +74,8 @@
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintHorizontal_bias="0.0"
                 card_view:layout_constraintStart_toStartOf="parent"
-                tools:text="stories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detail" />
+                tools:text="stories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detailstories_detail"
+                android:layout_marginLeft="8dp" />
 
 
 

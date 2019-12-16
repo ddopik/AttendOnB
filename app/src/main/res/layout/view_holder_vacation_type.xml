@@ -15,8 +15,9 @@
         android:textStyle="italic"
         android:gravity="center"
         tools:text="user name"
-        android:clickable="true"
+         android:clickable="true"
         android:focusable="true"
+        android:textColor="@color/black"
         android:background="?android:attr/selectableItemBackground"
         />
 </LinearLayout>

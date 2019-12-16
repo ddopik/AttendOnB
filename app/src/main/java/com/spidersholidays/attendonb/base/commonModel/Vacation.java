@@ -52,4 +52,13 @@ public class Vacation {
     @SerializedName("request_date")
     @Expose
     public String requestDate;
+
+    @SerializedName("user_name")
+    @Expose
+    public String userName;
+
+    @SerializedName("user_department")
+    @Expose
+    public String userDepartment;
+
 }

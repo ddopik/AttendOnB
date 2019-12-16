@@ -37,6 +37,10 @@ class Constants {
     enum class ErrorTypeStateAction {
         OPEN_SETTING
     }
+
+    /**
+     * this class used to determine whiter controll view to hide
+     * */
     public enum class AttendType{
         MAIN_CONTAINER,QR,NETWORK
     }

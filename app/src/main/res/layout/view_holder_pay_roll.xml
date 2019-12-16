@@ -24,6 +24,7 @@
         <TextView
             android:id="@+id/pay_roll_total_salary"
             android:layout_width="match_parent"
+            android:textColor="@color/black"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             tools:text="9000" />
@@ -54,7 +55,7 @@
             android:layout_height="wrap_content"
             android:textSize="21sp"
             android:textStyle="bold"
-
+android:textColor="@color/black"
             tools:text="2009" />
 
     </LinearLayout>

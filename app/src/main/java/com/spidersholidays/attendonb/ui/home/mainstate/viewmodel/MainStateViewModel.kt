@@ -80,6 +80,9 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
     override fun onLocationUpdate(location: Location) {
 
         progressBarState.postValue(false)
+
+
+
         val centralLocation = Location("centrla")
         centralLocation.latitude = PrefUtil.getCurrentCentralLat(AttendOnBApp.app!!)!!
         centralLocation.longitude = PrefUtil.getCurrentCentralLng(AttendOnBApp.app!!)!!
@@ -94,7 +97,6 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
          */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             when {
-
                 location.isFromMockProvider -> {
                     CustomErrorUtils.viewSnackBarError(Constants.ErrorType.MOCK_LOCATION)
                     Log.e(TAG, "----->isFromMockProvider")
@@ -153,6 +155,8 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
 
 
     private fun validatesUserRadius(currentLocation: Location, centralLocation: Location) {
+
+
         if (currentLocation.distanceTo(centralLocation) > PrefUtil.getCurrentCentralRadius(AttendOnBApp.app!!)!!) {
             CustomErrorUtils.viewSnackBarError(Constants.ErrorType.OUT_OF_AREA)
             Log.e(TAG, "----->Not InsideRadius")
@@ -210,7 +214,7 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
 
 
     @SuppressLint("CheckResult")
-    fun sendAttendNetworkRequest(location: Location) {
+    fun sendAttendNetworkRequest() {
 
         progressBarState.postValue(true)
         Log.e(TAG, "DEVICE--" + android.os.Build.DEVICE)
@@ -221,9 +225,7 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
                 , platform = "Android"
                 , deviceImei = Utilities.getDeviceIMEI(AttendOnBApp.app?.baseContext!!)
                 , device = Build.MODEL.toString(),
-                deviceDetails = Build.PRODUCT.toString(),
-                latitude = location.latitude.toString(),
-                longitude = location.longitude.toString())
+                deviceDetails = Build.PRODUCT.toString())
                 .subscribeOn(Schedulers.io())
                 .distinct()
                 .debounce(5000, TimeUnit.MILLISECONDS)

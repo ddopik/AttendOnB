@@ -1,5 +1,7 @@
 package com.spidersholidays.attendonb.network
 
+import android.os.Build
+import android.util.Log
 import com.androidnetworking.common.Priority
 import com.ddopik.linktask.ui.home.model.ArticlesResponse
 import com.rx2androidnetworking.Rx2AndroidNetworking
@@ -17,21 +19,16 @@ import com.spidersholidays.attendonb.ui.vacation.rejected.model.RejectedResponse
 import com.spidersholidays.attendonb.ui.vacationmangment.model.PendingManagementVactionResponse
 import com.spidersholidays.attendonb.ui.vacationmangment.model.VacationMangerRequestResponse
 import com.spidersholidays.attendonb.utilites.PrefUtil
+import com.spidersholidays.attendonb.utilites.Tls12SocketFactory
 import io.reactivex.Observable
-import okhttp3.CipherSuite
-import okhttp3.CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA
 import okhttp3.ConnectionSpec
 import okhttp3.ConnectionSpec.*
 import okhttp3.OkHttpClient
 import okhttp3.TlsVersion
-import java.security.SecureRandom
-import java.security.cert.X509Certificate
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
-import javax.net.ssl.SSLSession
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
-import okhttp3.ConnectionSpec.Builder as Builder1
+
 
 class BaseNetWorkApi {
     companion object {
@@ -135,15 +132,15 @@ class BaseNetWorkApi {
         }
 
 
-        fun sendAttendNetworkRequest(uid: String, platform: String, device: String, deviceDetails: String, deviceImei: String, latitude: String, longitude: String): Observable<AttendResponse> {
+        fun sendAttendNetworkRequest(uid: String, platform: String, device: String, deviceDetails: String, deviceImei: String): Observable<AttendResponse> {
             return Rx2AndroidNetworking.post(ATTEND_NETWORK_URL)
                     .addBodyParameter("uid", uid)
                     .addBodyParameter("platform", platform)
                     .addBodyParameter("device", device)
                     .addBodyParameter("device_details", deviceDetails)
                     .addBodyParameter("imei", deviceImei)
-                    .addBodyParameter("latitude", latitude)
-                    .addBodyParameter("longitude", longitude)
+                    .addBodyParameter("latitude", "0.0")
+                    .addBodyParameter("longitude", "0.0")
                     .addBodyParameter("mobile_flag", "1")
                     .addBodyParameter("attend_method", "NW")
                     .addPathParameter(LANGUAGE_PATH_PARAMETER, PrefUtil.getAppLanguage(AttendOnBApp.app!!))
@@ -325,66 +322,39 @@ class BaseNetWorkApi {
 
 
         }
-    }
 
-    /**
-     *
-     */
-    fun initNetWorkCirtefecate(): OkHttpClient
-    {
-        return try {
-            // Create a trust manager that does not validate certificate chains
-            // Create a trust manager that does not validate certificate chains
-            val trustAllCerts: Array<TrustManager> = arrayOf<TrustManager>(
-                    object : X509TrustManager {
-                        override fun checkClientTrusted(chain: Array<X509Certificate?>?, authType: String?) {}
-                        override fun checkServerTrusted(chain: Array<X509Certificate?>?, authType: String?) {}
-                        override fun getAcceptedIssuers(): Array<X509Certificate> {
-                            return arrayOf()
-                        }
+        /**
+         *
+         */
+        open fun enableTls12OnPreLollipop(client: OkHttpClient.Builder): OkHttpClient.Builder? {
+            if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 22) {
+                try {
+                    val sc = SSLContext.getInstance("TLSv1.2")
+                    sc.init(null, null, null)
+                    client.sslSocketFactory(Tls12SocketFactory(sc.socketFactory))
+                    val cs = Builder(MODERN_TLS)
+                            .tlsVersions(TlsVersion.TLS_1_2).build()
+                    val specs: MutableList<ConnectionSpec> = ArrayList()
+                    specs.add(cs)
+                    specs.add(COMPATIBLE_TLS)
+                    specs.add(CLEARTEXT)
+                    client.connectionSpecs(specs)
+                } catch (exc: Exception) {
+                    Log.e("OkHttpTLSCompat", "Error while setting TLS 1.2", exc)
+                }
+            }
+            return client
+        }
 
-
-
-                    }
-            )
-
-
-            //Using TLS 1_2 & 1_1 for HTTP/2 Server requests
-            // Note : The following is suitable for my Server. Please change accordingly
-            //Using TLS 1_2 & 1_1 for HTTP/2 Server requests
-// Note : The following is suitable for my Server. Please change accordingly
-            val spec = Builder1(COMPATIBLE_TLS)
-                    .tlsVersions(TlsVersion.TLS_1_2, TlsVersion.TLS_1_1, TlsVersion.TLS_1_0)
-                    .cipherSuites(
-                            TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
-                            CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
-                            CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
-                            CipherSuite.TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,
-                            CipherSuite.TLS_DHE_RSA_WITH_AES_256_CBC_SHA,
-                            CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,
-                            CipherSuite.TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,
-                            CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
-                            CipherSuite.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
-                            CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,
-                            CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA)
-                    .build()
-
-
-            // Install the all-trusting trust manager
-            val sslContext = SSLContext.getInstance("SSL")
-            sslContext.init(null, trustAllCerts, SecureRandom())
-            // Create an ssl socket factory with our all-trusting manager
-            val sslSocketFactory = sslContext.getSocketFactory()
-
-            val builder = OkHttpClient.Builder()
-            builder.sslSocketFactory(sslSocketFactory)
-            builder.connectionSpecs(Collections.singletonList(spec))
-            builder.hostnameVerifier { hostname: String?, session: SSLSession? -> true }
-            builder.build()
-        } catch (e: Exception) {
-            throw  RuntimeException(e)
+        fun getNewHttpClient(): OkHttpClient? {
+            val client = OkHttpClient.Builder().followRedirects(true).followSslRedirects(true)
+                    .retryOnConnectionFailure(true).cache(null).connectTimeout(5, TimeUnit.SECONDS)
+                    .writeTimeout(5, TimeUnit.SECONDS).readTimeout(5, TimeUnit.SECONDS)
+            return enableTls12OnPreLollipop(client)!!.build()
         }
     }
+
+
 
 
 }

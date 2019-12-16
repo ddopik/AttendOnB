@@ -72,6 +72,8 @@ class ManagmeentVacationAdapter(val vacationList: MutableList<Vacation>, val vac
         }
 
 
+        holder.vacationUserName.text = vacationList[position].userName
+        holder.vacationDepartment.text = vacationList[position].userDepartment
         holder.vacationReason.text = vacationList[position].reason
         holder.vacationStartDate.text = vacationList[position].startDate
         holder.vacationEndDate.text = vacationList[position].endDate
@@ -85,6 +87,8 @@ class ManagmeentVacationAdapter(val vacationList: MutableList<Vacation>, val vac
         val vacationControlView = view.findViewById<View>(R.id.vacation_control_container)
         val vacationUnderRevisiionIcon = view.findViewById<ImageView>(R.id.img_vacation_vacation_under_revision)
         val vacationIcon = view.findViewById<ImageView>(R.id.vacation_icon)
+        val vacationUserName: TextView = view.findViewById(R.id.employee_name)
+        val vacationDepartment: TextView = view.findViewById(R.id.employee_department)
         val vacationReason: TextView = view.findViewById(R.id.vacation_reason_val)
         var vacationStartDate: TextView = view.findViewById(R.id.vacation_start_date)
         var vacationEndDate: TextView = view.findViewById(R.id.vacation_end_date)

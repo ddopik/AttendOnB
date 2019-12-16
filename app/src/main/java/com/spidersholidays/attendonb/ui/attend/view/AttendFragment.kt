@@ -4,7 +4,7 @@ import CustomErrorUtils
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.location.Location
-import android.net.Network
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -35,7 +35,7 @@ class AttendFragment : BaseFragment() {
 
     companion object {
         val TAG = AttendFragment::class.java.simpleName
-        public fun getInstance(): AttendFragment {
+        fun getInstance(): AttendFragment {
             val attendFragment = AttendFragment()
             return attendFragment
         }
@@ -44,7 +44,7 @@ class AttendFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val mainView = inflater.inflate(R.layout.fragment_attend, container, false)
-        return mainView;
+        return mainView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,6 +64,15 @@ class AttendFragment : BaseFragment() {
     }
 
     override fun intiView() {
+
+
+//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
+//            qr_attend_btn.visibility = View.GONE
+//        } else {
+//            qr_attend_btn.visibility = View.VISIBLE
+//
+//        }
+
         /**
          * Initial request to update view stats
          * */
@@ -81,14 +90,21 @@ class AttendFragment : BaseFragment() {
     private fun intiListeners() {
 
         network_attend_btn.setOnClickListener {
-            if (!utilities.Utilities.isLocationEnabled(context)) {
-                CustomErrorUtils.viewSnackBarError(Constants.ErrorType.GPS_PROVIDER)
-            } else {
+            setBtnAttendBtnState(ApplyButtonState(btnEnabled = false, btnVisible = true, btnType = Constants.AttendType.NETWORK))
+            mainStateViewModel?.sendAttendNetworkRequest()
 
-                attendType = Constants.AttendType.NETWORK
-                setBtnAttendBtnState(ApplyButtonState(btnEnabled = false, btnVisible = true, btnType = Constants.AttendType.NETWORK))
-                mainStateViewModel?.attendRequest(context!!)
-            }
+            /**
+             * Check location has been currently disabled
+             * */
+//            mainStateViewModel?.attendRequest(context!!)
+//            if (!utilities.Utilities.isLocationEnabled(context)) {
+//                CustomErrorUtils.viewSnackBarError(Constants.ErrorType.GPS_PROVIDER)
+//            } else {
+//
+//                attendType = Constants.AttendType.NETWORK
+//                setBtnAttendBtnState(ApplyButtonState(btnEnabled = false, btnVisible = true, btnType = Constants.AttendType.NETWORK))
+//                mainStateViewModel?.attendRequest(context!!)
+//            }
 
         }
 
@@ -97,6 +113,7 @@ class AttendFragment : BaseFragment() {
             if (!utilities.Utilities.isLocationEnabled(context)) {
                 CustomErrorUtils.viewSnackBarError(Constants.ErrorType.GPS_PROVIDER)
             } else {
+
                 attendType = Constants.AttendType.QR
                 setBtnAttendBtnState(ApplyButtonState(btnEnabled = false, btnVisible = true, btnType = Constants.AttendType.QR))
                 mainStateViewModel?.attendRequest(context!!)
@@ -126,7 +143,7 @@ class AttendFragment : BaseFragment() {
         /**
          * this observer checks wither can attend or not
          * if  "yes"  ----> processes will continue to desired method
-         *     "No"   ----> an rejection reason should be displayed
+         *     "No"   ----> an rejection reason should be displayed from "ViewModel"
          */
         mainStateViewModel?.onAttendAction()?.observe(this, Observer {
             when (it.attendFlag) {
@@ -139,8 +156,11 @@ class AttendFragment : BaseFragment() {
 
                         }
                         Constants.AttendType.NETWORK -> {
-                            Log.e(TAG, "Network attend reqested")
-                            mainStateViewModel?.sendAttendNetworkRequest(it.currentLocation)
+                            /**
+                             * Location check has been disabled
+                             * */
+//                            Log.e(TAG, "Network attend reqested")
+//                            mainStateViewModel?.sendAttendNetworkRequest()
                         }
                     }
                 }
@@ -171,7 +191,7 @@ class AttendFragment : BaseFragment() {
 
         when (applyButtonState.btnType) {
 
-            Constants.AttendType.QR ,Constants.AttendType.NETWORK-> {
+            Constants.AttendType.QR, Constants.AttendType.NETWORK -> {
                 if (applyButtonState.btnEnabled) {
                     qr_attend_btn.setBackgroundColor(ContextCompat.getColor(context!!, R.color.text_input_color))
                     qr_attend_btn.isEnabled = true

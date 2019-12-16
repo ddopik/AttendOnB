@@ -11,13 +11,12 @@
         android:id="@+id/manger_search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/verdana"
-        android:background="@drawable/rounded_search_view"
-        android:drawableStart="@drawable/ic_search_gray"
+        app:drawableStartCompat="@drawable/ic_search_gray"
+        app:drawableLeftCompat="@drawable/ic_search_gray"
         android:drawablePadding="@dimen/widget_padding"
         android:hint="@string/search"
         android:padding="@dimen/widget_padding"
-        android:drawableLeft="@drawable/ic_search_gray" />
+       />
 
     <ui_componanets.widgets.CustomRecyclerView
         android:id="@+id/rv_manger_list"

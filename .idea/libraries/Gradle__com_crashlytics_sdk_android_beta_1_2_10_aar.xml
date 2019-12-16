@@ -4,7 +4,9 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6af1a9bce684e7117353b668fb67dea7/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6af1a9bce684e7117353b668fb67dea7/jars/classes.jar!/" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.crashlytics.sdk.android/beta/1.2.10/d3a7d8e5a630bbb5499eda138ba55d42c9415bb2/beta-1.2.10-javadoc.jar!/" />
+    </JAVADOC>
     <SOURCES />
   </library>
 </component>
