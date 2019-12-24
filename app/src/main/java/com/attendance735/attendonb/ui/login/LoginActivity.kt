@@ -103,7 +103,7 @@ class LoginActivity : BaseActivity(), MapUtls.OnLocationUpdate, EasyPermissions.
         btn_login.setOnClickListener {
 
             if (validateLoginInput() && isPermissionGranted) {
-                loginViewModel?.loginUser(userName = login_user_name.text.toString(), password = login_password.text.toString(), currentLat = curentLat, currentLng = curentLng, deviceImei = Utilities.getDeviceIMEI(baseContext), context = baseContext)
+                loginViewModel?.loginUser(userName = login_user_name.text.toString(), password = login_password.text.toString(), currentLat = curentLat, currentLng = curentLng, deviceImei = Utilities.getDeviceUniqueID(baseContext), context = baseContext)
             } else {
                 requestLoginPermeation()
             }

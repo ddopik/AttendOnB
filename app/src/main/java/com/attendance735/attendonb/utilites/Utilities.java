@@ -185,20 +185,27 @@ public class Utilities {
         password.setSelection(password.getText().length());
     }
 
-    @SuppressLint("MissingPermission")
-    public static String getDeviceIMEI(Context context) {
-        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        return telephonyManager.getDeviceId();
+//    @SuppressLint("MissingPermission")
+//    public static String getDeviceIMEI(Context context) {
+//        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+//        return telephonyManager.getDeviceId();
+//
+//
+//    }
 
-//      return Settings.Secure.getString(context.getContentResolver(),
-//                Settings.Secure.ANDROID_ID);
-    }
-
+    /**
+     * Values of ANDROID_ID are now scoped per-app instead of per-user. The value of ANDROID_ID is unique for each combination of application package name, signature, user, and device. Two apps running on the same device no longer see the same Android ID, and so cannot correlate.
+     *
+     * The value of ANDROID_ID does not change on package uninstall or reinstall, as long as the package name and signing key are the same.
+     *
+     * The value of ANDROID_ID does not change if the package signing key changes due to an update.
+     *
+     * For apps that were installed prior to the OTA, the value of ANDROID_ID remains the same unless uninstalled and then reinstalled.
+     * */
     @SuppressLint("HardwareIds")
-    public static String getDeviceUniqueID(Activity activity) {
-        String device_unique_id = Settings.Secure.getString(activity.getContentResolver(),
+    public static String getDeviceUniqueID(Context context) {
+         return  Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-        return device_unique_id;
     }
 
 

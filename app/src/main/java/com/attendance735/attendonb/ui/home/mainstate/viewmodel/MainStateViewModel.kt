@@ -223,7 +223,7 @@ class MainStateViewModel : ViewModel(), MapUtls.OnLocationUpdate {
         BaseNetWorkApi.sendAttendNetworkRequest(
                 uid = PrefUtil.getUserId(AttendOnBApp.app?.baseContext!!)!!
                 , platform = "Android"
-                , deviceImei = Utilities.getDeviceIMEI(AttendOnBApp.app?.baseContext!!)
+                , deviceImei = Utilities.getDeviceUniqueID(AttendOnBApp.app?.baseContext!!)
                 , device = Build.MODEL.toString(),
                 deviceDetails = Build.PRODUCT.toString())
                 .subscribeOn(Schedulers.io())

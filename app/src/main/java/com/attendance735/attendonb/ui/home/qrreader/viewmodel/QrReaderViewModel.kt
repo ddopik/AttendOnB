@@ -53,9 +53,9 @@ class QrReaderViewModel : ViewModel() {
         Log.e(TAG, "MODEL--" + android.os.Build.MODEL)
         Log.e(TAG, "PRODUCT--" + android.os.Build.PRODUCT)
         BaseNetWorkApi.sendAttendRequest(
-                uid = PrefUtil.getUserId(AttendOnBApp.app?.baseContext!!)!!
+                uid = PrefUtil.getUserId(AttendOnBApp.app?.baseContext!!)
                 , platform = "Android"
-                , deviceImei = Utilities.getDeviceIMEI(AttendOnBApp.app?.baseContext!!)
+                , deviceImei = Utilities.getDeviceUniqueID(AttendOnBApp.app?.baseContext!!)
                 , device = android.os.Build.MODEL.toString(),
                 deviceDetails = android.os.Build.PRODUCT.toString(),
                 latitude = lat.toString(),
