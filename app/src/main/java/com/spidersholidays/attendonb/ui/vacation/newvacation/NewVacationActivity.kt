@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import com.spidersholidays.attendonb.R
+import com.spidersholidays.attendonb.TestCases2
 import com.spidersholidays.attendonb.base.BaseActivity
 import com.spidersholidays.attendonb.base.commonModel.User
 import com.spidersholidays.attendonb.base.commonModel.VacationsType
@@ -32,10 +33,10 @@ class NewVacationActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_vacation)
         newVacationViewModel = NewVacationViewModel.getInstance(this)
+         initObservers()
+         initListeners()
+        TestCases2().getPager()
 
-        initObservers()
-
-        initListeners()
 
     }
 
@@ -145,7 +146,7 @@ class NewVacationActivity : BaseActivity() {
         choose_manger_val.setOnClickListener {
 
             if (mangerList.size > 0) {
-                val intent = Intent(NewVacationActivity@ this, MangerListActivity::class.java)
+                val intent = Intent(this, MangerListActivity::class.java)
                 intent.putExtra(MangerListActivity.userList, mangerList as ArrayList<User>)
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 startActivityForResult(intent, MangerListActivity_REQUESE_CODE)

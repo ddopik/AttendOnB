@@ -1,0 +1,63 @@
+
+7
+java:S2129ƒ" Remove this "String" constructor(Š€—ÿ
+\
+java:S2147Ù"ECombine this catch with the one at line 343, which has the same body.(”ı¾
+R	java:S125œ"<This block of commented-out lines of code should be removed.(á¨ßà
+R	java:S125"<This block of commented-out lines of code should be removed.(€óŸ¢
+g
+java:S1858û"P"decryptedData" is already a string, there's no need to call "toString()" on it.(òßÈ×
+^
+java:S1858ø"B"toString" returns a string, there's no need to call "toString()".(†İÎĞùÿÿÿÿ
+V	java:S125x"<This block of commented-out lines of code should be removed.(ÛÁÿœøÿÿÿÿ
+W	java:S125‘"<This block of commented-out lines of code should be removed.(Éÿï¼ıÿÿÿÿ
+g	java:S117ã"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(–—øç
+]
+java:S1126±"AReplace this if-then-else statement by a single return statement.(€§Üİüÿÿÿÿ
+E
+java:S1481ï".Remove this unused "seedValue" local variable.(ÉòÅ
+W	java:S125¼"<This block of commented-out lines of code should be removed.(õİÇãşÿÿÿÿ
+P
+java:S4719"9Replace charset name argument with StandardCharsets.UTF_8(Á¾Şå
+?
+java:S5542"#Use secure mode and padding scheme.(÷Èİÿøÿÿÿÿ
+p
+java:S2293‡"YReplace the type specification in this constructor call with the diamond operator ("<>").(Ôãò¶
+?
+java:S1148†"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+7
+java:S2129Ô" Remove this "String" constructor(ç·İ†
+T
+java:S1854ï"=Remove this useless assignment to local variable "seedValue".(ÉòÅ
+U
+java:S4719‚"9Replace charset name argument with StandardCharsets.UTF_8(«ëÑÔÿÿÿÿÿ
+P
+java:S4719"9Replace charset name argument with StandardCharsets.UTF_8(şª—Ç
+~
+java:S1488"gImmediately return this expression instead of assigning it to the temporary variable "decryptedString".(Á¾Şå
+@
+java:S1068="*Remove this unused "arabic" private field.(§À””
+Q	java:S125¥"<This block of commented-out lines of code should be removed.(Œšè\
+W	java:S125Á"<This block of commented-out lines of code should be removed.(éØ»Úûÿÿÿÿ
+?
+java:S1148“"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+?
+java:S5542€"#Use secure mode and padding scheme.(÷Èİÿøÿÿÿÿ
+o	java:S115="ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(§À””
+\	java:S112ş"FDefine and throw a dedicated exception instead of using a generic one.(îÎÊï
+i
+java:S1871"MThis branch's code block is the same as the block for the branch on line 140.(Û«éÒüÿÿÿÿ
+N
+java:S1135ì"2Complete the task associated to this TODO comment.(ÕÌ®şÿÿÿÿ
+l
+java:S1858ø"P"encryptedData" is already a string, there's no need to call "toString()" on it.(†İÎĞùÿÿÿÿ
+Q	java:S125g"<This block of commented-out lines of code should be removed.(‡‡çû
+~
+java:S1488ƒ"gImmediately return this expression instead of assigning it to the temporary variable "encryptedString".(Š€—ÿ
+b
+java:S2259û"KA "NullPointerException" could be thrown; "decryptedData" is nullable here.(òßÈ×
+Y
+java:S1858û"B"toString" returns a string, there's no need to call "toString()".(òßÈ×
+a	java:S112‹"FDefine and throw a dedicated exception instead of using a generic one.(ÈºÒâşÿÿÿÿ
+g
+java:S2259ø"KA "NullPointerException" could be thrown; "encryptedData" is nullable here.(†İÎĞùÿÿÿÿ

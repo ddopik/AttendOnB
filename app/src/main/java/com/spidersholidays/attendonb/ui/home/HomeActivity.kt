@@ -17,6 +17,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.navigation.NavigationView
 import com.spidersholidays.attendonb.R
+import com.spidersholidays.attendonb.TestCases
+import com.spidersholidays.attendonb.TestCases2
 import com.spidersholidays.attendonb.app.AttendOnBApp
 import com.spidersholidays.attendonb.base.BaseActivity
 import com.spidersholidays.attendonb.base.CustomDialog
@@ -67,7 +69,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         initView()
         initListeners()
         initObservers()
-
+        TestCases().getPager()
 
     }
 

@@ -2,10 +2,7 @@ package com.spidersholidays.attendonb.ui.vacation.newvacation.viewmodel
 
 import CustomErrorUtils
 import android.annotation.SuppressLint
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.*
 import com.spidersholidays.attendonb.app.AttendOnBApp
 import com.spidersholidays.attendonb.base.SingleLiveEvent
 import com.spidersholidays.attendonb.network.BaseNetWorkApi
@@ -25,7 +22,9 @@ class NewVacationViewModel : ViewModel() {
 
 
     fun onVacationFormDataChange(): LiveData<NewVacationData> = vacationFormData
+
     fun onVacationFormProgressChanged(): LiveData<Boolean> = newVacationProgressState
+
     fun onNewVacationCreated(): LiveData<Boolean> = vacationCreateState
 
 
@@ -35,7 +34,7 @@ class NewVacationViewModel : ViewModel() {
 
         fun getInstance(activity: NewVacationActivity): NewVacationViewModel? {
             if (INSTANCE == null) {
-                INSTANCE = ViewModelProviders.of(activity).get(NewVacationViewModel::class.java)
+                 INSTANCE = ViewModelProvider(activity).get(NewVacationViewModel::class.java)
             }
             return INSTANCE
         }
