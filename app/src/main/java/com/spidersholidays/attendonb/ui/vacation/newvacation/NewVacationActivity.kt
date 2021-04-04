@@ -35,9 +35,9 @@ class NewVacationActivity : BaseActivity() {
         newVacationViewModel = NewVacationViewModel.getInstance(this)
          initObservers()
          initListeners()
-        TestCases2().getPager()
+         TestCases2().getPager()
 
-
+supportFragmentManager
     }
 
     override fun initObservers() {

@@ -14,7 +14,7 @@ class ResultActivity :BaseActivity() {
         setContentView(R.layout.activity_result)
         if(intent.getByteArrayExtra("img") !=null){
             val byteArray = intent.getByteArrayExtra("img")
-            val bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+            val bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray?.size ?: 0)
             qr_test_img.setBackgroundColor(ContextCompat.getColor(this,R.color.light_blue))
             qr_test_img.setImageBitmap(bmp)
         }

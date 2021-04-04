@@ -51,7 +51,7 @@ class RejectedViewModel : ViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     if (it.status) {
-                        Log.e(TAG, it.data?.msg)
+                        Log.e(TAG, it.data?.msg?:"error")
                         it.data?.rejectedVacations?.let {
                             rejectedVacationList.postValue(it.reversed())
                         }

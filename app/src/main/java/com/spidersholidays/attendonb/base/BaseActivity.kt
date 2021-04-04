@@ -1,5 +1,6 @@
 package com.spidersholidays.attendonb.base
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -8,16 +9,15 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.spidersholidays.attendonb.R
-import com.spidersholidays.attendonb.utilites.Constants.ErrorType.*
-import com.spidersholidays.attendonb.utilites.rxeventbus.RxEventBus
-import com.spidersholidays.attendonb.utilites.rxeventbus.RxForceRefreshEvent
 import com.google.android.material.snackbar.Snackbar
-import io.reactivex.disposables.CompositeDisposable
-import android.content.Context
+import com.spidersholidays.attendonb.R
 import com.spidersholidays.attendonb.app.AttendOnBApp
+import com.spidersholidays.attendonb.utilites.Constants.ErrorType.*
 import com.spidersholidays.attendonb.utilites.ContextWrapper
 import com.spidersholidays.attendonb.utilites.PrefUtil
+import com.spidersholidays.attendonb.utilites.rxeventbus.RxEventBus
+import com.spidersholidays.attendonb.utilites.rxeventbus.RxForceRefreshEvent
+import io.reactivex.disposables.CompositeDisposable
 import java.util.*
 
 
@@ -83,7 +83,7 @@ abstract class BaseActivity : AppCompatActivity() {
             }
 
         }, { throwable ->
-            Log.e(TAG, throwable.message)
+            Log.e(TAG, throwable?.message.toString())
         })
         disposables.add(disposable)
     }

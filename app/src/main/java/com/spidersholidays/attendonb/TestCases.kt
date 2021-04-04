@@ -13,8 +13,33 @@ class TestCases {
 
         Log.e("TestCases Value after---->", TestSingletonClass.getValue().toString())
 
+        solution(arrayOf(1,2,5,6,77,9))
+    }
+
+
+    fun solution(mArra: Array<Int>) {
+
+/// get the biggest number
+
+/// loop throug supplied array
+// if number exsist decrese it by 1 --> repeat the loop
+// if not found this ---> this is the desired number
+
+
+        for (mNumber in mArra) {
+            for ((index, arrayNum) in  mArra.withIndex()) {
+                if (mNumber<arrayNum ){
+                  break
+              }
+                if(index == mArra.size-1){
+                    println("$mNumber is the biggest number")
+                }
+            }
+        }
+
 
     }
+
 }
 
 class TestCases2 {

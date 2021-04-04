@@ -1,0 +1,20 @@
+
+J
+java:S1066^"/Merge this if statement with the enclosing one.(êÿ×¤ùÿÿÿÿ
+>
+java:S1148r"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+h
+java:S2259_"MA "NullPointerException" could be thrown; "locationManager" is nullable here.(ý¡­Ôûÿÿÿÿ
+˜
+java:S1186Ñ"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ÁïÕÒ
+˜
+java:S1186Õ"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(çÅðÙ
+˜
+java:S1186Ù"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ÀÄÞ’
+h	java:S116"NRename this field "TAG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(òé·¸ûÿÿÿÿ
+m
+java:S37767"RRefactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.(øˆ÷Ãùÿÿÿÿ
+=
+java:S1172¸"&Remove these unused method parameters.(¦Œœ¢
+C
+java:S1172Á",Remove this unused method parameter "which".(¦Œœ¢

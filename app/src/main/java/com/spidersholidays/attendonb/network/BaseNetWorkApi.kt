@@ -83,21 +83,6 @@ class BaseNetWorkApi {
 
         fun login(userName: String, password: String, currentLat: String, currentLng: String, deviceImei: String): Observable<LoginResponse> {
 
-
-
-
-
-
-
-
-
-
-
-
-
-            /////////////
-
-
             return Rx2AndroidNetworking.post(LOGIN_URL)
                     .setOkHttpClient(getNewHttpClient())
                      .addBodyParameter("username", userName)
