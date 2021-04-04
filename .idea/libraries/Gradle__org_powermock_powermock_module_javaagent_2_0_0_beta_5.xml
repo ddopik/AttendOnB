@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: org.powermock:powermock-module-javaagent:2.0.0-beta.5">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.powermock/powermock-module-javaagent/2.0.0-beta.5/f0f3a1ace703bdfdd65f66de30e17476b95e39f2/powermock-module-javaagent-2.0.0-beta.5.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.powermock/powermock-module-javaagent/2.0.0-beta.5/c4b505f8e5144fa0c20b92e4be9c8b13e9401311/powermock-module-javaagent-2.0.0-beta.5-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.powermock/powermock-module-javaagent/2.0.0-beta.5/93ab499505fac1e9ef0d43223e8d182d042dd4b2/powermock-module-javaagent-2.0.0-beta.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

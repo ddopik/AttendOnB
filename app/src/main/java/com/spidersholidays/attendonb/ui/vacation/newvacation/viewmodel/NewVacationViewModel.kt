@@ -34,7 +34,8 @@ class NewVacationViewModel : ViewModel() {
 
         fun getInstance(activity: NewVacationActivity): NewVacationViewModel? {
             if (INSTANCE == null) {
-                 INSTANCE = ViewModelProvider(activity).get(NewVacationViewModel::class.java)
+
+                INSTANCE = ViewModelProvider(activity).get(NewVacationViewModel::class.java)
             }
             return INSTANCE
         }
@@ -65,6 +66,12 @@ class NewVacationViewModel : ViewModel() {
     }
 
 
+    fun testtest(){
+        newVacationProgressState.postValue(true)
+
+    }
+
+
     @SuppressLint("CheckResult")
     fun sendVacationRequest(reason: String, startDate: String, endDate: String, requestTo: String, vacationType: String) {
         newVacationProgressState.postValue(true)
@@ -72,16 +79,16 @@ class NewVacationViewModel : ViewModel() {
         startDate.replace("/", "-")
         val start = startDate.split("/").toTypedArray()
         start.reverse()
-        val startString= start.joinToString(separator = "-")
+        val startString = start.joinToString(separator = "-")
 
         endDate.replace("/", "-")
         val end = endDate.split("/").toTypedArray()
         end.reverse()
-        val endString= end.joinToString(separator = "-")
+        val endString = end.joinToString(separator = "-")
 
 
 
-         BaseNetWorkApi.sendNewVacationRequest(PrefUtil.getUserId(AttendOnBApp.app?.baseContext!!), reason, startString, endString, requestTo, vacationType)
+        BaseNetWorkApi.sendNewVacationRequest(PrefUtil.getUserId(AttendOnBApp.app?.baseContext!!), reason, startString, endString, requestTo, vacationType)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ createNewVacationResponse: CreateNewVacationResponse ->
